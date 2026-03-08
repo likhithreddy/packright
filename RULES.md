@@ -61,13 +61,13 @@ PackRight follows a highly organized Next.js App Router structure. Separating se
 
 ### Testing Strategy
 
-**Methodology:** Test-Driven Development (TDD) is required. Ensure minimum **70% test code coverage** across the project.
+**Methodology:** Test-Driven Development (TDD) is required. Ensure minimum **80% test code coverage** across the project.
 
 - **Feature Implementation Checkpoint**: For every feature requested via a GitHub issue, you must evaluate the acceptance criteria and proactively generate as many robust test cases as possible using **Jest** (not Vitest). Implementation cannot be marked as "completed" until all generated Jest test cases successfully pass.
 - **Unit Tests (Jest)**: Used for isolated business logic, database query wrappers, and utility functions (e.g., testing the Group Readiness percentage calculation). All files must end in `.test.ts` or `.test.tsx` and reside in `/tests/unit/`.
 - **Integration Tests (Jest)**: Used for evaluating connected React Components spanning multiple features or simulating back-end interaction via mocked APIs (e.g., MSW). All files must end in `.test.tsx` or `.test.ts` and reside in `/tests/integration/`.
 - **E2E Tests (Playwright)**: Used to validate critical user flows (e.g., Logging in, creating a trip, utilizing the drag-and-drop board). All files must reside in the `/tests/e2e/` root directory.
-- **CI Blocker**: Every Pull Request must pass the automated GitHub Actions pipeline. The PR **cannot be merged** if unit tests fail, integration tests fail, E2E tests fail, or aggregate code coverage drops below 70%.
+- **CI Blocker**: Every Pull Request must pass the automated GitHub Actions pipeline. The PR **cannot be merged** if unit tests fail, integration tests fail, E2E tests fail, or aggregate code coverage drops below 80%.
 
 ---
 
@@ -128,7 +128,7 @@ We strictly adhere to Agile Scrum methodology. **Do not deviate from this workfl
 
 - Open the PR against `main`.
 - Link the GitHub issue in the PR description to trigger automatic closure upon merge (e.g., `Closes #42`).
-- A PR is blocked unless: (a) Automated tests pass, (b) 70% coverage is maintained, (c) Code reviews (if applicable) are approved, and (d) ESLint/Prettier checks pass.
+- A PR is blocked unless: (a) Automated tests pass, (b) 80% coverage is maintained, (c) Code reviews (if applicable) are approved, and (d) ESLint/Prettier checks pass.
 
 ---
 
