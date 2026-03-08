@@ -117,7 +117,7 @@ We strictly adhere to Agile Scrum methodology. **Do not deviate from this workfl
   3. **CRITICAL:** Explicitly remind the user to move the tracking issue to **"In Progress"** on the Kanban board.
   4. Start the implementation phase (incorporating all mandatory Jest test generation and validation).
   5. Once implementation and tests are completely verified and done, prompt to raise a Pull Request to `main`.
-  6. Remind the user / explicitly ensure that the issue card on the Kanban board is moved to **"Review"**.
+  6. **CRITICAL:** Explicitly remind the user to move the tracking issue to **"Review"** on the Kanban board immediately after the Pull Request is raised against `main`.
 - **Commit Frequency**: Commit often (e.g., after creating a component, after writing a test) to build a valid history checkpoint. You must explicitly commit the moment an issue implementation is completed in full.
 - **Commit Format**: Start the message with the bracketed issue reference. Example: `[#42] feat: implement real-time kanban board`.
 
