@@ -9,7 +9,7 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-yarn.lock
+package-lock.json
 .ds_store
 # testing
 /coverage
