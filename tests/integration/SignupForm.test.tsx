@@ -1,6 +1,14 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SignupForm } from '@/components/features/auth/SignupForm';
+import { toast } from 'sonner';
+
+jest.mock('sonner', () => ({
+  toast: {
+    error: jest.fn(),
+    success: jest.fn(),
+  },
+}));
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
@@ -185,5 +193,88 @@ describe('SignupForm', () => {
         options: expect.any(Object),
       });
     });
+  });
+  it('handles auth error when already registered', async () => {
+    const user = userEvent.setup();
+    mockRpc.mockResolvedValueOnce({ data: true, error: null });
+    mockSignUp.mockResolvedValueOnce({
+      data: { user: null },
+      error: { message: 'user already registered' },
+    });
+
+    render(<SignupForm />);
+
+    await user.type(screen.getByLabelText(/Username/i), 'johndoe123');
+    await user.type(screen.getByLabelText(/Email/i), 'name@example.com');
+    await user.type(screen.getByLabelText(/^Password/i), 'ValidPass123!');
+    await user.type(screen.getByLabelText(/Confirm Password/i), 'ValidPass123!');
+
+    const submitBtn = screen.getByRole('button', { name: 'Create Account' });
+    await user.click(submitBtn);
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('An account with this email already exists.');
+    });
+  });
+
+  it('handles email enumeration fake success', async () => {
+    const user = userEvent.setup();
+    mockRpc.mockResolvedValueOnce({ data: true, error: null });
+    mockSignUp.mockResolvedValueOnce({ data: { user: { identities: [] } }, error: null });
+
+    render(<SignupForm />);
+
+    await user.type(screen.getByLabelText(/Username/i), 'johndoe123');
+    await user.type(screen.getByLabelText(/Email/i), 'name@example.com');
+    await user.type(screen.getByLabelText(/^Password/i), 'ValidPass123!');
+    await user.type(screen.getByLabelText(/Confirm Password/i), 'ValidPass123!');
+
+    const submitBtn = screen.getByRole('button', { name: 'Create Account' });
+    await user.click(submitBtn);
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        'An account with this email already exists. Please sign in instead.'
+      );
+    });
+  });
+
+  it('handles Google OAuth error', async () => {
+    const user = userEvent.setup();
+    mockOAuth.mockResolvedValueOnce({ data: { user: null }, error: new Error('Google error') });
+
+    render(<SignupForm />);
+
+    const googleBtn = screen.getByRole('button', { name: /Continue with Google/i });
+    await user.click(googleBtn);
+
+    await waitFor(() => {
+      expect(mockOAuth).toHaveBeenCalled();
+    });
+  });
+
+  it('toggles password visibility correctly', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<SignupForm />);
+
+    const passwordInput = screen.getByLabelText(/^Password/i);
+    const confirmPasswordInput = screen.getByLabelText(/Confirm Password/i);
+
+    expect(passwordInput).toHaveAttribute('type', 'password');
+    expect(confirmPasswordInput).toHaveAttribute('type', 'password');
+
+    const toggleButtons = container.querySelectorAll('button[type="button"]');
+
+    // Toggle Password
+    await user.click(toggleButtons[0] as Element);
+    expect(passwordInput).toHaveAttribute('type', 'text');
+    await user.click(toggleButtons[0] as Element);
+    expect(passwordInput).toHaveAttribute('type', 'password');
+
+    // Toggle Confirm Password
+    await user.click(toggleButtons[1] as Element);
+    expect(confirmPasswordInput).toHaveAttribute('type', 'text');
+    await user.click(toggleButtons[1] as Element);
+    expect(confirmPasswordInput).toHaveAttribute('type', 'password');
   });
 });

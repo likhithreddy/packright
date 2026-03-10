@@ -1,8 +1,22 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LoginForm } from '@/components/features/auth/LoginForm';
+import { toast } from 'sonner';
 
 // Mock the useRouter hook
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    refresh: jest.fn(),
+  }),
+}));
+
+jest.mock('sonner', () => ({
+  toast: {
+    error: jest.fn(),
+    success: jest.fn(),
+  },
+}));
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
@@ -107,5 +121,59 @@ describe('LoginForm', () => {
         options: expect.any(Object),
       });
     });
+  });
+  it('handles email not confirmed error', async () => {
+    const user = userEvent.setup();
+    mockSignInWithPassword.mockResolvedValueOnce({
+      data: { user: null },
+      error: { message: 'email not confirmed' }, // Ensure lowercase to match component check
+    });
+
+    render(<LoginForm />);
+
+    await user.type(screen.getByLabelText(/Email/i), 'test@example.com');
+    await user.type(screen.getByLabelText(/Password/i), 'ValidPass123!');
+
+    const submitBtn = screen.getByRole('button', { name: 'Sign In' });
+    await user.click(submitBtn);
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        'Please verify your email address before logging in.'
+      );
+    });
+  });
+
+  it('handles Google OAuth error', async () => {
+    const user = userEvent.setup();
+    mockSignInWithOAuth.mockResolvedValueOnce({
+      data: { user: null },
+      error: new Error('Google error'),
+    });
+
+    render(<LoginForm />);
+
+    const googleBtn = screen.getByRole('button', { name: /Continue with Google/i });
+    await user.click(googleBtn);
+
+    await waitFor(() => {
+      expect(mockSignInWithOAuth).toHaveBeenCalled();
+    });
+  });
+
+  it('toggles password visibility correctly', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<LoginForm />);
+
+    const passwordInput = screen.getByLabelText(/Password/i);
+    expect(passwordInput).toHaveAttribute('type', 'password');
+
+    const toggleButton = container.querySelector('button[type="button"]');
+
+    await user.click(toggleButton as Element);
+    expect(passwordInput).toHaveAttribute('type', 'text');
+
+    await user.click(toggleButton as Element);
+    expect(passwordInput).toHaveAttribute('type', 'password');
   });
 });
