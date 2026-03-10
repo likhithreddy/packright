@@ -97,7 +97,7 @@ export function SignupForm() {
     }
 
     // 2. Proceed with Supabase Auth Sign Up
-    const { error: authError } = await supabase.auth.signUp({
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
       options: {
@@ -113,6 +113,15 @@ export function SignupForm() {
       } else {
         toast.error(authError.message);
       }
+      setIsLoading(false);
+      return;
+    }
+
+    // Check for email enumeration protection fake success
+    // When signing up with an existing email, Supabase returns a user with empty identities
+    if (authData.user && authData.user.identities && authData.user.identities.length === 0) {
+      toast.error('An account with this email already exists. Please sign in instead.');
+      form.setError('email', { type: 'manual', message: 'Email is already registered.' });
       setIsLoading(false);
       return;
     }
