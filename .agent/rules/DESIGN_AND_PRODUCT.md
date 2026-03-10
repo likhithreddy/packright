@@ -21,6 +21,7 @@ When communicating with the developer outside of generating designated reports o
 
 - **Typography Pair**: **DM Serif Display** (for elegant headings and titles) + **Figtree** (for clean, readable body text).
 - **Color Palette**: Premium earthy/organic tones — warm browns, forest greens, and soft beiges.
+- **Icons vs Emojis (Strict Rule)**: **NEVER use emojis** anywhere in the UI. Emojis make the application look like "AI generated slop". **Always** use `lucide-react` icons for any iconography, indicators, or visual flair.
 - **Micro-interactions & UX**: Implement fluid, spring-physics animations using `framer-motion`. Elements like modals, dropdowns, and drag-and-drop operations should transition smoothly. **Rule:** Do _not_ overdo animations or add superfluous front-end elements. The transitions should feel natural and minimal, not distracting.
 
 ### Key UI Components & Expected Behaviors
