@@ -47,9 +47,9 @@ test.describe('Authentication UI Flow', () => {
     // Submit the form
     await page.click('button[type="submit"]');
 
-    // Expected outcome: It should attempt to load and show a loading state, 
-    // and if successful, redirect to dashboard. 
-    // If the test user doesn't exist locally, it will show an error toast, 
+    // Expected outcome: It should attempt to load and show a loading state,
+    // and if successful, redirect to dashboard.
+    // If the test user doesn't exist locally, it will show an error toast,
     // which proves the form logic accurately hits the authentication service.
 
     // Check that button shows loading state correctly shortly after click

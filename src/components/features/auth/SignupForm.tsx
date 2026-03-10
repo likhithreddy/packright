@@ -277,8 +277,9 @@ export function SignupForm() {
             {passwordReqs.map((rule, idx) => (
               <div
                 key={idx}
-                className={`flex items-center text-[10px] font-medium uppercase tracking-wider ${rule.met ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'
-                  }`}
+                className={`flex items-center text-[10px] font-medium uppercase tracking-wider ${
+                  rule.met ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'
+                }`}
               >
                 {rule.met ? (
                   <Check className="w-3 h-3 mr-1.5 shrink-0" />
