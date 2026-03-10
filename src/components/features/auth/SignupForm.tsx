@@ -74,20 +74,22 @@ export function SignupForm() {
     const supabase = createClient();
 
     // 1. Check if username is already taken BEFORE creating the user
-    // Since we created the profiles table, we can query it directly
-    const { data: existingUser, error: existingUserError } = await supabase
-      .from('profiles')
-      .select('username')
-      .eq('username', data.username.toLowerCase())
-      .single();
+    // We use a securely defined Postgres function (RPC) to bypass the RLS restrictions
+    // since users cannot freely query the profiles table for other users.
+    const { data: isAvailable, error: lookupError } = await supabase.rpc(
+      'check_username_available',
+      {
+        username_to_check: data.username.toLowerCase(),
+      }
+    );
 
-    if (existingUserError && existingUserError.code !== 'PGRST116') {
+    if (lookupError) {
       toast.error('An error occurred while checking username availability.');
       setIsLoading(false);
       return;
     }
 
-    if (existingUser) {
+    if (!isAvailable) {
       toast.error('An account with this username already exists.');
       form.setError('username', { type: 'manual', message: 'Username is already taken' });
       setIsLoading(false);

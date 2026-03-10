@@ -14,6 +14,7 @@ const mockSingle = jest.fn();
 const mockEq = jest.fn(() => ({ single: mockSingle }));
 const mockSelect = jest.fn(() => ({ eq: mockEq }));
 const mockFrom = jest.fn(() => ({ select: mockSelect }));
+const mockRpc = jest.fn();
 
 jest.mock('../../src/lib/supabase/client', () => ({
   createClient: () => ({
@@ -22,6 +23,7 @@ jest.mock('../../src/lib/supabase/client', () => ({
       signInWithOAuth: mockOAuth,
     },
     from: mockFrom,
+    rpc: mockRpc,
   }),
 }));
 
@@ -51,6 +53,7 @@ describe('SignupForm', () => {
     expect(await screen.findByText(/Please enter a valid email address/i)).toBeInTheDocument();
     expect(mockSignUp).not.toHaveBeenCalled();
     expect(mockFrom).not.toHaveBeenCalled();
+    expect(mockRpc).not.toHaveBeenCalled();
   });
 
   it('shows validation error when passwords do not match', async () => {
@@ -71,7 +74,8 @@ describe('SignupForm', () => {
 
   it('submits successfully when data is valid and username is unique', async () => {
     const user = userEvent.setup();
-    mockSingle.mockResolvedValueOnce({ data: null, error: { code: 'PGRST116' } }); // Simulate no existing user
+    mockRpc.mockResolvedValueOnce({ data: true, error: null }); // Simulate unique username
+    mockSingle.mockResolvedValueOnce({ data: null, error: { code: 'PGRST116' } }); // Simulate no existing user from 'from' if it was used
     mockSignUp.mockResolvedValueOnce({ data: { user: { id: '1' } }, error: null });
 
     render(<SignupForm />);
@@ -85,7 +89,9 @@ describe('SignupForm', () => {
     await user.click(submitBtn);
 
     await waitFor(() => {
-      expect(mockFrom).toHaveBeenCalledWith('profiles');
+      expect(mockRpc).toHaveBeenCalledWith('check_username_available', {
+        username_to_check: 'johndoe123',
+      });
       expect(mockSignUp).toHaveBeenCalledWith({
         email: 'name@example.com',
         password: 'ValidPass123!',
@@ -100,7 +106,7 @@ describe('SignupForm', () => {
 
   it('throws an error if the username is already taken', async () => {
     const user = userEvent.setup();
-    mockSingle.mockResolvedValueOnce({ data: { username: 'johndoe123' }, error: null }); // Simulate user exists
+    mockRpc.mockResolvedValueOnce({ data: false, error: null }); // Simulate user exists (not available)
 
     render(<SignupForm />);
 
@@ -113,7 +119,9 @@ describe('SignupForm', () => {
     await user.click(submitBtn);
 
     await waitFor(() => {
-      expect(mockFrom).toHaveBeenCalledWith('profiles');
+      expect(mockRpc).toHaveBeenCalledWith('check_username_available', {
+        username_to_check: 'johndoe123',
+      });
     });
 
     expect(mockSignUp).not.toHaveBeenCalled();
@@ -121,7 +129,7 @@ describe('SignupForm', () => {
 
   it('handles generic username query errors', async () => {
     const user = userEvent.setup();
-    mockSingle.mockResolvedValueOnce({ data: null, error: { code: 'OTHER_ERR' } }); // generic error
+    mockRpc.mockResolvedValueOnce({ data: null, error: { code: 'OTHER_ERR' } }); // generic error
 
     render(<SignupForm />);
 
@@ -134,7 +142,9 @@ describe('SignupForm', () => {
     await user.click(submitBtn);
 
     await waitFor(() => {
-      expect(mockFrom).toHaveBeenCalledWith('profiles');
+      expect(mockRpc).toHaveBeenCalledWith('check_username_available', {
+        username_to_check: 'johndoe123',
+      });
     });
 
     expect(mockSignUp).not.toHaveBeenCalled();
@@ -142,7 +152,7 @@ describe('SignupForm', () => {
 
   it('handles generic auth sign up errors', async () => {
     const user = userEvent.setup();
-    mockSingle.mockResolvedValueOnce({ data: null, error: { code: 'PGRST116' } }); // no existing user
+    mockRpc.mockResolvedValueOnce({ data: true, error: null }); // username available
     mockSignUp.mockResolvedValueOnce({ data: null, error: { message: 'Some generic error' } }); // generic auth error
 
     render(<SignupForm />);
