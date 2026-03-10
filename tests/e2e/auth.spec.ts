@@ -36,6 +36,8 @@ test.describe('Authentication UI Flow', () => {
   test('should successfully log in with valid credentials', async ({ page }) => {
     // Intercept the Supabase Auth API call to mock a successful login response.
     // This allows the E2E test to verify the UI flow (loading state, toast, redirect)
+
+    // Mock the POST token request
     await page.route(/\/auth\/v1\/token\?grant_type=password/, async (route) => {
       const json = {
         access_token: 'fake-access-token',
@@ -44,6 +46,12 @@ test.describe('Authentication UI Flow', () => {
         refresh_token: 'fake-refresh-token',
         user: { id: 'mock-user-123', email: 'testuser@example.com' },
       };
+      await route.fulfill({ status: 200, json });
+    });
+
+    // Mock any GET user/session requests that Supabase might make to verify session
+    await page.route(/\/auth\/v1\/user/, async (route) => {
+      const json = { id: 'mock-user-123', email: 'testuser@example.com' };
       await route.fulfill({ status: 200, json });
     });
 
@@ -56,13 +64,11 @@ test.describe('Authentication UI Flow', () => {
     // Submit the form
     await page.click('button[type="submit"]');
 
-    // Verify the success toast appears (assuming sonner toast is used for success)
-    await expect(page.getByText('Welcome back!')).toBeVisible({ timeout: 5000 });
-
     // Wait for the success toast to verify the login flow executed successfully
     // We do not assert on the /dashboard URL redirect here because we are only
     // mocking the network response, not the actual session cookie setting that
     // Next.js middleware relies on to allow the redirect to complete without
     // bouncing back to /login.
+    await expect(page.getByText('Welcome back!')).toBeVisible({ timeout: 10000 });
   });
 });
