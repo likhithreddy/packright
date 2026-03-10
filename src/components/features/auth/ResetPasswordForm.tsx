@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/form';
 import { toast } from 'sonner';
 import { createClient } from '@/lib/supabase/client';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 const resetPasswordSchema = z
@@ -39,6 +39,8 @@ type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 export function ResetPasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
 
   const form = useForm<ResetPasswordFormValues>({
@@ -81,14 +83,23 @@ export function ResetPasswordForm() {
                 <FormLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                   New Password
                 </FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="••••••••••••"
-                    {...field}
-                    className="h-12 bg-background border-border"
-                  />
-                </FormControl>
+                <div className="relative">
+                  <FormControl>
+                    <Input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="••••••••••••"
+                      {...field}
+                      className="h-12 bg-background border-border pr-10"
+                    />
+                  </FormControl>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -103,14 +114,27 @@ export function ResetPasswordForm() {
                 <FormLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                   Confirm Password
                 </FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="••••••••••••"
-                    {...field}
-                    className="h-12 bg-background border-border"
-                  />
-                </FormControl>
+                <div className="relative">
+                  <FormControl>
+                    <Input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      placeholder="••••••••••••"
+                      {...field}
+                      className="h-12 bg-background border-border pr-10"
+                    />
+                  </FormControl>
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}

@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/form';
 import { toast } from 'sonner';
 import { createClient } from '@/lib/supabase/client';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -29,6 +29,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const form = useForm<LoginFormValues>({
@@ -125,14 +126,23 @@ export function LoginForm() {
                     Forgot Password?
                   </Link>
                 </div>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="••••••••••••"
-                    {...field}
-                    className="h-12 bg-background border-border"
-                  />
-                </FormControl>
+                <div className="relative">
+                  <FormControl>
+                    <Input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="••••••••••••"
+                      {...field}
+                      className="h-12 bg-background border-border pr-10"
+                    />
+                  </FormControl>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
