@@ -34,9 +34,19 @@ test.describe('Authentication UI Flow', () => {
   });
 
   test('should successfully log in with valid credentials', async ({ page }) => {
-    // Note: The application logic requires confirming the email before successful login via Supabase.
-    // For this E2E test, we are assuming a test user is seeded or mocked in the local Supabase instance.
-    // If not seeded, this will test the frontend form filling and submission execution.
+    // Intercept the Supabase Auth API call to mock a successful login response.
+    // This allows the E2E test to verify the UI flow (loading state, toast, redirect)
+    // without depending on a seeded local database.
+    await page.route('**/auth/v1/token?grant_type=password', async (route) => {
+      const json = {
+        access_token: 'fake-access-token',
+        token_type: 'bearer',
+        expires_in: 3600,
+        refresh_token: 'fake-refresh-token',
+        user: { id: 'mock-user-123', email: 'testuser@example.com' },
+      };
+      await route.fulfill({ json });
+    });
 
     await page.goto('/login');
 
@@ -47,13 +57,13 @@ test.describe('Authentication UI Flow', () => {
     // Submit the form
     await page.click('button[type="submit"]');
 
-    // Expected outcome: It should attempt to load and show a loading state,
-    // and if successful, redirect to dashboard.
-    // If the test user doesn't exist locally, it will show an error toast,
-    // which proves the form logic accurately hits the authentication service.
+    // Verify the success toast appears (assuming sonner toast is used for success)
+    await expect(page.getByText('Welcome back!')).toBeVisible({ timeout: 5000 });
 
-    // Check that button shows loading state correctly shortly after click
-    // Note: Playwright proceeds fast, but we can wait for the network or redirect eventually.
-    // If we mock the route, we could expect('/dashboard'). Here we just test the flow submission.
+    // Wait for the success toast to verify the login flow executed successfully
+    // We do not assert on the /dashboard URL redirect here because we are only
+    // mocking the network response, not the actual session cookie setting that
+    // Next.js middleware relies on to allow the redirect to complete without
+    // bouncing back to /login.
   });
 });
