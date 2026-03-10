@@ -36,8 +36,7 @@ test.describe('Authentication UI Flow', () => {
   test('should successfully log in with valid credentials', async ({ page }) => {
     // Intercept the Supabase Auth API call to mock a successful login response.
     // This allows the E2E test to verify the UI flow (loading state, toast, redirect)
-    // without depending on a seeded local database.
-    await page.route('**/auth/v1/token?grant_type=password', async (route) => {
+    await page.route(/\/auth\/v1\/token\?grant_type=password/, async (route) => {
       const json = {
         access_token: 'fake-access-token',
         token_type: 'bearer',
@@ -45,7 +44,7 @@ test.describe('Authentication UI Flow', () => {
         refresh_token: 'fake-refresh-token',
         user: { id: 'mock-user-123', email: 'testuser@example.com' },
       };
-      await route.fulfill({ json });
+      await route.fulfill({ status: 200, json });
     });
 
     await page.goto('/login');
