@@ -35,7 +35,8 @@ describe('SignupForm', () => {
 
     expect(screen.getByLabelText(/Username/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Password/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Confirm Password/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Create Account' })).toBeInTheDocument();
   });
 
@@ -52,6 +53,22 @@ describe('SignupForm', () => {
     expect(mockFrom).not.toHaveBeenCalled();
   });
 
+  it('shows validation error when passwords do not match', async () => {
+    const user = userEvent.setup();
+    render(<SignupForm />);
+
+    await user.type(screen.getByLabelText(/Username/i), 'johndoe123');
+    await user.type(screen.getByLabelText(/Email/i), 'name@example.com');
+    await user.type(screen.getByLabelText(/^Password/i), 'ValidPass123!');
+    await user.type(screen.getByLabelText(/Confirm Password/i), 'DifferentPass123!');
+
+    const submitBtn = screen.getByRole('button', { name: 'Create Account' });
+    await user.click(submitBtn);
+
+    expect(await screen.findByText(/Passwords don't match/i)).toBeInTheDocument();
+    expect(mockSignUp).not.toHaveBeenCalled();
+  });
+
   it('submits successfully when data is valid and username is unique', async () => {
     const user = userEvent.setup();
     mockSingle.mockResolvedValueOnce({ data: null, error: { code: 'PGRST116' } }); // Simulate no existing user
@@ -61,7 +78,8 @@ describe('SignupForm', () => {
 
     await user.type(screen.getByLabelText(/Username/i), 'johndoe123');
     await user.type(screen.getByLabelText(/Email/i), 'name@example.com');
-    await user.type(screen.getByLabelText(/Password/i), 'ValidPass123!');
+    await user.type(screen.getByLabelText(/^Password/i), 'ValidPass123!');
+    await user.type(screen.getByLabelText(/Confirm Password/i), 'ValidPass123!');
 
     const submitBtn = screen.getByRole('button', { name: 'Create Account' });
     await user.click(submitBtn);
@@ -88,7 +106,8 @@ describe('SignupForm', () => {
 
     await user.type(screen.getByLabelText(/Username/i), 'johndoe123');
     await user.type(screen.getByLabelText(/Email/i), 'name@example.com');
-    await user.type(screen.getByLabelText(/Password/i), 'ValidPass123!');
+    await user.type(screen.getByLabelText(/^Password/i), 'ValidPass123!');
+    await user.type(screen.getByLabelText(/Confirm Password/i), 'ValidPass123!');
 
     const submitBtn = screen.getByRole('button', { name: 'Create Account' });
     await user.click(submitBtn);
@@ -108,7 +127,8 @@ describe('SignupForm', () => {
 
     await user.type(screen.getByLabelText(/Username/i), 'johndoe123');
     await user.type(screen.getByLabelText(/Email/i), 'name@example.com');
-    await user.type(screen.getByLabelText(/Password/i), 'ValidPass123!');
+    await user.type(screen.getByLabelText(/^Password/i), 'ValidPass123!');
+    await user.type(screen.getByLabelText(/Confirm Password/i), 'ValidPass123!');
 
     const submitBtn = screen.getByRole('button', { name: 'Create Account' });
     await user.click(submitBtn);
@@ -129,7 +149,8 @@ describe('SignupForm', () => {
 
     await user.type(screen.getByLabelText(/Username/i), 'johndoe123');
     await user.type(screen.getByLabelText(/Email/i), 'name@example.com');
-    await user.type(screen.getByLabelText(/Password/i), 'ValidPass123!');
+    await user.type(screen.getByLabelText(/^Password/i), 'ValidPass123!');
+    await user.type(screen.getByLabelText(/Confirm Password/i), 'ValidPass123!');
 
     const submitBtn = screen.getByRole('button', { name: 'Create Account' });
     await user.click(submitBtn);
