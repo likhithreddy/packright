@@ -33,7 +33,6 @@ describe('SignupForm', () => {
   it('renders all necessary fields', () => {
     render(<SignupForm />);
 
-    expect(screen.getByLabelText(/Full Name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Username/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
@@ -47,7 +46,7 @@ describe('SignupForm', () => {
     const submitBtn = screen.getByRole('button', { name: 'Create Account' });
     await user.click(submitBtn);
 
-    expect(await screen.findByText(/Full name must be at least 2 characters/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Username must be at least 3 characters/i)).toBeInTheDocument();
     expect(await screen.findByText(/Please enter a valid email address/i)).toBeInTheDocument();
     expect(mockSignUp).not.toHaveBeenCalled();
     expect(mockFrom).not.toHaveBeenCalled();
@@ -60,9 +59,8 @@ describe('SignupForm', () => {
 
     render(<SignupForm />);
 
-    await user.type(screen.getByLabelText(/Full Name/i), 'John Doe');
     await user.type(screen.getByLabelText(/Username/i), 'johndoe123');
-    await user.type(screen.getByLabelText(/Email/i), 'test@example.com');
+    await user.type(screen.getByLabelText(/Email/i), 'name@example.com');
     await user.type(screen.getByLabelText(/Password/i), 'ValidPass123!');
 
     const submitBtn = screen.getByRole('button', { name: 'Create Account' });
@@ -71,14 +69,11 @@ describe('SignupForm', () => {
     await waitFor(() => {
       expect(mockFrom).toHaveBeenCalledWith('profiles');
       expect(mockSignUp).toHaveBeenCalledWith({
-        email: 'test@example.com',
+        email: 'name@example.com',
         password: 'ValidPass123!',
         options: {
           data: {
-            full_name: 'John Doe',
             username: 'johndoe123',
-            avatar_theme: expect.any(String),
-            packing_style: expect.any(String),
           },
         },
       });
@@ -91,9 +86,8 @@ describe('SignupForm', () => {
 
     render(<SignupForm />);
 
-    await user.type(screen.getByLabelText(/Full Name/i), 'John Doe');
     await user.type(screen.getByLabelText(/Username/i), 'johndoe123');
-    await user.type(screen.getByLabelText(/Email/i), 'test@example.com');
+    await user.type(screen.getByLabelText(/Email/i), 'name@example.com');
     await user.type(screen.getByLabelText(/Password/i), 'ValidPass123!');
 
     const submitBtn = screen.getByRole('button', { name: 'Create Account' });
@@ -104,6 +98,45 @@ describe('SignupForm', () => {
     });
 
     expect(mockSignUp).not.toHaveBeenCalled();
+  });
+
+  it('handles generic username query errors', async () => {
+    const user = userEvent.setup();
+    mockSingle.mockResolvedValueOnce({ data: null, error: { code: 'OTHER_ERR' } }); // generic error
+
+    render(<SignupForm />);
+
+    await user.type(screen.getByLabelText(/Username/i), 'johndoe123');
+    await user.type(screen.getByLabelText(/Email/i), 'name@example.com');
+    await user.type(screen.getByLabelText(/Password/i), 'ValidPass123!');
+
+    const submitBtn = screen.getByRole('button', { name: 'Create Account' });
+    await user.click(submitBtn);
+
+    await waitFor(() => {
+      expect(mockFrom).toHaveBeenCalledWith('profiles');
+    });
+
+    expect(mockSignUp).not.toHaveBeenCalled();
+  });
+
+  it('handles generic auth sign up errors', async () => {
+    const user = userEvent.setup();
+    mockSingle.mockResolvedValueOnce({ data: null, error: { code: 'PGRST116' } }); // no existing user
+    mockSignUp.mockResolvedValueOnce({ data: null, error: { message: 'Some generic error' } }); // generic auth error
+
+    render(<SignupForm />);
+
+    await user.type(screen.getByLabelText(/Username/i), 'johndoe123');
+    await user.type(screen.getByLabelText(/Email/i), 'name@example.com');
+    await user.type(screen.getByLabelText(/Password/i), 'ValidPass123!');
+
+    const submitBtn = screen.getByRole('button', { name: 'Create Account' });
+    await user.click(submitBtn);
+
+    await waitFor(() => {
+      expect(mockSignUp).toHaveBeenCalled();
+    });
   });
 
   it('handles Google OAuth click', async () => {

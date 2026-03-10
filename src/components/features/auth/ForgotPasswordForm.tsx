@@ -106,7 +106,7 @@ export function ForgotPasswordForm() {
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="likhith@example.com"
+                    placeholder="name@example.com"
                     {...field}
                     className="h-12 bg-background border-border"
                   />

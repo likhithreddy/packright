@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   Form,
   FormControl,
@@ -20,29 +19,8 @@ import { createClient } from '@/lib/supabase/client';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-// Utility to generate initials
-function getInitials(name: string) {
-  if (!name) return '';
-  const parts = name.trim().split(' ');
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  }
-  return parts[0][0].toUpperCase();
-}
-
-const THEMES = [
-  { id: 'theme-brown', color: 'bg-[#A87B5B]' },
-  { id: 'theme-blue', color: 'bg-[#5B8BA8]' },
-  { id: 'theme-green', color: 'bg-[#3D5A46]' },
-  { id: 'theme-purple', color: 'bg-[#8A5B73]' },
-  { id: 'theme-indigo', color: 'bg-[#5B5BA8]' },
-];
-
-const PACKING_STYLES = ['Light Packer', 'Prepared', 'Overpacker'];
-
 // Validation Schema
 const signupSchema = z.object({
-  fullName: z.string().min(2, 'Full Name must be at least 2 characters.'),
   username: z
     .string()
     .min(3, 'Username must be at least 3 characters.')
@@ -55,8 +33,6 @@ const signupSchema = z.object({
     .regex(/[A-Z]/, 'Password must contain at least one uppercase letter.')
     .regex(/[0-9]/, 'Password must contain at least one number.')
     .regex(/[^a-zA-Z0-9]/, 'Password must contain at least one special character.'),
-  avatarTheme: z.string().min(1, 'Please pick an avatar theme.'),
-  packingStyle: z.string().min(1, 'Please pick a packing style.'),
 });
 
 type SignupFormValues = z.infer<typeof signupSchema>;
@@ -68,17 +44,11 @@ export function SignupForm() {
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      fullName: '',
       username: '',
       email: '',
       password: '',
-      avatarTheme: 'theme-brown',
-      packingStyle: 'Prepared',
     },
   });
-
-  const currentFullName = form.watch('fullName');
-  const initials = getInitials(currentFullName);
 
   async function onSubmit(data: SignupFormValues) {
     setIsLoading(true);
@@ -111,10 +81,7 @@ export function SignupForm() {
       password: data.password,
       options: {
         data: {
-          full_name: data.fullName,
           username: data.username.toLowerCase(),
-          avatar_theme: data.avatarTheme,
-          packing_style: data.packingStyle,
         },
       },
     });
@@ -162,27 +129,6 @@ export function SignupForm() {
     <div className="space-y-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-          {/* Full Name */}
-          <FormField
-            control={form.control}
-            name="fullName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
-                  Full Name
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Likhith Reddy"
-                    {...field}
-                    className="h-12 bg-background border-border"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           {/* Username */}
           <FormField
             control={form.control}
@@ -194,7 +140,7 @@ export function SignupForm() {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="likhith_r"
+                    placeholder="alex_t"
                     {...field}
                     className="h-12 bg-background border-border"
                   />
@@ -216,7 +162,7 @@ export function SignupForm() {
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="likhith@example.com"
+                    placeholder="name@example.com"
                     {...field}
                     className="h-12 bg-background border-border"
                   />
@@ -242,83 +188,6 @@ export function SignupForm() {
                     {...field}
                     className="h-12 bg-background border-border"
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Avatar Theme Picker */}
-          <FormField
-            control={form.control}
-            name="avatarTheme"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
-                  Pick an avatar
-                </FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex flex-wrap gap-4"
-                  >
-                    {THEMES.map((theme) => (
-                      <FormItem key={theme.id} className="flex items-center space-x-0 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value={theme.id} className="peer sr-only" />
-                        </FormControl>
-                        <div
-                          onClick={() => form.setValue('avatarTheme', theme.id)}
-                          className={`w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-lg cursor-pointer transition-all border-4 ${
-                            field.value === theme.id
-                              ? 'border-primary/80 scale-110 shadow-md'
-                              : 'border-transparent hover:scale-105 opacity-80 hover:opacity-100'
-                          } ${theme.color}`}
-                        >
-                          {initials || 'LR'}
-                        </div>
-                      </FormItem>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Packing Style */}
-          <FormField
-            control={form.control}
-            name="packingStyle"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
-                  Packing Style
-                </FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex flex-wrap gap-3"
-                  >
-                    {PACKING_STYLES.map((style) => (
-                      <FormItem key={style} className="flex items-center space-x-0 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value={style} className="peer sr-only" />
-                        </FormControl>
-                        <FormLabel
-                          className={`cursor-pointer px-4 py-2 rounded-full font-medium text-sm transition-all border ${
-                            field.value === style
-                              ? 'bg-foreground text-background border-foreground shadow-sm'
-                              : 'bg-secondary text-secondary-foreground border-transparent hover:bg-secondary/80'
-                          }`}
-                        >
-                          {style}
-                        </FormLabel>
-                      </FormItem>
-                    ))}
-                  </RadioGroup>
                 </FormControl>
                 <FormMessage />
               </FormItem>
