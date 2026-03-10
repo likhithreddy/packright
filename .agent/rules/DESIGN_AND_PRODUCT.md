@@ -29,6 +29,9 @@ When communicating with the developer outside of generating designated reports o
 - **The Packing Board**: This is the core interface. It must look and behave precisely like a **GitHub Kanban board**.
   - _Behavior_: Users must be able to drag-and-drop items freely between columns (Needed -> Claimed -> Packed) to alter their status. Crucially, users must _also_ be able to reorder items vertically _within the same column_.
   - _Tech_: Built using `dnd-kit` for the drag physics, nested inside `Shadcn` layout cards, managed by `Zustand`.
+- **Form Inputs & Validation**:
+  - _Styling_: Input fields must **never** have focus rings (`focus-visible:ring-0`, `focus:ring-0`). They should rely on subtle border/background changes for focus states.
+  - _Validation Layout_: Error messages must be displayed intimately inline, immediately below or adjacent to the specific input field they reference. Do not use generic top-of-form error banners for field-specific validation.
 - **Modals**: E.g., The "New Trip" modal. Built using Shadcn Dialog components, enhanced with `framer-motion` for smooth, snappy entry/exit transitions.
 
 ### User Flow Descriptions (AI Implementation Guide)

@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/form';
 import { toast } from 'sonner';
 import { createClient } from '@/lib/supabase/client';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Check, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 // Validation Schema
@@ -55,7 +55,17 @@ export function SignupForm() {
       password: '',
       confirmPassword: '',
     },
+    mode: 'onChange', // Enable real-time validation for password checks
   });
+
+  const watchPassword = form.watch('password');
+  const passwordReqs = [
+    { req: 'At least 8 characters', met: watchPassword.length >= 8 },
+    { req: 'One lowercase letter', met: /[a-z]/.test(watchPassword) },
+    { req: 'One uppercase letter', met: /[A-Z]/.test(watchPassword) },
+    { req: 'One number', met: /[0-9]/.test(watchPassword) },
+    { req: 'One special character', met: /[^a-zA-Z0-9]/.test(watchPassword) },
+  ];
 
   async function onSubmit(data: SignupFormValues) {
     setIsLoading(true);
@@ -196,6 +206,24 @@ export function SignupForm() {
                     className="h-12 bg-background border-border"
                   />
                 </FormControl>
+                {/* Visual Password Requirements */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 p-3 bg-secondary/30 rounded-lg border border-border/50">
+                  {passwordReqs.map((rule, idx) => (
+                    <div
+                      key={idx}
+                      className={`flex items-center text-[10px] font-medium uppercase tracking-wider ${
+                        rule.met ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'
+                      }`}
+                    >
+                      {rule.met ? (
+                        <Check className="w-3 h-3 mr-1.5 shrink-0" />
+                      ) : (
+                        <X className="w-3 h-3 mr-1.5 shrink-0" />
+                      )}
+                      {rule.req}
+                    </div>
+                  ))}
+                </div>
                 <FormMessage />
               </FormItem>
             )}
