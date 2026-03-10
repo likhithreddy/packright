@@ -150,132 +150,136 @@ export function SignupForm() {
     <div className="space-y-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-          {/* Username */}
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
-                  Username — Unique, used to search you
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="alex_t"
-                    {...field}
-                    className="h-12 bg-background border-border"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Email */}
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
-                  Email
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="name@example.com"
-                    {...field}
-                    className="h-12 bg-background border-border"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Password */}
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
-                  Password
-                </FormLabel>
-                <div className="relative">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {/* Username */}
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                    Username
+                  </FormLabel>
                   <FormControl>
                     <Input
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="••••••••••••"
+                      placeholder="alex_t"
                       {...field}
-                      className="h-12 bg-background border-border pr-10"
+                      className="h-12 bg-background border-border"
                     />
                   </FormControl>
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-                {/* Visual Password Requirements */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 p-3 bg-secondary/30 rounded-lg border border-border/50">
-                  {passwordReqs.map((rule, idx) => (
-                    <div
-                      key={idx}
-                      className={`flex items-center text-[10px] font-medium uppercase tracking-wider ${
-                        rule.met ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'
-                      }`}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Email */}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                    Email
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="name@example.com"
+                      {...field}
+                      className="h-12 bg-background border-border"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {/* Password */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                    Password
+                  </FormLabel>
+                  <div className="relative">
+                    <FormControl>
+                      <Input
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="••••••••••••"
+                        {...field}
+                        className="h-12 bg-background border-border pr-10"
+                      />
+                    </FormControl>
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
                     >
-                      {rule.met ? (
-                        <Check className="w-3 h-3 mr-1.5 shrink-0" />
-                      ) : (
-                        <X className="w-3 h-3 mr-1.5 shrink-0" />
-                      )}
-                      {rule.req}
-                    </div>
-                  ))}
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Confirm Password */}
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
-                  Confirm Password
-                </FormLabel>
-                <div className="relative">
-                  <FormControl>
-                    <Input
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      placeholder="••••••••••••"
-                      {...field}
-                      className="h-12 bg-background border-border pr-10"
-                    />
-                  </FormControl>
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            {/* Confirm Password */}
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                    Confirm Password
+                  </FormLabel>
+                  <div className="relative">
+                    <FormControl>
+                      <Input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        placeholder="••••••••••••"
+                        {...field}
+                        className="h-12 bg-background border-border pr-10"
+                      />
+                    </FormControl>
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* Visual Password Requirements */}
+          <div className="flex flex-col space-y-1.5 mt-2 p-3 bg-secondary/30 rounded-lg border border-border/50">
+            {passwordReqs.map((rule, idx) => (
+              <div
+                key={idx}
+                className={`flex items-center text-[10px] font-medium uppercase tracking-wider ${rule.met ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'
+                  }`}
+              >
+                {rule.met ? (
+                  <Check className="w-3 h-3 mr-1.5 shrink-0" />
+                ) : (
+                  <X className="w-3 h-3 mr-1.5 shrink-0" />
+                )}
+                {rule.req}
+              </div>
+            ))}
+          </div>
 
           <Button
             type="submit"

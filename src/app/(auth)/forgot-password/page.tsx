@@ -9,13 +9,15 @@ export const metadata: Metadata = {
 
 export default function ForgotPasswordPage() {
   return (
-    <div className="flex flex-col gap-6">
-      <AuthCard
-        title="Reset Password"
-        description="Enter your email to receive a password reset link."
-      >
-        <ForgotPasswordForm />
-      </AuthCard>
+    <div className="h-full max-h-full min-h-0 flex flex-col justify-center gap-6">
+      <div className="flex-1 min-h-0 flex flex-col justify-center">
+        <AuthCard
+          title="Reset Password"
+          description="Enter your email to receive a password reset link."
+        >
+          <ForgotPasswordForm />
+        </AuthCard>
+      </div>
     </div>
   );
 }
