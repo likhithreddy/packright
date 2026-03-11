@@ -4,14 +4,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 /**
  * Next.js Middleware for session management and auth-based routing.
  *
- * CRITICAL: This uses getSession() which reads the JWT from the cookie locally
- * without making any network calls to Supabase. This is intentional — it allows
- * the middleware to work in all environments including CI, where a live Supabase
- * instance is not available.
- *
- * The Server Components downstream (DashboardLayout, OnboardingPage) are
- * responsible for fetching application-level data (e.g. profile), not for
- * auth gating — that responsibility belongs here.
+ * This implementation uses getUser() for secure JWT verification on every request.
  */
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -39,30 +32,38 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // IMPORTANT: getSession() reads the JWT from the cookie — zero network calls.
-  // Do NOT use getUser() here, as that makes a network round-trip to Supabase.
+  /**
+   * IMPORTANT: getUser() verifies the JWT with Supabase.
+   * This is more secure than getSession() which only reads the cookie locally.
+   */
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
 
-  // Redirect unauthenticated users away from protected routes
-  if (!session) {
-    if (pathname.startsWith('/dashboard') || pathname.startsWith('/onboarding')) {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/login';
-      return NextResponse.redirect(redirectUrl);
-    }
+  // Define protected routes
+  const isProtectedRoute = pathname.startsWith('/dashboard') || pathname.startsWith('/onboarding');
+
+  // Define auth routes (where authenticated users should not go)
+  const isAuthRoute = ['/login', '/signup', '/forgot-password', '/reset-password'].includes(
+    pathname
+  );
+
+  // 1. Redirect unauthenticated users away from protected routes
+  if (!user && isProtectedRoute) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = '/login';
+    // Add 'next' parameter to return after login
+    redirectUrl.searchParams.set('next', pathname);
+    return NextResponse.redirect(redirectUrl);
   }
 
-  // Redirect authenticated users away from auth pages
-  if (session) {
-    if (pathname === '/login' || pathname === '/signup') {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/dashboard';
-      return NextResponse.redirect(redirectUrl);
-    }
+  // 2. Redirect authenticated users away from auth-related pages
+  if (user && isAuthRoute) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = '/dashboard';
+    return NextResponse.redirect(redirectUrl);
   }
 
   return supabaseResponse;
