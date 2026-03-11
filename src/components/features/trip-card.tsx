@@ -3,14 +3,7 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import { MapPin, Calendar, ArrowRight } from 'lucide-react';
 import { Trip } from '@/types/database.types';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 
 interface TripCardProps {
   trip: Trip;
