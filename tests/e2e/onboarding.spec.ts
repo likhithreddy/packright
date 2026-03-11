@@ -101,6 +101,6 @@ test.describe.serial('Onboarding Flow', () => {
     // ── Assert redirect to dashboard ──────────────────────────────────────────
     // The redirect is driven by the server-side layout detecting the new username
     await expect(page).toHaveURL(/\/dashboard/, { timeout: 15000 });
-    await expect(page.locator('h1')).toContainText('Welcome to your Dashboard');
+    await expect(page.locator('h1').first()).toContainText('My Trips');
   });
 });
