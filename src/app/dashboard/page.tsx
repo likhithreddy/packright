@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { getUserTrips } from '@/lib/supabase/trips';
-import { TripCard } from '@/components/features/trip-card';
+import { TripGrid } from '@/components/features/trip-grid';
 import { LinkButton } from '@/components/ui/link-button';
 import { Plus, Compass } from 'lucide-react';
 
@@ -80,11 +80,7 @@ export default async function DashboardPage() {
                   </h2>
                   <div className="h-px flex-1 bg-border/60" />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-max">
-                  {activeTrips.map((trip) => (
-                    <TripCard key={trip.id} trip={trip} />
-                  ))}
-                </div>
+                <TripGrid trips={activeTrips} />
               </section>
             )}
 
@@ -97,11 +93,7 @@ export default async function DashboardPage() {
                   </h2>
                   <div className="h-px flex-1 bg-border/40" />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-max">
-                  {pastTrips.map((trip) => (
-                    <TripCard key={trip.id} trip={trip} />
-                  ))}
-                </div>
+                <TripGrid trips={pastTrips} />
               </section>
             )}
           </div>

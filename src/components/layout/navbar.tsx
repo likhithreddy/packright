@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -22,6 +23,11 @@ interface NavbarProps {
 
 export default function Navbar({ profile }: NavbarProps) {
   const router = useRouter();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSignOut = async () => {
     const supabase = createClient();
@@ -29,6 +35,22 @@ export default function Navbar({ profile }: NavbarProps) {
     router.push('/login');
     router.refresh();
   };
+
+  if (!mounted) {
+    return (
+      <nav className="h-16 w-full bg-[#4A3728] shadow-md flex items-center justify-between px-6">
+        <Link href="/dashboard" className="flex items-center">
+          <span className="text-2xl font-serif text-white italic tracking-wide">
+            Pack<span className="text-[#C49B6C]">Right</span>
+          </span>
+        </Link>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-4 bg-white/10 rounded animate-pulse hidden sm:block" />
+          <div className="w-9 h-9 rounded-full bg-white/10 animate-pulse" />
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="h-16 w-full bg-[#4A3728] shadow-md flex items-center justify-between px-6">

@@ -90,4 +90,42 @@ describe('DashboardPage Integration', () => {
     expect(screen.queryByText('Active Trips')).not.toBeInTheDocument();
     expect(screen.queryByText('Past Trips')).not.toBeInTheDocument();
   });
+
+  it('redirects to /login if user is not authenticated', async () => {
+    // Mock unauthorized user
+    (serverSupabaseLib.createClient as jest.Mock).mockResolvedValue({
+      auth: {
+        getUser: jest.fn().mockResolvedValue({
+          data: { user: null },
+          error: new Error('Unauthorized'),
+        }),
+      },
+    });
+
+    const { redirect } = require('next/navigation');
+    
+    await DashboardPage();
+    expect(redirect).toHaveBeenCalledWith('/login');
+  });
+
+  it('correctly categorizes a trip ending exactly at the end of today as active', async () => {
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+    
+    const boundaryTrip: Trip = {
+      ...mockTrips[0],
+      id: 'boundary-trip',
+      date_end: endOfToday.toISOString(),
+    };
+
+    (tripsLib.getUserTrips as jest.Mock).mockResolvedValue({
+      data: [boundaryTrip],
+      error: null,
+    });
+
+    const DashboardUI = await DashboardPage();
+    render(DashboardUI as React.ReactElement);
+
+    expect(screen.getByText('Active Trips')).toBeInTheDocument();
+  });
 });
