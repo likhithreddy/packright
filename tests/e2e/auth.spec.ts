@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Authentication UI Flow', () => {
+  // Clear the global storageState for these tests so they start unauthenticated
+  test.use({ storageState: { cookies: [], origins: [] } });
+
   test('should show validation errors when submitting an empty login form', async ({ page }) => {
     await page.goto('/login');
 

@@ -478,6 +478,7 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                               <button
                                 key={color.value}
                                 type="button"
+                                aria-label={`Select ${color.name} avatar color`}
                                 onClick={() => field.onChange(color.value)}
                                 className={`group relative w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-300 border-2 ${
                                   field.value === color.value

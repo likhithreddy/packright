@@ -1,71 +1,73 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Onboarding Flow', () => {
+// We no longer use a single storageState at the file level.
+// Instead, playwright.config.ts assigns separate storageStates per project
+// (chromium, firefox, webkit) to ensure full horizontal isolation.
+
+test.describe.serial('Onboarding Flow', () => {
+  // Reset the specific e2e user's profile before each test.
+  // This ensures that even within one browser runner's serial execution,
+  // each test starts with a clean slate (no username).
+  test.beforeEach(async ({}, testInfo) => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'http://127.0.0.1:54321';
+    const serviceRoleKey =
+      process.env.SUPABASE_SERVICE_ROLE_KEY ??
+      process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY ??
+      '';
+
+    // Each project has its own unique user: e2e-chromium, e2e-firefox, etc.
+    const project = testInfo.project.name;
+    const testEmail = `e2e-${project}@packright.test`;
+
+    if (!serviceRoleKey) return;
+
+    // 1. Find the specific e2e user for this browser project
+    const listRes = await fetch(`${supabaseUrl}/auth/v1/admin/users?page=1&per_page=1000`, {
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+      },
+    });
+    if (!listRes.ok) return;
+    const { users } = (await listRes.json()) as {
+      users?: { id: string; email?: string }[];
+    };
+    const e2eUser = users?.find((u) => u.email === testEmail);
+    if (!e2eUser) return;
+
+    // 2. Reset the profile to null-username state
+    await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(e2eUser.id)}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({
+        username: null,
+        avatar_theme: null,
+        packing_style: null,
+      }),
+    });
+  });
+
   test('redirects users without username to onboarding page', async ({ page }) => {
-    // Mock Supabase auth to return a session but user has no username
-    await page.route('**/auth/v1/user', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          id: 'test-user-id',
-          email: 'newuser@example.com',
-          app_metadata: { provider: 'email', providers: ['email'] },
-          user_metadata: {},
-          aud: 'authenticated',
-        }),
-      });
-    });
-
-    // Mock profiles table to return a profile with no username
-    await page.route('**/rest/v1/profiles*', async (route) => {
-      if (route.request().method() === 'GET') {
-        await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify([{ id: 'test-user-id', username: null }]),
-        });
-      } else {
-        await route.continue();
-      }
-    });
-
+    // Navigate to dashboard — since the profile was reset in beforeEach,
+    // the server-side DashboardLayout should see username=null and redirect.
     await page.goto('/dashboard');
 
-    // Should be redirected to onboarding
+    // Assert redirect to onboarding
     await expect(page).toHaveURL(/\/onboarding/);
     await expect(page.locator('h1')).toContainText('Almost there!');
   });
 
   test('allows completing onboarding and then entering dashboard', async ({ page }) => {
-    // Setup initial mock (no username)
-    await page.route('**/auth/v1/user', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          id: 'test-user-id',
-          email: 'newuser@example.com',
-          app_metadata: { providers: ['email'] },
-          aud: 'authenticated',
-        }),
-      });
-    });
+    // Use a unique username to avoid any potential collision within the same DB
+    const uniqueUsername = `user_${Math.random().toString(36).slice(2, 8)}`;
 
-    await page.route('**/rest/v1/profiles*', async (route) => {
-      const method = route.request().method();
-      if (method === 'GET') {
-        await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify([{ id: 'test-user-id', username: null }]),
-        });
-      } else if (method === 'PATCH' || method === 'PUT') {
-        await route.fulfill({ status: 200, body: JSON.stringify({}) });
-      }
-    });
-
-    // Mock RPC for username check
+    // Mock ONLY the client-side availability check.
+    // Profile writes (PATCH) and reads (SSR) hit the real Supabase.
     await page.route('**/rest/v1/rpc/check_username_available', async (route) => {
       await route.fulfill({
         status: 200,
@@ -76,35 +78,29 @@ test.describe('Onboarding Flow', () => {
 
     await page.goto('/onboarding');
 
-    // Fill the form
-    await page.fill('input[name="full_name"]', 'John Doe');
-    await page.fill('input[name="username"]', 'johndoe_unique');
+    // ── Step 1: Identity ──────────────────────────────────────────────────────
+    await page.fill('input[name="full_name"]', 'E2E Test User');
+    await page.fill('input[name="username"]', uniqueUsername);
 
-    // Select a color (first one)
-    await page.click('button[aria-label="Select Deep Gold avatar color"]');
+    // Wait for the availability check icon
+    await page.waitForSelector('[data-testid="user-check-icon"]', { timeout: 10000 });
 
-    // Submit
-    await page.click('button:has-text("Complete Profile")');
-
-    // Handle AlertDialog
+    // Click Next -> Shows "Confirm your handle"
+    await page.click('button:has-text("Next")');
     await expect(page.getByRole('alertdialog')).toBeVisible();
-    await page.click('button:has-text("I understand, save handle")');
+    await page.click('button:has-text("Yes, I\'m sure")');
 
-    // Check redirection or success
-    // Note: After submission, the interceptor in dashboard/layout will run again.
-    // We should mock the second call to profiles to return the username.
+    // ── Step 2: Avatar Color ──────────────────────────────────────────────────
+    await page.click('button[aria-label="Select Deep Gold avatar color"]');
+    await page.click('button:has-text("Next")');
 
-    await page.route('**/rest/v1/profiles*', async (route) => {
-      if (route.request().method() === 'GET') {
-        await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify([{ id: 'test-user-id', username: 'johndoe_unique' }]),
-        });
-      }
-    });
+    // ── Step 3: Packing Style ─────────────────────────────────────────────────
+    await page.click('button:has-text("Light Packer")');
+    await page.click('button:has-text("Complete Setup")');
 
-    await expect(page).toHaveURL(/\/dashboard/);
+    // ── Assert redirect to dashboard ──────────────────────────────────────────
+    // The redirect is driven by the server-side layout detecting the new username
+    await expect(page).toHaveURL(/\/dashboard/, { timeout: 15000 });
     await expect(page.locator('h1')).toContainText('Welcome to your Dashboard');
   });
 });

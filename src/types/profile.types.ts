@@ -9,6 +9,7 @@ export interface Profile {
 }
 
 export const AVATAR_COLORS = [
+  { name: 'Deep Gold', value: '#C9922A' },
   { name: 'Neutral Gray', value: '#b3b3b3' },
   { name: 'Professional Blue', value: '#2E67A0' },
   { name: 'Soft Cyan', value: '#5AACCF' },
