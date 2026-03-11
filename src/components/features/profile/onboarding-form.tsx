@@ -37,6 +37,8 @@ import {
   Backpack,
   ArrowRight,
   ArrowLeft,
+  Package,
+  Sparkles,
 } from 'lucide-react';
 import { getInitials } from '@/lib/profile-utils';
 import { onboardingSchema, type OnboardingFormValues } from '@/types/onboarding.schema';
@@ -57,6 +59,22 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingValues, setPendingValues] = useState<OnboardingFormValues | null>(null);
   const [canSubmit, setCanSubmit] = useState(false);
+  const [statusIndex, setStatusIndex] = useState(0);
+
+  const statusMessages = [
+    'Packing your things...',
+    'Double-checking the list...',
+    'Ready for take-off!',
+  ];
+
+  useEffect(() => {
+    if (isSubmitting) {
+      const interval = setInterval(() => {
+        setStatusIndex((prev) => (prev + 1) % statusMessages.length);
+      }, 800);
+      return () => clearInterval(interval);
+    }
+  }, [isSubmitting]);
 
   const form = useForm<OnboardingFormValues>({
     resolver: zodResolver(onboardingSchema),
@@ -175,6 +193,7 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
       if (error) {
         if (error.code === '23505') {
           toast.error('This handle is already taken. Please choose another.');
+          setIsSubmitting(false);
           setStep(1);
           return;
         }
@@ -187,13 +206,12 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
       setTimeout(() => {
         router.push('/dashboard');
         router.refresh();
-      }, 1500);
+      }, 2400); // 2.4s to let status messages cycle
     } catch (err) {
       console.error('Onboarding error detailed:', err);
       const errorMessage = (err as Error)?.message || 'An unexpected error occurred. Please try again.';
       toast.error(errorMessage);
-    } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Re-enable form on generic error
     }
   };
 
@@ -203,21 +221,91 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
 
   return (
     <div className="relative">
-      {/* Loading Overlay */}
+      {/* Loading/Success Overlay */}
       <AnimatePresence>
         {isSubmitting && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-card/80 backdrop-blur-sm rounded-2xl"
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background/95 backdrop-blur-md"
           >
-            <div className="bg-background p-6 rounded-full shadow-2xl border border-border">
-              <Loader2 className="h-10 w-10 animate-spin text-primary" />
+            <div className="relative mb-8">
+              <motion.div
+                animate={{
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 5, -5, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="bg-primary/10 p-8 rounded-full shadow-inner border border-primary/20 relative"
+              >
+                <Package className="h-16 w-16 text-primary" />
+                {/* Floating particles */}
+                <motion.div
+                  animate={{ y: [-10, 10, -10], opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute -top-1 left-1/2 -translate-x-1/2"
+                >
+                  <Sparkles className="h-5 w-5 text-primary/40" />
+                </motion.div>
+                <motion.div
+                  animate={{ y: [10, -10, 10], opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 2.5, repeat: Infinity }}
+                  className="absolute -bottom-2 right-4"
+                >
+                  <Sparkles className="h-4 w-4 text-primary/30" />
+                </motion.div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 }}
+                className="absolute -top-2 -right-2 bg-emerald-500 text-white p-2 rounded-full shadow-lg"
+              >
+                <Check className="h-5 w-5" />
+              </motion.div>
             </div>
-            <p className="mt-4 font-medium text-foreground animate-pulse tracking-wide">
-              Finalizing your setup...
-            </p>
+
+            <div className="text-center space-y-2">
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={statusMessages[statusIndex]}
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -10, opacity: 0 }}
+                  className="text-xl font-serif font-bold text-foreground"
+                >
+                  {statusMessages[statusIndex]}
+                </motion.p>
+              </AnimatePresence>
+              <p className="text-sm text-muted-foreground animate-pulse">
+                Preparing your personal dashboard
+              </p>
+            </div>
+
+            {/* Progress indicators at bottom */}
+            <div className="flex gap-1.5 mt-8">
+              {statusMessages.map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="h-1.5 w-8 rounded-full bg-primary/20 overflow-hidden"
+                >
+                  {statusIndex >= i && (
+                    <motion.div
+                      layoutId="progress-bar"
+                      className="h-full bg-primary"
+                      initial={{ x: "-100%" }}
+                      animate={{ x: 0 }}
+                      transition={{ duration: 0.8 }}
+                    />
+                  )}
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
