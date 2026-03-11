@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { Profile } from '@/types/profile.types';
+import { getInitials } from '@/lib/profile-utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,12 +22,6 @@ interface NavbarProps {
 export default function Navbar({ profile }: NavbarProps) {
   const router = useRouter();
 
-  const getInitials = (name: string | null): string => {
-    if (!name) return '?';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length === 1) return parts[0][0]?.toUpperCase() || '?';
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  };
 
   const handleSignOut = async () => {
     const supabase = createClient();

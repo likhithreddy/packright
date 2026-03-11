@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Form,
   FormControl,
@@ -28,23 +29,21 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { AVATAR_COLORS, PACKING_STYLES } from '@/types/profile.types';
-import { Loader2, UserCheck, AtSign, User, Palette, Backpack } from 'lucide-react';
+import {
+  Check,
+  Loader2,
+  UserCheck,
+  AtSign,
+  User,
+  Compass,
+  Backpack,
+  ArrowRight,
+  ArrowLeft,
+  Palette
+} from 'lucide-react';
+import { getInitials } from '@/lib/profile-utils';
+import { onboardingSchema, type OnboardingFormValues } from '@/types/onboarding.schema';
 
-const onboardingSchema = z.object({
-  full_name: z
-    .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(50, 'Name must be at most 50 characters'),
-  username: z
-    .string()
-    .min(3, 'Username must be at least 3 characters')
-    .max(20, 'Username must be at most 20 characters')
-    .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'),
-  avatar_theme: z.string().min(1, 'Please select an avatar color'),
-  packing_style: z.string().min(1, 'Please select a packing style'),
-});
-
-type OnboardingFormValues = z.infer<typeof onboardingSchema>;
 
 interface OnboardingFormProps {
   userId: string;
@@ -54,6 +53,7 @@ interface OnboardingFormProps {
 export default function OnboardingForm({ userId, existingFullName }: OnboardingFormProps) {
   const router = useRouter();
   const supabase = createClient();
+  const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
@@ -68,10 +68,11 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
       avatar_theme: AVATAR_COLORS[0].value,
       packing_style: PACKING_STYLES[0],
     },
+    mode: 'onChange',
   });
 
-  // Sync existingFullName if it changes (important for tests and async loads)
-  const { setValue } = form;
+  const { getValues, setValue, watch, trigger, formState: { errors, isValid } } = form;
+
   useEffect(() => {
     if (existingFullName) {
       setValue('full_name', existingFullName);
@@ -106,241 +107,391 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
     [supabase]
   );
 
-  const handleFormSubmit = (values: OnboardingFormValues) => {
-    // ISSUE-#36: Show AlertDialog confirmation before saving the permanent username
-    setPendingValues(values);
-    setShowConfirmDialog(true);
+  const handleNext = async () => {
+    let fieldsToValidate: (keyof OnboardingFormValues)[] = [];
+    if (step === 1) fieldsToValidate = ['full_name', 'username'];
+    if (step === 2) fieldsToValidate = ['avatar_theme'];
+    if (step === 3) fieldsToValidate = ['packing_style'];
+
+
+    const isStepValid = await trigger(fieldsToValidate);
+
+    if (isStepValid) {
+      if (step === 1 && usernameAvailable === true) {
+        setPendingValues(getValues());
+        setShowConfirmDialog(true);
+      } else {
+        setStep((s) => s + 1);
+      }
+    }
   };
 
-  const handleConfirmSave = async () => {
-    if (!pendingValues) return;
+  const handleBack = () => {
+    setStep((s) => s - 1);
+  };
 
+  const handleConfirmHandle = async () => {
+    setIsCheckingUsername(true); // Re-use loading state or add new one
+    // Simulate a brief check/processing delay for premium feel
+    await new Promise((resolve) => setTimeout(resolve, 800));
     setShowConfirmDialog(false);
-    setIsSubmitting(true);
+    setIsCheckingUsername(false);
+    setStep(2);
+  };
 
+  const onSubmit = async (values: OnboardingFormValues) => {
+    // If user hits Enter on earlier steps, just move forward
+    if (step < 3) {
+      handleNext();
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({
-          full_name: pendingValues.full_name,
-          username: pendingValues.username.toLowerCase(),
-          avatar_theme: pendingValues.avatar_theme,
-          packing_style: pendingValues.packing_style,
-        })
-        .eq('id', userId);
+        .upsert({
+          id: userId,
+          full_name: values.full_name,
+          username: values.username.toLowerCase(),
+          avatar_theme: values.avatar_theme,
+          packing_style: values.packing_style,
+          updated_at: new Date().toISOString(),
+        });
 
       if (error) {
         if (error.code === '23505') {
           toast.error('This handle is already taken. Please choose another.');
+          setStep(1);
           return;
-        } else {
-          toast.error('Failed to save your profile. Please try again.');
         }
-        return;
+        throw error;
       }
 
       toast.success('Profile created successfully! Welcome to PackRight!');
-      router.push('/dashboard');
-      router.refresh();
-    } catch {
-      toast.error('An unexpected error occurred. Please try again.');
+
+      // Delay redirect for transition
+      setTimeout(() => {
+        router.push('/dashboard');
+        router.refresh();
+      }, 1500);
+    } catch (err) {
+      console.error('Onboarding error detailed:', err);
+      const errorMessage = (err as any)?.message || 'An unexpected error occurred. Please try again.';
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const getInitials = (name: string): string => {
-    if (!name) return '?';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length === 1) return parts[0][0]?.toUpperCase() || '?';
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  };
-
-  const watchedName = form.watch('full_name');
-  const watchedColor = form.watch('avatar_theme');
+  const watchedFullName = watch('full_name');
+  const watchedColor = watch('avatar_theme');
+  const initials = getInitials(watchedFullName || existingFullName);
 
   return (
-    <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
-          {/* Avatar Preview */}
-          <div className="flex justify-center">
-            <div
-              className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg transition-all duration-300"
-              style={{ backgroundColor: watchedColor }}
-            >
-              {getInitials(watchedName)}
-            </div>
-          </div>
-
-          {/* Full Name */}
-          <FormField
-            control={form.control}
-            name="full_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-2 text-foreground/80">
-                  <User className="h-4 w-4" />
-                  Full Name
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter your full name"
-                    className="h-12 bg-secondary/30 border-border/50 focus-visible:ring-0 focus:ring-0 focus:border-primary/50"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Username */}
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-2 text-foreground/80">
-                  <AtSign className="h-4 w-4" />
-                  Handle
-                </FormLabel>
-                <div className="relative">
-                  <FormControl>
-                    <Input
-                      placeholder="your_unique_handle"
-                      className="h-12 bg-secondary/30 border-border/50 focus-visible:ring-0 focus:ring-0 focus:border-primary/50 pr-10"
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        checkUsernameAvailability(e.target.value);
-                      }}
-                    />
-                  </FormControl>
-                  {/* Username availability indicator */}
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                    {isCheckingUsername && (
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                    )}
-                    {!isCheckingUsername && usernameAvailable === true && (
-                      <UserCheck className="h-4 w-4 text-primary" data-testid="user-check-icon" />
-                    )}
-                    {!isCheckingUsername && usernameAvailable === false && (
-                      <span className="text-xs text-destructive font-medium">Taken</span>
-                    )}
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  3-20 characters. Only letters, numbers, and underscores.
-                </p>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Avatar Color Picker */}
-          <FormField
-            control={form.control}
-            name="avatar_theme"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-2 text-foreground/80">
-                  <Palette className="h-4 w-4" />
-                  Avatar Color
-                </FormLabel>
-                <FormControl>
-                  <div className="flex flex-wrap gap-3">
-                    {AVATAR_COLORS.map((color) => (
-                      <button
-                        key={color.value}
-                        type="button"
-                        onClick={() => field.onChange(color.value)}
-                        className={`w-10 h-10 rounded-full transition-all duration-200 border-2 ${
-                          field.value === color.value
-                            ? 'border-foreground scale-110 shadow-md'
-                            : 'border-transparent hover:scale-105'
-                        }`}
-                        style={{ backgroundColor: color.value }}
-                        title={color.name}
-                        aria-label={`Select ${color.name} avatar color`}
-                      />
-                    ))}
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Packing Style */}
-          <FormField
-            control={form.control}
-            name="packing_style"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-2 text-foreground/80">
-                  <Backpack className="h-4 w-4" />
-                  Packing Style
-                </FormLabel>
-                <FormControl>
-                  <div className="grid grid-cols-2 gap-2">
-                    {PACKING_STYLES.map((style) => (
-                      <button
-                        key={style}
-                        type="button"
-                        onClick={() => field.onChange(style)}
-                        className={`py-3 px-4 rounded-lg text-sm font-medium transition-all duration-200 border ${
-                          field.value === style
-                            ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                            : 'bg-secondary/30 text-foreground/70 border-border/50 hover:bg-secondary/50'
-                        }`}
-                      >
-                        {style}
-                      </button>
-                    ))}
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button
-            type="submit"
-            className="w-full h-12 text-base font-semibold"
-            disabled={isSubmitting || usernameAvailable === false}
+    <div className="relative">
+      {/* Loading Overlay */}
+      <AnimatePresence>
+        {isSubmitting && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-card/80 backdrop-blur-sm rounded-2xl"
           >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              'Complete Setup'
-            )}
-          </Button>
-        </form>
-      </Form>
+            <div className="bg-background p-6 rounded-full shadow-2xl border border-border">
+              <Loader2 className="h-10 w-10 animate-spin text-primary" />
+            </div>
+            <p className="mt-4 font-medium text-foreground animate-pulse tracking-wide">
+              Finalizing your setup...
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* ISSUE-#36: AlertDialog warning that the handle is permanent */}
+      <div className="space-y-8">
+        {/* Progress Tracker */}
+        <div className="relative flex items-center justify-between w-full px-5 mb-8">
+          {/* Background Line */}
+          <div className="absolute top-1/2 left-10 right-10 h-[2px] bg-secondary/50 -translate-y-1/2" />
+
+          {/* Active Progress Line */}
+          <motion.div
+            className="absolute top-1/2 left-10 right-10 h-[2px] bg-primary -translate-y-1/2 origin-left"
+            initial={false}
+            animate={{ scaleX: (step - 1) / 2 }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+          />
+
+          {[1, 2, 3].map((s) => (
+            <div key={s} className="relative z-10 flex flex-col items-center">
+              <motion.div
+                initial={false}
+                animate={{
+                  backgroundColor: step >= s ? 'var(--primary)' : 'var(--background)',
+                  borderColor: step >= s ? 'var(--primary)' : 'var(--secondary)',
+                  color: step >= s ? 'var(--primary-foreground)' : 'var(--muted-foreground)',
+                }}
+                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all duration-300 ${step === s ? 'ring-4 ring-primary/20 ring-offset-2 ring-offset-background scale-110' : ''
+                  }`}
+              >
+                {step > s ? <Check className="h-5 w-5" /> : s}
+              </motion.div>
+            </div>
+          ))}
+        </div>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="min-h-[320px] flex flex-col">
+            <AnimatePresence mode="wait">
+              {step === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ x: 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -20, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  className="space-y-6 flex-1"
+                >
+                  <div className="space-y-2">
+                    <h2 className="text-2xl font-serif font-bold text-foreground">Tell us about yourself</h2>
+                    <p className="text-sm text-muted-foreground">This is how friends will find you on PackRight.</p>
+                  </div>
+
+                  <div className="space-y-5">
+                    <FormField
+                      control={form.control}
+                      name="full_name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center gap-2">
+                            <User className="h-4 w-4 text-primary" /> Full Name
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="e.g. Alex Johnson"
+                              className="h-12 bg-secondary/20 border-border/50 focus:border-primary/50 transition-colors"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center gap-2">
+                            <AtSign className="h-4 w-4 text-primary" /> Unique Handle
+                          </FormLabel>
+                          <div className="relative">
+                            <FormControl>
+                              <Input
+                                placeholder="alex_packer"
+                                className="h-12 bg-secondary/20 border-border/50 focus:border-primary/50 transition-colors pr-10"
+                                {...field}
+                                onChange={(e) => {
+                                  field.onChange(e);
+                                  checkUsernameAvailability(e.target.value);
+                                }}
+                              />
+                            </FormControl>
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                              {isCheckingUsername && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+                              {!isCheckingUsername && usernameAvailable === true && (
+                                <UserCheck className="h-5 w-5 text-emerald-500" data-testid="user-check-icon" />
+                              )}
+                              {!isCheckingUsername && usernameAvailable === false && (
+                                <span className="text-[10px] bg-destructive/10 text-destructive px-1.5 py-0.5 rounded font-bold uppercase">Taken</span>
+                              )}
+                            </div>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </motion.div>
+              )}
+
+              {step === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ x: 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -20, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  className="space-y-8 flex-1"
+                >
+                  <div className="flex flex-col items-center gap-6">
+                    {/* Main Preview */}
+                    <div
+                      className="w-28 h-28 rounded-full flex items-center justify-center text-4xl font-bold text-white shadow-2xl ring-4 ring-background transition-all duration-500"
+                      style={{ backgroundColor: watchedColor }}
+                    >
+                      {initials}
+                    </div>
+
+                    <div className="text-center space-y-1">
+                      <h2 className="text-2xl font-serif font-bold text-foreground">Choose your vibe</h2>
+                      <p className="text-sm text-muted-foreground">Pick a color that represents you.</p>
+                    </div>
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="avatar_theme"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <div className="grid grid-cols-4 md:grid-cols-8 gap-4 justify-items-center">
+                            {AVATAR_COLORS.map((color) => (
+                              <button
+                                key={color.value}
+                                type="button"
+                                onClick={() => field.onChange(color.value)}
+                                className={`group relative w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-300 border-2 ${field.value === color.value
+                                  ? 'border-primary ring-4 ring-primary/10 scale-110'
+                                  : 'border-transparent hover:scale-105 hover:border-gray-300'
+                                  } shadow-sm`}
+                                style={{ backgroundColor: color.value }}
+                              >
+                                <span className="text-[10px] md:text-xs font-bold text-white/90 uppercase tracking-tighter opacity-80 group-hover:opacity-100 transition-opacity">
+                                  {initials}
+                                </span>
+                                {field.value === color.value && (
+                                  <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full p-0.5 shadow-lg">
+                                    <Check className="h-3 w-3" />
+                                  </div>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </motion.div>
+              )}
+
+              {step === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ x: 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -20, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  className="space-y-8 flex-1"
+                >
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="p-4 bg-primary/10 rounded-2xl">
+                      <Backpack className="h-10 w-10 text-primary" />
+                    </div>
+                    <div className="text-center space-y-1">
+                      <h2 className="text-2xl font-serif font-bold text-foreground">Packing Style</h2>
+                      <p className="text-sm text-muted-foreground">How do you usually prepare for a trip?</p>
+                    </div>
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="packing_style"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {PACKING_STYLES.map((style) => (
+                              <button
+                                key={style}
+                                type="button"
+                                onClick={() => field.onChange(style)}
+                                className={`relative py-5 px-6 rounded-xl text-left transition-all duration-300 border-2 ${field.value === style
+                                  ? 'bg-primary/5 border-primary shadow-sm'
+                                  : 'bg-secondary/20 border-transparent hover:border-border/50'
+                                  }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span className={`font-semibold ${field.value === style ? 'text-primary' : 'text-foreground/70'}`}>
+                                    {style}
+                                  </span>
+                                  {field.value === style && <Check className="h-5 w-5 text-primary" />}
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Navigation Buttons */}
+            <div className="mt-10 flex items-center justify-between gap-4">
+              {step > 1 ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleBack}
+                  className="px-6 border-border/50 hover:bg-secondary/50"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+              ) : (
+                <div /> // Spacer
+              )}
+
+              {step < 3 ? (
+                <Button
+                  type="button"
+                  onClick={handleNext}
+                  className="px-8 font-semibold"
+                  disabled={step === 1 && (!watchedFullName || watchedFullName.length < 3 || usernameAvailable !== true || isCheckingUsername)}
+                >
+                  Next <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  className="px-10 font-bold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
+                  disabled={isSubmitting}
+                >
+                  Complete Setup <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          </form>
+        </Form>
+      </div>
+
+      {/* Confirmation Dialog */}
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <AlertDialogContent>
+        <AlertDialogContent className="rounded-2xl max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Your Handle</AlertDialogTitle>
-            <AlertDialogDescription>
-              Your handle{' '}
-              <span className="font-bold text-foreground">@{pendingValues?.username}</span> will be{' '}
-              <strong>permanently locked</strong> and cannot be changed later. Other users will find
-              and add you to trips using this handle. Please make sure you are entering the correct
-              username.
+            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+              <AtSign className="h-6 w-6 text-primary" />
+            </div>
+            <AlertDialogTitle className="text-xl font-serif">Confirm your handle</AlertDialogTitle>
+            <AlertDialogDescription className="text-base">
+              Your handle <span className="font-bold text-foreground italic">@{pendingValues?.username}</span> will be permanently locked.
+              <br /><br />
+              Friends will use this to find you and collaborate on packing lists.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmSave}>Confirm Handle</AlertDialogAction>
+          <AlertDialogFooter className="gap-2 sm:gap-0">
+            <AlertDialogCancel className="rounded-xl">Wait, let me change it</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmHandle} className="rounded-xl font-bold">
+              Yes, I'm sure
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 }

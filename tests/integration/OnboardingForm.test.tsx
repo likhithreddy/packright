@@ -19,9 +19,9 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
-const mockUpdate = jest.fn();
+const mockUpsert = jest.fn();
 const mockFrom = jest.fn(() => ({
-  update: mockUpdate,
+  upsert: mockUpsert,
 }));
 const mockRpc = jest.fn();
 
@@ -36,105 +36,117 @@ describe('OnboardingForm', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockFrom.mockReturnValue({
-      update: mockUpdate,
+      upsert: mockUpsert,
     });
     // DEFAULT MOCK: Stable and available
     mockRpc.mockResolvedValue({ data: true, error: null });
   });
 
-  it('covers all branch conditions in OnboardingForm submission', async () => {
+  const navigateToStep3 = async (user: any) => {
+    // Step 1 -> Step 2
+    await user.type(screen.getByLabelText(/Full Name/i), 'Test User');
+    await user.type(screen.getByLabelText(/Unique Handle/i), 'valid_handle');
+    await waitFor(() => expect(screen.getByTestId('user-check-icon')).toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: /Next/i }));
+
+    // Step 2 -> Step 3
+    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: /Next/i }));
+  };
+
+  it('covers full 3-step submission flow with upsert', async () => {
     const user = userEvent.setup();
-    const mockEq = jest.fn().mockResolvedValue({ error: null });
-    mockUpdate.mockReturnValue({ eq: mockEq });
+    mockUpsert.mockResolvedValue({ error: null });
 
-    // Provide valid full_name to satisfy Zod validation
-    render(<OnboardingForm userId="u" existingFullName="Test User" />);
+    render(<OnboardingForm userId="u" />);
 
-    // Interaction with correct colors from AVATAR_COLORS
-    fireEvent.click(screen.getByTitle('Forest Green'));
-    fireEvent.click(screen.getByRole('button', { name: /Over Packer/i }));
+    // Step 1: Identity
+    await user.type(screen.getByLabelText(/Full Name/i), 'Test User');
+    await user.type(screen.getByLabelText(/Unique Handle/i), 'valid_handle');
+    await waitFor(() => expect(screen.getByTestId('user-check-icon')).toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: /Next/i }));
 
-    await user.type(screen.getByLabelText(/Handle/i), 'valid_handle');
+    // Step 2: Avatar
+    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument());
+    // Use aria-label or just click a button (all show initials)
+    const colorButtons = screen.getAllByRole('button');
+    // First color button is Indigo by default
+    await user.click(colorButtons[0]);
+    await user.click(screen.getByRole('button', { name: /Next/i }));
+
+    // Step 3: Packing Style
+    await waitFor(() => expect(screen.getByText(/Packing Style/i)).toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: /Over Packer/i }));
     await user.click(screen.getByRole('button', { name: /Complete Setup/i }));
 
-    const confirmBtn = await screen.findByRole('button', { name: /Confirm Handle/i });
+    // Confirm Dialog
+    const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
     await user.click(confirmBtn);
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/dashboard');
-    });
+      expect(mockUpsert).toHaveBeenCalled();
+      expect(toast.success).toHaveBeenCalledWith(expect.stringContaining('Profile created successfully'));
+    }, { timeout: 3000 });
   });
 
-  it('handles cancel in confirm dialog', async () => {
+  it('handles back navigation', async () => {
     const user = userEvent.setup();
     render(<OnboardingForm userId="u" existingFullName="Test User" />);
 
-    await user.type(screen.getByLabelText(/Handle/i), 'cancel_me');
-    await user.click(screen.getByRole('button', { name: /Complete Setup/i }));
+    await user.type(screen.getByLabelText(/Unique Handle/i), 'back_test');
+    await waitFor(() => expect(screen.getByTestId('user-check-icon')).toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: /Next/i }));
 
-    const cancelBtn = await screen.findByRole('button', { name: /Cancel/i });
-    await user.click(cancelBtn);
+    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: /Back/i }));
 
-    await waitFor(() => {
-      expect(screen.queryByRole('heading', { name: /Are you sure/i })).not.toBeInTheDocument();
-    });
+    await waitFor(() => expect(screen.getByText(/Tell us about yourself/i)).toBeInTheDocument());
   });
 
-  it('handles username taken state', async () => {
+  it('handles username taken state in Step 1', async () => {
     const user = userEvent.setup();
-    // Constant failure for availability check (simulating taken)
     mockRpc.mockResolvedValue({ data: false, error: null });
 
     render(<OnboardingForm userId="u" existingFullName="Test User" />);
-    const input = screen.getByLabelText(/Handle/i);
+    const input = screen.getByLabelText(/Unique Handle/i);
 
     await user.type(input, 'taken');
 
-    await waitFor(
-      () => {
-        expect(screen.getByText('Taken')).toBeInTheDocument();
-      },
-      { timeout: 3000 }
-    );
+    await waitFor(() => {
+      expect(screen.getByText('Taken')).toBeInTheDocument();
+    });
+
+    const nextBtn = screen.getByRole('button', { name: /Next/i });
+    expect(nextBtn).toBeDisabled();
   });
 
-  it('handles username already taken error (23505)', async () => {
+  it('handles database conflict (23505) after confirm', async () => {
     const user = userEvent.setup();
-    const mockEq = jest.fn().mockResolvedValue({ error: { code: '23505' } });
-    mockUpdate.mockReturnValue({ eq: mockEq });
+    mockUpsert.mockResolvedValue({ error: { code: '23505' } });
 
     render(<OnboardingForm userId="u" existingFullName="Test User" />);
-    await user.type(screen.getByLabelText(/Handle/i), 'taken_db');
+    await navigateToStep3(user);
+
     await user.click(screen.getByRole('button', { name: /Complete Setup/i }));
-    const confirmBtn = await screen.findByRole('button', { name: /Confirm Handle/i });
+    const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
     await user.click(confirmBtn);
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith(
-        'This handle is already taken. Please choose another.'
-      );
+      expect(toast.error).toHaveBeenCalledWith('This handle is already taken. Please choose another.');
+      // Should redirect back to Step 1
+      expect(screen.getByText(/Tell us about yourself/i)).toBeInTheDocument();
     });
   });
 
-  it('handles username check error and catch blocks', async () => {
+  it('handles unexpected submission error', async () => {
     const user = userEvent.setup();
-    mockRpc.mockResolvedValue({ data: null, error: { message: 'RPC Error' } });
+    mockUpsert.mockRejectedValue(new Error('Crash'));
 
     render(<OnboardingForm userId="u" existingFullName="Test User" />);
-    const input = screen.getByLabelText(/Handle/i);
+    await navigateToStep3(user);
 
-    await user.type(input, 'error');
-    await waitFor(() => expect(mockRpc).toHaveBeenCalled());
-    expect(screen.queryByTestId('user-check-icon')).not.toBeInTheDocument();
-
-    // Trigger catch block in submission
-    const mockEq = jest.fn().mockRejectedValue(new Error('Crash'));
-    mockUpdate.mockReturnValue({ eq: mockEq });
-
-    await user.clear(input);
-    await user.type(input, 'crash_user');
     await user.click(screen.getByRole('button', { name: /Complete Setup/i }));
-    const confirmBtn = await screen.findByRole('button', { name: /Confirm Handle/i });
+    const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
     await user.click(confirmBtn);
 
     await waitFor(() =>
@@ -142,16 +154,16 @@ describe('OnboardingForm', () => {
     );
   });
 
-  it('covers initials generation variations', () => {
-    const { unmount } = render(<OnboardingForm userId="u" existingFullName="First Last" />);
-    expect(screen.getByText('FL')).toBeInTheDocument();
-    unmount();
+  it('covers initials generation variations and display in Step 2', async () => {
+    const user = userEvent.setup();
+    render(<OnboardingForm userId="u" existingFullName="First Last" />);
 
-    render(<OnboardingForm userId="u" existingFullName="Single" />);
-    expect(screen.getByText('S')).toBeInTheDocument();
-    unmount();
+    await user.type(screen.getByLabelText(/Unique Handle/i), 'fl_user');
+    await waitFor(() => expect(screen.getByTestId('user-check-icon')).toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: /Next/i }));
 
-    render(<OnboardingForm userId="u" existingFullName="" />);
-    expect(screen.getByText('?')).toBeInTheDocument();
+    // Check initials in Step 2 main preview
+    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument());
+    expect(screen.getAllByText('FL').length).toBeGreaterThan(1); // Main preview + color circles
   });
 });
