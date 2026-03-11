@@ -77,6 +77,7 @@ jobs:
           echo "NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321" >> $GITHUB_ENV
           echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$(supabase status | grep 'anon key' | awk '{print $NF}')" >> $GITHUB_ENV
           echo "SUPABASE_SERVICE_ROLE_KEY=$(supabase status | grep 'service_role key' | awk '{print $NF}')" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=$(supabase status | grep 'service_role key' | awk '{print $NF}')" >> $GITHUB_ENV
 
       - name: Get installed Playwright version
         id: playwright-version

@@ -5,10 +5,14 @@ import { defineConfig, devices } from '@playwright/test';
  * https://github.com/motdotla/dotenv
  */
 import dotenv from 'dotenv';
+import fs from 'fs';
 import path from 'path';
 
-// Load environment variables from .env.local during E2E tests
-dotenv.config({ path: path.resolve(__dirname, '.env.local') });
+// Load environment variables from .env.local during E2E tests if it exists
+const envPath = path.resolve(__dirname, '.env.local');
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+}
 
 /**
  * See https://playwright.dev/docs/test-configuration.
