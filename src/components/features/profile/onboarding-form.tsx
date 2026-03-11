@@ -43,7 +43,6 @@ import {
 import { getInitials } from '@/lib/profile-utils';
 import { onboardingSchema, type OnboardingFormValues } from '@/types/onboarding.schema';
 
-
 interface OnboardingFormProps {
   userId: string;
   existingFullName?: string | null;
@@ -138,7 +137,6 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
     if (step === 2) fieldsToValidate = ['avatar_theme'];
     if (step === 3) fieldsToValidate = ['packing_style'];
 
-
     const isStepValid = await trigger(fieldsToValidate);
 
     if (isStepValid) {
@@ -179,16 +177,14 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .upsert({
-          id: userId,
-          full_name: values.full_name,
-          username: values.username.toLowerCase(),
-          avatar_theme: values.avatar_theme,
-          packing_style: values.packing_style,
-          updated_at: new Date().toISOString(),
-        });
+      const { error } = await supabase.from('profiles').upsert({
+        id: userId,
+        full_name: values.full_name,
+        username: values.username.toLowerCase(),
+        avatar_theme: values.avatar_theme,
+        packing_style: values.packing_style,
+        updated_at: new Date().toISOString(),
+      });
 
       if (error) {
         if (error.code === '23505') {
@@ -209,7 +205,8 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
       }, 2400); // 2.4s to let status messages cycle
     } catch (err) {
       console.error('Onboarding error detailed:', err);
-      const errorMessage = (err as Error)?.message || 'An unexpected error occurred. Please try again.';
+      const errorMessage =
+        (err as Error)?.message || 'An unexpected error occurred. Please try again.';
       toast.error(errorMessage);
       setIsSubmitting(false); // Re-enable form on generic error
     }
@@ -239,7 +236,7 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                 transition={{
                   duration: 2,
                   repeat: Infinity,
-                  ease: "easeInOut",
+                  ease: 'easeInOut',
                 }}
                 className="bg-primary/10 p-8 rounded-full shadow-inner border border-primary/20 relative"
               >
@@ -298,7 +295,7 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                     <motion.div
                       layoutId="progress-bar"
                       className="h-full bg-primary"
-                      initial={{ x: "-100%" }}
+                      initial={{ x: '-100%' }}
                       animate={{ x: 0 }}
                       transition={{ duration: 0.8 }}
                     />
@@ -343,8 +340,11 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                   borderColor: step >= s ? 'var(--primary)' : 'var(--secondary)',
                   color: step >= s ? 'var(--primary-foreground)' : 'var(--muted-foreground)',
                 }}
-                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all duration-300 ${step === s ? 'ring-4 ring-primary/20 ring-offset-2 ring-offset-background scale-110' : ''
-                  }`}
+                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all duration-300 ${
+                  step === s
+                    ? 'ring-4 ring-primary/20 ring-offset-2 ring-offset-background scale-110'
+                    : ''
+                }`}
               >
                 {step > s ? <Check className="h-5 w-5" /> : s}
               </motion.div>
@@ -365,8 +365,12 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                   className="space-y-6 flex-1"
                 >
                   <div className="space-y-2">
-                    <h2 className="text-2xl font-serif font-bold text-foreground">Tell us about yourself</h2>
-                    <p className="text-sm text-muted-foreground">This is how friends will find you on PackRight.</p>
+                    <h2 className="text-2xl font-serif font-bold text-foreground">
+                      Tell us about yourself
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      This is how friends will find you on PackRight.
+                    </p>
                   </div>
 
                   <div className="space-y-5">
@@ -411,12 +415,19 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                               />
                             </FormControl>
                             <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                              {isCheckingUsername && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+                              {isCheckingUsername && (
+                                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                              )}
                               {!isCheckingUsername && usernameAvailable === true && (
-                                <UserCheck className="h-5 w-5 text-emerald-500" data-testid="user-check-icon" />
+                                <UserCheck
+                                  className="h-5 w-5 text-emerald-500"
+                                  data-testid="user-check-icon"
+                                />
                               )}
                               {!isCheckingUsername && usernameAvailable === false && (
-                                <span className="text-[10px] bg-destructive/10 text-destructive px-1.5 py-0.5 rounded font-bold uppercase">Taken</span>
+                                <span className="text-[10px] bg-destructive/10 text-destructive px-1.5 py-0.5 rounded font-bold uppercase">
+                                  Taken
+                                </span>
                               )}
                             </div>
                           </div>
@@ -447,8 +458,12 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                     </div>
 
                     <div className="text-center space-y-1">
-                      <h2 className="text-2xl font-serif font-bold text-foreground">Choose your vibe</h2>
-                      <p className="text-sm text-muted-foreground">Pick a color that represents you.</p>
+                      <h2 className="text-2xl font-serif font-bold text-foreground">
+                        Choose your vibe
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        Pick a color that represents you.
+                      </p>
                     </div>
                   </div>
 
@@ -464,10 +479,11 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                                 key={color.value}
                                 type="button"
                                 onClick={() => field.onChange(color.value)}
-                                className={`group relative w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-300 border-2 ${field.value === color.value
-                                  ? 'border-primary ring-4 ring-primary/10 scale-110'
-                                  : 'border-transparent hover:scale-105 hover:border-gray-300'
-                                  } shadow-sm`}
+                                className={`group relative w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-300 border-2 ${
+                                  field.value === color.value
+                                    ? 'border-primary ring-4 ring-primary/10 scale-110'
+                                    : 'border-transparent hover:scale-105 hover:border-gray-300'
+                                } shadow-sm`}
                                 style={{ backgroundColor: color.value }}
                               >
                                 <span className="text-[10px] md:text-xs font-bold text-white/90 uppercase tracking-tighter opacity-80 group-hover:opacity-100 transition-opacity">
@@ -503,8 +519,12 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                       <Backpack className="h-10 w-10 text-primary" />
                     </div>
                     <div className="text-center space-y-1">
-                      <h2 className="text-2xl font-serif font-bold text-foreground">Packing Style</h2>
-                      <p className="text-sm text-muted-foreground">How do you usually prepare for a trip?</p>
+                      <h2 className="text-2xl font-serif font-bold text-foreground">
+                        Packing Style
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        How do you usually prepare for a trip?
+                      </p>
                     </div>
                   </div>
 
@@ -520,16 +540,21 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                                 key={style}
                                 type="button"
                                 onClick={() => field.onChange(style)}
-                                className={`relative py-5 px-6 rounded-xl text-left transition-all duration-300 border-2 ${field.value === style
-                                  ? 'bg-primary/5 border-primary shadow-sm'
-                                  : 'bg-secondary/20 border-transparent hover:border-border/50'
-                                  }`}
+                                className={`relative py-5 px-6 rounded-xl text-left transition-all duration-300 border-2 ${
+                                  field.value === style
+                                    ? 'bg-primary/5 border-primary shadow-sm'
+                                    : 'bg-secondary/20 border-transparent hover:border-border/50'
+                                }`}
                               >
                                 <div className="flex items-center justify-between">
-                                  <span className={`font-semibold ${field.value === style ? 'text-primary' : 'text-foreground/70'}`}>
+                                  <span
+                                    className={`font-semibold ${field.value === style ? 'text-primary' : 'text-foreground/70'}`}
+                                  >
                                     {style}
                                   </span>
-                                  {field.value === style && <Check className="h-5 w-5 text-primary" />}
+                                  {field.value === style && (
+                                    <Check className="h-5 w-5 text-primary" />
+                                  )}
                                 </div>
                               </button>
                             ))}
@@ -563,7 +588,14 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                   type="button"
                   onClick={handleNext}
                   className="px-8 font-semibold"
-                  disabled={isSubmitting || (step === 1 && (!watchedFullName || watchedFullName.length < 3 || usernameAvailable !== true || isCheckingUsername))}
+                  disabled={
+                    isSubmitting ||
+                    (step === 1 &&
+                      (!watchedFullName ||
+                        watchedFullName.length < 3 ||
+                        usernameAvailable !== true ||
+                        isCheckingUsername))
+                  }
                 >
                   Next <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -590,8 +622,11 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
             </div>
             <AlertDialogTitle className="text-xl font-serif">Confirm your handle</AlertDialogTitle>
             <AlertDialogDescription className="text-base">
-              Your handle <span className="font-bold text-foreground italic">@{pendingValues?.username}</span> will be permanently locked.
-              <br /><br />
+              Your handle{' '}
+              <span className="font-bold text-foreground italic">@{pendingValues?.username}</span>{' '}
+              will be permanently locked.
+              <br />
+              <br />
               Friends will use this to find you and collaborate on packing lists.
             </AlertDialogDescription>
           </AlertDialogHeader>

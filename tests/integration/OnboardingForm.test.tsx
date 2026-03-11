@@ -35,7 +35,7 @@ jest.mock('../../src/lib/supabase/client', () => ({
 describe('OnboardingForm', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(console, 'error').mockImplementation(() => { });
+    jest.spyOn(console, 'error').mockImplementation(() => {});
     mockFrom.mockReturnValue({
       upsert: mockUpsert,
     });
@@ -55,11 +55,15 @@ describe('OnboardingForm', () => {
     await user.click(confirmBtn);
 
     // Step 2 -> Step 3
-    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument(), { timeout: 3000 });
+    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument(), {
+      timeout: 3000,
+    });
     await user.click(screen.getByRole('button', { name: /Next/i }));
 
     // Wait for Step 3 to be active
-    await waitFor(() => expect(screen.getByText(/Packing Style/i)).toBeInTheDocument(), { timeout: 3000 });
+    await waitFor(() => expect(screen.getByText(/Packing Style/i)).toBeInTheDocument(), {
+      timeout: 3000,
+    });
   };
 
   it('covers full 3-step submission flow with upsert', async () => {
@@ -77,10 +81,15 @@ describe('OnboardingForm', () => {
     await waitFor(() => expect(submitBtn).not.toBeDisabled());
     await user.click(submitBtn);
 
-    await waitFor(() => {
-      expect(mockUpsert).toHaveBeenCalled();
-      expect(toast.success).toHaveBeenCalledWith(expect.stringContaining('Profile created successfully'));
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(mockUpsert).toHaveBeenCalled();
+        expect(toast.success).toHaveBeenCalledWith(
+          expect.stringContaining('Profile created successfully')
+        );
+      },
+      { timeout: 3000 }
+    );
   });
 
   it('handles back navigation', async () => {
@@ -95,7 +104,9 @@ describe('OnboardingForm', () => {
     const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
     await user.click(confirmBtn);
 
-    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument(), { timeout: 3000 });
+    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument(), {
+      timeout: 3000,
+    });
     await user.click(screen.getByRole('button', { name: /Back/i }));
 
     await waitFor(() => expect(screen.getByText(/Tell us about yourself/i)).toBeInTheDocument());
@@ -134,7 +145,9 @@ describe('OnboardingForm', () => {
     await user.click(submitBtn);
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith('This handle is already taken. Please choose another.');
+      expect(toast.error).toHaveBeenCalledWith(
+        'This handle is already taken. Please choose another.'
+      );
       // Should redirect back to Step 1
       expect(screen.getByText(/Tell us about yourself/i)).toBeInTheDocument();
     });
@@ -154,9 +167,7 @@ describe('OnboardingForm', () => {
     await waitFor(() => expect(submitBtn).not.toBeDisabled(), { timeout: 2000 });
     await user.click(submitBtn);
 
-    await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith('Crash')
-    );
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Crash'));
   });
 
   it('covers initials generation variations and display in Step 2', async () => {
@@ -172,7 +183,9 @@ describe('OnboardingForm', () => {
     await user.click(confirmBtn);
 
     // Check initials in Step 2 main preview
-    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument(), { timeout: 3000 });
+    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument(), {
+      timeout: 3000,
+    });
     expect(screen.getAllByText('FL').length).toBeGreaterThan(1); // Main preview + color circles
   });
 });

@@ -18,7 +18,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={cn('font-sans h-screen w-screen overflow-hidden', figtree.variable, dmSerifDisplay.variable)}>
+    <html
+      lang="en"
+      className={cn(
+        'font-sans h-screen w-screen overflow-hidden',
+        figtree.variable,
+        dmSerifDisplay.variable
+      )}
+    >
       <body className="antialiased font-sans h-screen w-screen overflow-hidden">
         {children}
         <Toaster position="top-right" />

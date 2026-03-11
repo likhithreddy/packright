@@ -62,7 +62,7 @@ describe('EditProfileModal', () => {
       <EditProfileModal
         profile={mockProfile}
         open={true}
-        onOpenChange={() => { }}
+        onOpenChange={() => {}}
         onProfileUpdate={onProfileUpdate}
       />
     );
@@ -93,8 +93,8 @@ describe('EditProfileModal', () => {
       <EditProfileModal
         profile={mockProfile}
         open={true}
-        onOpenChange={() => { }}
-        onProfileUpdate={() => { }}
+        onOpenChange={() => {}}
+        onProfileUpdate={() => {}}
       />
     );
 
@@ -122,7 +122,7 @@ describe('EditProfileModal', () => {
         profile={mockProfile}
         open={true}
         onOpenChange={onOpenChange}
-        onProfileUpdate={() => { }}
+        onProfileUpdate={() => {}}
       />
     );
 

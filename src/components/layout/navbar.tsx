@@ -23,7 +23,6 @@ interface NavbarProps {
 export default function Navbar({ profile }: NavbarProps) {
   const router = useRouter();
 
-
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
