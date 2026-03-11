@@ -61,9 +61,19 @@ PackRight follows a highly organized Next.js App Router structure. Separating se
 
 **Methodology:** Test-Driven Development (TDD) is required. Ensure minimum **80% test code coverage** across the project.
 
-- **Test Integrity Constraint (Strict Rule):** Test cases must always verify the _intended_ or _ideal_ behavior. You must **never** blindly update test cases to match a broken or incorrect implementation. If the current implementation does not follow the intended behavior, you must change the implementation to fix it, do not change the test.
+- **Test Integrity Constraint (Strict Rule):** Test cases must always verify the _intended_ or _ideal_ behavior. You must **never** blindly update test cases to match a broken or incorrect implementation. If the current implementation does not follow the intended behavior, you must change the implementation to fix it, do not change the test. **Additionally, you must NEVER delete existing test cases; always fix or update them to ensure continuous coverage and regression testing.**
 - **Feature Implementation Checkpoint**: For every feature requested via a GitHub issue, you must evaluate the acceptance criteria and proactively generate as many robust test cases as possible using **Jest** (not Vitest). Implementation cannot be marked as "completed" until all generated Jest test cases successfully pass.
 - **Unit Tests (Jest)**: Used for isolated business logic, database query wrappers, and utility functions (e.g., testing the Group Readiness percentage calculation). All files must end in `.test.ts` or `.test.tsx` and reside in `/tests/unit/`.
 - **Integration Tests (Jest)**: Used for evaluating connected React Components spanning multiple features or simulating back-end interaction via mocked APIs (e.g., MSW). All files must end in `.test.tsx` or `.test.ts` and reside in `/tests/integration/`.
 - **E2E Tests (Playwright)**: Used to validate critical user flows (e.g., Logging in, creating a trip, utilizing the drag-and-drop board). All files must reside in the `/tests/e2e/` root directory.
 - **CI Blocker**: Every Pull Request must pass the automated GitHub Actions pipeline. The PR **cannot be merged** if unit tests fail, integration tests fail, E2E tests fail, or aggregate code coverage drops below 80%.
+
+### Mandatory Pre-Commit Checks
+
+To ensure code quality and prevent CI failures, the following must be run and passed before EVERY commit:
+
+1. `yarn lint`: Zero ESLint errors or warnings.
+2. `yarn format`: Strict Prettier compliance.
+3. `yarn test --coverage`: Unit tests with 80%+ coverage.
+4. `yarn test:integration`: All integration tests pass.
+5. `yarn test:e2e`: All Playwright E2E flows pass across all browsers.

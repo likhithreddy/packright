@@ -63,6 +63,22 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start local Supabase
+        run: supabase start
+
+      - name: Export Supabase environment variables
+        run: |
+          supabase status
+          echo "NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$(supabase status | grep 'anon key' | awk '{print $NF}')" >> $GITHUB_ENV
+          echo "SUPABASE_SERVICE_ROLE_KEY=$(supabase status | grep 'service_role key' | awk '{print $NF}')" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=$(supabase status | grep 'service_role key' | awk '{print $NF}')" >> $GITHUB_ENV
+
       - name: Get installed Playwright version
         id: playwright-version
         run: echo "version=$(yarn list --pattern @playwright/test --depth=0 | grep '@playwright/test' | awk -F@ '{print $3}')" >> "$GITHUB_OUTPUT"
@@ -86,9 +102,6 @@ jobs:
 
       - name: Run Playwright tests
         run: yarn test:e2e
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSJ9.mock-key
 
   security-scan:
     name: Security Scan
