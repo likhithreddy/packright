@@ -1,4 +1,4 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import OnboardingForm from '@/components/features/profile/onboarding-form';
 import { toast } from 'sonner';
@@ -35,6 +35,7 @@ jest.mock('../../src/lib/supabase/client', () => ({
 describe('OnboardingForm', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.spyOn(console, 'error').mockImplementation(() => { });
     mockFrom.mockReturnValue({
       upsert: mockUpsert,
     });
@@ -42,7 +43,7 @@ describe('OnboardingForm', () => {
     mockRpc.mockResolvedValue({ data: true, error: null });
   });
 
-  const navigateToStep3 = async (user: any) => {
+  const navigateToStep3 = async (user: ReturnType<typeof userEvent.setup>) => {
     // Step 1 -> Step 2
     await user.type(screen.getByLabelText(/Full Name/i), 'Test User');
     await user.type(screen.getByLabelText(/Unique Handle/i), 'valid_handle');

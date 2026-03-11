@@ -3,7 +3,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
@@ -35,11 +34,9 @@ import {
   UserCheck,
   AtSign,
   User,
-  Compass,
   Backpack,
   ArrowRight,
   ArrowLeft,
-  Palette
 } from 'lucide-react';
 import { getInitials } from '@/lib/profile-utils';
 import { onboardingSchema, type OnboardingFormValues } from '@/types/onboarding.schema';
@@ -72,7 +69,7 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
     mode: 'onChange',
   });
 
-  const { getValues, setValue, watch, trigger, formState: { errors, isValid } } = form;
+  const { setValue, watch, trigger, getValues } = form;
 
   useEffect(() => {
     if (existingFullName) {
@@ -193,7 +190,7 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
       }, 1500);
     } catch (err) {
       console.error('Onboarding error detailed:', err);
-      const errorMessage = (err as any)?.message || 'An unexpected error occurred. Please try again.';
+      const errorMessage = (err as Error)?.message || 'An unexpected error occurred. Please try again.';
       toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);

@@ -15,21 +15,23 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="flex-1 bg-background p-6 sm:p-8 overflow-y-auto min-h-0">
-      <div className="max-w-2xl mx-auto space-y-6">
-        {/* Header */}
-        <div>
-          <h1 className="text-3xl font-serif font-bold text-foreground">Account Settings</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Manage your account security and sign-in methods.
-          </p>
-        </div>
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-background">
+      <div className="flex-1 overflow-y-auto p-6 sm:p-8 min-h-0">
+        <div className="max-w-4xl mx-auto space-y-6">
+          {/* Header */}
+          <div>
+            <h1 className="text-3xl font-serif font-bold text-foreground">Account Settings</h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Manage your account security and sign-in methods.
+            </p>
+          </div>
 
-        {/* Security Form */}
-        <SecuritySettingsForm
-          email={user.email || ''}
-          providers={user.app_metadata?.providers || []}
-        />
+          {/* Security Form */}
+          <SecuritySettingsForm
+            email={user.email || ''}
+            providers={user.app_metadata?.providers || []}
+          />
+        </div>
       </div>
     </div>
   );

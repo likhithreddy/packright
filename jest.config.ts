@@ -18,6 +18,7 @@ const config: Config = {
       statements: 80,
     },
   },
+  testPathIgnorePatterns: ['<rootDir>/tests/e2e/'],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

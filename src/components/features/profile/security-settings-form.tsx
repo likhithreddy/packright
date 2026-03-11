@@ -66,9 +66,9 @@ export default function SecuritySettingsForm({ email, providers }: SecuritySetti
   const hasOAuthIdentity = providers.some((p) => p !== 'email');
 
   return (
-    <div className="space-y-8">
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
       {/* Account Information */}
-      <Card className="p-6 border-border/50">
+      <Card className="p-6 border-border/50 lg:col-span-2">
         <h3 className="text-lg font-serif font-semibold text-foreground mb-4">
           Account Information
         </h3>
@@ -97,7 +97,7 @@ export default function SecuritySettingsForm({ email, providers }: SecuritySetti
       </Card>
 
       {/* Password Section - Conditional UI */}
-      <Card className="p-6 border-border/50">
+      <Card className="p-6 border-border/50 lg:col-span-3">
         {hasPasswordIdentity ? <ChangePasswordForm email={email} /> : <SetPasswordForm />}
       </Card>
     </div>

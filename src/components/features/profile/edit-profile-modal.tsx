@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import type { Profile } from '@/types/profile.types';
@@ -180,8 +179,8 @@ export default function EditProfileModal({
                           type="button"
                           onClick={() => field.onChange(color.value)}
                           className={`w-9 h-9 rounded-full transition-all duration-200 border-2 ${field.value === color.value
-                              ? 'border-foreground scale-110 shadow-md'
-                              : 'border-transparent hover:scale-105'
+                            ? 'border-foreground scale-110 shadow-md'
+                            : 'border-transparent hover:scale-105'
                             }`}
                           style={{ backgroundColor: color.value }}
                           title={color.name}
@@ -213,8 +212,8 @@ export default function EditProfileModal({
                           type="button"
                           onClick={() => field.onChange(style)}
                           className={`py-2.5 px-3 rounded-lg text-sm font-medium transition-all duration-200 border ${field.value === style
-                              ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                              : 'bg-secondary/30 text-foreground/70 border-border/50 hover:bg-secondary/50'
+                            ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                            : 'bg-secondary/30 text-foreground/70 border-border/50 hover:bg-secondary/50'
                             }`}
                         >
                           {style}
