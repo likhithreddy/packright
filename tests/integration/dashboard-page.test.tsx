@@ -103,7 +103,7 @@ describe('DashboardPage Integration', () => {
     });
 
     const { redirect } = require('next/navigation');
-    
+
     await DashboardPage();
     expect(redirect).toHaveBeenCalledWith('/login');
   });
@@ -111,7 +111,7 @@ describe('DashboardPage Integration', () => {
   it('correctly categorizes a trip ending exactly at the end of today as active', async () => {
     const endOfToday = new Date();
     endOfToday.setHours(23, 59, 59, 999);
-    
+
     const boundaryTrip: Trip = {
       ...mockTrips[0],
       id: 'boundary-trip',

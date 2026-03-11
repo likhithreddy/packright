@@ -59,7 +59,7 @@ describe('TripCard Component', () => {
     const { format } = require('date-fns');
     const startStr = format(new Date(sameMonthTrip.date_start), 'MMM d');
     const endStr = format(new Date(sameMonthTrip.date_end), 'MMM d, yyyy');
-    
+
     render(<TripCard trip={sameMonthTrip} />);
     expect(screen.getByText(`${startStr} - ${endStr}`)).toBeInTheDocument();
   });
@@ -83,8 +83,8 @@ describe('TripCard Component', () => {
     const link = screen.getByRole('link');
     // The link should contain the trip title which acts as its primary label
     expect(link).toHaveTextContent('Summer Vacation in Paris');
-    
-    // Check for MapPin and Calendar icons (they should be hidden from screen readers if decorative, 
+
+    // Check for MapPin and Calendar icons (they should be hidden from screen readers if decorative,
     // but the text beside them matters)
     expect(screen.getByText('Paris, France')).toBeInTheDocument();
   });

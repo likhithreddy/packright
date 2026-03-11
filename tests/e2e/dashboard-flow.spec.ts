@@ -4,7 +4,7 @@ test.describe('Dashboard E2E Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to dashboard - assumes authentication is set up correctly in global-setup or fixtures
     await page.goto('/dashboard');
-    
+
     // Check if we are redirected to login, if so skip the rest (or handle login if needed for this environment)
     if (page.url().includes('/login')) {
       console.log('Redirected to login, skipping E2E flow steps that require auth');
@@ -16,7 +16,7 @@ test.describe('Dashboard E2E Flow', () => {
 
     // Verify Header
     await expect(page.getByRole('heading', { name: 'My Trips' })).toBeVisible();
-    
+
     // Verify "New Trip" button
     const newTripBtn = page.getByRole('link', { name: 'New Trip' });
     await expect(newTripBtn).toBeVisible();
@@ -24,8 +24,8 @@ test.describe('Dashboard E2E Flow', () => {
 
     // Check for trips or empty state
     const emptyState = page.locator('text=No trips planned yet');
-    const hasTrips = await page.locator('section').count() > 0;
-    
+    const hasTrips = (await page.locator('section').count()) > 0;
+
     if (!hasTrips) {
       await expect(emptyState).toBeVisible();
       await expect(page.getByRole('link', { name: 'Plan Your First Trip' })).toBeVisible();
@@ -41,7 +41,7 @@ test.describe('Dashboard E2E Flow', () => {
 
     const tripCard = page.locator('a[href^="/dashboard/trips/"]').first();
     const count = await tripCard.count();
-    
+
     if (count > 0) {
       const href = await tripCard.getAttribute('href');
       await tripCard.click();

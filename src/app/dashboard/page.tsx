@@ -5,7 +5,6 @@ import { TripGrid } from '@/components/features/trip-grid';
 import { LinkButton } from '@/components/ui/link-button';
 import { Plus, Compass } from 'lucide-react';
 
-
 export default async function DashboardPage() {
   const supabase = await createClient();
 
