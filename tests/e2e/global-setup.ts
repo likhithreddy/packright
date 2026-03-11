@@ -1,4 +1,4 @@
-import { chromium, firefox, webkit, type FullConfig } from '@playwright/test';
+import { chromium, type FullConfig } from '@playwright/test';
 import path from 'path';
 import fs from 'fs';
 
@@ -34,7 +34,7 @@ async function globalSetup(config: FullConfig) {
     try {
       const res = await fetch(baseURL);
       if (res.ok) break;
-    } catch (e) {
+    } catch {
       // ignore
     }
     attempts++;

@@ -67,3 +67,12 @@ PackRight follows a highly organized Next.js App Router structure. Separating se
 - **Integration Tests (Jest)**: Used for evaluating connected React Components spanning multiple features or simulating back-end interaction via mocked APIs (e.g., MSW). All files must end in `.test.tsx` or `.test.ts` and reside in `/tests/integration/`.
 - **E2E Tests (Playwright)**: Used to validate critical user flows (e.g., Logging in, creating a trip, utilizing the drag-and-drop board). All files must reside in the `/tests/e2e/` root directory.
 - **CI Blocker**: Every Pull Request must pass the automated GitHub Actions pipeline. The PR **cannot be merged** if unit tests fail, integration tests fail, E2E tests fail, or aggregate code coverage drops below 80%.
+
+### Mandatory Pre-Commit Checks
+
+To ensure code quality and prevent CI failures, the following must be run and passed before EVERY commit:
+1. `yarn lint`: Zero ESLint errors or warnings.
+2. `yarn format`: Strict Prettier compliance.
+3. `yarn test --coverage`: Unit tests with 80%+ coverage.
+4. `yarn test:integration`: All integration tests pass.
+5. `yarn test:e2e`: All Playwright E2E flows pass across all browsers.
