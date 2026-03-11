@@ -48,8 +48,18 @@ PackRight follows a highly organized Next.js App Router structure. Separating se
   │    │    └── utils.ts    # General utilities (e.g., tailwind `cn` merger)
   │    ├── store/           # Zustand client-side state stores
   │    └── types/           # Global TypeScript definitions & Zod schemas
+  ├── supabase/
+  │    └── migrations/      # ALL database changes MUST be captured here. Use format: YYYYMMDDHHMMSS_issue_number_description.sql
   └── tests/                # E2E Playwright and Vitest root setup
 ```
+
+### Database Migrations (Strict Rule)
+
+**Requirement:** All database schema changes, row-level security policies, and seed data adjustments **must** be captured as raw SQL files in the `supabase/migrations/` directory. You must never apply changes directly to the database via the UI or Supabase Studio without first creating a migration file.
+
+**Naming Convention:** Migration files must follow the strict chronological naming convention and include the tracking issue number.
+Format: `YYYYMMDDHHMMSS_<issue-number>_<short-description>.sql`
+_(Example: `20260311140000_39_create_new_trip_schema.sql`)_
 
 ### Naming Conventions & Coding Standards
 

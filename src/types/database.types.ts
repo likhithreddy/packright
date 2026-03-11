@@ -5,6 +5,7 @@ export interface Trip {
   destination: string;
   date_start: string;
   date_end: string;
+  is_archived: boolean;
   created_at: string;
 }
 

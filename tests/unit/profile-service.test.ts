@@ -63,5 +63,31 @@ describe('Profile Service (Server Side)', () => {
       const profile = await getProfileById('non-existent');
       expect(profile).toBeNull();
     });
+
+    it('returns null if getProfileById catches an exception', async () => {
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      mockFrom.mockImplementationOnce(() => {
+        throw new Error('Crash');
+      });
+
+      const profile = await getProfileById('crash-user');
+      expect(profile).toBeNull();
+      expect(consoleSpy).toHaveBeenCalled();
+      consoleSpy.mockRestore();
+    });
+  });
+
+  describe('getProfile catch block', () => {
+    it('returns null if getProfile catches an exception', async () => {
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      mockGetUser.mockImplementationOnce(() => {
+        throw new Error('Auth Crash');
+      });
+
+      const profile = await getProfile();
+      expect(profile).toBeNull();
+      expect(consoleSpy).toHaveBeenCalled();
+      consoleSpy.mockRestore();
+    });
   });
 });

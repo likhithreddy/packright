@@ -188,4 +188,64 @@ describe('OnboardingForm', () => {
     });
     expect(screen.getAllByText('FL').length).toBeGreaterThan(1); // Main preview + color circles
   });
+
+  it('validates username format and length', async () => {
+    const user = userEvent.setup();
+    render(<OnboardingForm userId="u" />);
+
+    const handleInput = screen.getByLabelText(/Unique Handle/i);
+
+    // Too short
+    await user.type(handleInput, 'ab');
+    await user.tab();
+    expect(await screen.findByText('Username must be at least 3 characters')).toBeInTheDocument();
+
+    // Invalid characters
+    await user.clear(handleInput);
+    await user.type(handleInput, 'user@name');
+    await user.tab();
+    expect(
+      await screen.findByText('Username can only contain letters, numbers, and underscores')
+    ).toBeInTheDocument();
+  });
+
+  it('validates full name length', async () => {
+    const user = userEvent.setup();
+    render(<OnboardingForm userId="u" />);
+
+    const nameInput = screen.getByLabelText(/Full Name/i);
+
+    // Too short
+    await user.type(nameInput, 'Ab');
+    await user.tab();
+    expect(await screen.findByText('Full name must be at least 3 characters')).toBeInTheDocument();
+  });
+
+  it('can cancel the handle confirmation dialog', async () => {
+    const user = userEvent.setup();
+    render(<OnboardingForm userId="u" existingFullName="Test User" />);
+
+    await user.type(screen.getByLabelText(/Unique Handle/i), 'new_handle');
+    await waitFor(() => expect(screen.getByTestId('user-check-icon')).toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: /Next/i }));
+
+    // Find and click "Wait, let me change it" (Cancel)
+    const cancelBtn = await screen.findByRole('button', { name: /Wait, let me change it/i });
+    await user.click(cancelBtn);
+
+    // Should still be on Step 1
+    expect(screen.getByText(/Tell us about yourself/i)).toBeInTheDocument();
+    expect(screen.getByDisplayValue('new_handle')).toBeInTheDocument();
+  });
+
+  it('disables next button if username is not available', async () => {
+    const user = userEvent.setup();
+    mockRpc.mockResolvedValue({ data: false, error: null });
+
+    render(<OnboardingForm userId="u" existingFullName="Test User" />);
+    await user.type(screen.getByLabelText(/Unique Handle/i), 'taken_boss');
+
+    await waitFor(() => expect(screen.getByText('Taken')).toBeInTheDocument());
+    expect(screen.getByRole('button', { name: /Next/i })).toBeDisabled();
+  });
 });

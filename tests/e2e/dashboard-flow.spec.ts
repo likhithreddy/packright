@@ -15,12 +15,11 @@ test.describe('Dashboard E2E Flow', () => {
     if (page.url().includes('/login')) return;
 
     // Verify Header
-    await expect(page.getByRole('heading', { name: 'My Trips' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Plan Your Trips' })).toBeVisible();
 
-    // Verify "New Trip" button
-    const newTripBtn = page.getByRole('link', { name: 'New Trip' });
+    // Verify "Plan New Trip" button
+    const newTripBtn = page.getByRole('button', { name: 'Plan New Trip' });
     await expect(newTripBtn).toBeVisible();
-    await expect(newTripBtn).toHaveAttribute('href', '/dashboard/trips/new');
 
     // Check for trips or empty state
     const emptyState = page.locator('text=No trips planned yet');
@@ -28,7 +27,7 @@ test.describe('Dashboard E2E Flow', () => {
 
     if (!hasTrips) {
       await expect(emptyState).toBeVisible();
-      await expect(page.getByRole('link', { name: 'Plan Your First Trip' })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Plan Your First Trip' })).toBeVisible();
     } else {
       // Check for at least one trip card
       const tripCards = page.locator('a[href^="/dashboard/trips/"]');
@@ -54,13 +53,13 @@ test.describe('Dashboard E2E Flow', () => {
 
     // Mobile view
     await page.setViewportSize({ width: 375, height: 667 });
-    await expect(page.getByRole('heading', { name: 'My Trips' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Plan Your Trips' })).toBeVisible();
     // Header often collapses or wraps on mobile, check for visibility
-    const header = page.getByText('My Trips');
+    const header = page.getByText('Plan Your Trips');
     await expect(header).toBeVisible();
 
     // Desktop view
     await page.setViewportSize({ width: 1280, height: 800 });
-    await expect(page.getByRole('heading', { name: 'My Trips' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Plan Your Trips' })).toBeVisible();
   });
 });

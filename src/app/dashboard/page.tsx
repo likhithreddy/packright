@@ -2,7 +2,8 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { getUserTrips } from '@/lib/supabase/trips';
 import { TripGrid } from '@/components/features/trip-grid';
-import { LinkButton } from '@/components/ui/link-button';
+import { Button } from '@/components/ui/button';
+import { NewTripModal } from '@/components/features/trips/new-trip-modal';
 import { Plus, Compass } from 'lucide-react';
 
 export default async function DashboardPage() {
@@ -40,13 +41,12 @@ export default async function DashboardPage() {
               Manage all your packing lists and upcoming adventures.
             </p>
           </div>
-          <LinkButton
-            href="/dashboard/trips/new"
-            className="gap-2 shrink-0 shadow-sm rounded-full pl-4 pr-6"
-          >
-            <Plus className="h-5 w-5" />
-            <span className="font-medium text-base">New Trip</span>
-          </LinkButton>
+          <NewTripModal>
+            <Button className="gap-2 shrink-0 shadow-sm rounded-full pl-4 pr-6">
+              <Plus className="h-5 w-5" />
+              <span className="font-medium text-base">New Trip</span>
+            </Button>
+          </NewTripModal>
         </div>
 
         {/* Empty State */}
@@ -60,13 +60,11 @@ export default async function DashboardPage() {
               You don&apos;t have any active or past trips. Create your first trip to start
               organizing your packing lists!
             </p>
-            <LinkButton
-              href="/dashboard/trips/new"
-              size="lg"
-              className="rounded-full shadow-md text-base px-8"
-            >
-              Plan Your First Trip
-            </LinkButton>
+            <NewTripModal>
+              <Button size="lg" className="rounded-full shadow-md text-base px-8">
+                Plan Your First Trip
+              </Button>
+            </NewTripModal>
           </div>
         ) : (
           <div className="space-y-12 mt-4">
