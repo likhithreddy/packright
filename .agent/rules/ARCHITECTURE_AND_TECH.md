@@ -71,6 +71,7 @@ PackRight follows a highly organized Next.js App Router structure. Separating se
 ### Mandatory Pre-Commit Checks
 
 To ensure code quality and prevent CI failures, the following must be run and passed before EVERY commit:
+
 1. `yarn lint`: Zero ESLint errors or warnings.
 2. `yarn format`: Strict Prettier compliance.
 3. `yarn test --coverage`: Unit tests with 80%+ coverage.
