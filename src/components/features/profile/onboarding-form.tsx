@@ -59,6 +59,7 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingValues, setPendingValues] = useState<OnboardingFormValues | null>(null);
+  const [canSubmit, setCanSubmit] = useState(false);
 
   const form = useForm<OnboardingFormValues>({
     resolver: zodResolver(onboardingSchema),
@@ -78,6 +79,15 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
       setValue('full_name', existingFullName);
     }
   }, [existingFullName, setValue]);
+
+  useEffect(() => {
+    if (step === 3) {
+      const timer = setTimeout(() => setCanSubmit(true), 400);
+      return () => clearTimeout(timer);
+    } else {
+      setCanSubmit(false);
+    }
+  }, [step]);
 
   const checkUsernameAvailability = useCallback(
     async (username: string) => {
@@ -127,6 +137,7 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
   };
 
   const handleBack = () => {
+    setCanSubmit(false);
     setStep((s) => s - 1);
   };
 
@@ -143,6 +154,11 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
     // If user hits Enter on earlier steps, just move forward
     if (step < 3) {
       handleNext();
+      return;
+    }
+
+    // Guard against "ghost clicks" or premature submissions during transition
+    if (step !== 3 || !canSubmit) {
       return;
     }
 
@@ -470,7 +486,7 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                 <Button
                   type="submit"
                   className="px-10 font-bold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !canSubmit}
                 >
                   Complete Setup <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

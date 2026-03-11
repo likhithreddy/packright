@@ -28,7 +28,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden">
       <Navbar profile={profile} />
-      <main className="flex-1 overflow-y-auto">{children}</main>
+      <main className="flex-1 flex flex-col overflow-hidden">{children}</main>
     </div>
   );
 }

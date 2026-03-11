@@ -15,7 +15,7 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="flex-1 bg-background p-6 sm:p-8 overflow-y-auto">
+    <div className="flex-1 bg-background p-6 sm:p-8 overflow-y-auto min-h-0">
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Header */}
         <div>

@@ -36,7 +36,7 @@ export default function ProfileView({ profile, email, providers: _providers }: P
   };
 
   return (
-    <div className="flex-1 bg-background p-6 sm:p-8 overflow-y-auto">
+    <div className="flex-1 bg-background p-6 sm:p-8 overflow-y-auto min-h-0">
       <div className="max-w-3xl mx-auto space-y-8">
         {/* Profile Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">

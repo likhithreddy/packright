@@ -62,7 +62,7 @@ describe('EditProfileModal', () => {
       <EditProfileModal
         profile={mockProfile}
         open={true}
-        onOpenChange={() => {}}
+        onOpenChange={() => { }}
         onProfileUpdate={onProfileUpdate}
       />
     );
@@ -73,7 +73,7 @@ describe('EditProfileModal', () => {
     await user.type(nameInput, 'Updated Name');
 
     // Selection branches - Correct regex for "Over Packer"
-    fireEvent.click(screen.getByTitle('Forest Green'));
+    fireEvent.click(screen.getByTitle('Subtle Green'));
     fireEvent.click(screen.getByRole('button', { name: /Over Packer/i }));
 
     await user.click(screen.getByRole('button', { name: /Save Changes/i }));
@@ -93,8 +93,8 @@ describe('EditProfileModal', () => {
       <EditProfileModal
         profile={mockProfile}
         open={true}
-        onOpenChange={() => {}}
-        onProfileUpdate={() => {}}
+        onOpenChange={() => { }}
+        onProfileUpdate={() => { }}
       />
     );
 
@@ -122,7 +122,7 @@ describe('EditProfileModal', () => {
         profile={mockProfile}
         open={true}
         onOpenChange={onOpenChange}
-        onProfileUpdate={() => {}}
+        onProfileUpdate={() => { }}
       />
     );
 
