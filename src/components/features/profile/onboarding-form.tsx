@@ -213,15 +213,25 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
         {/* Progress Tracker */}
         <div className="relative flex items-center justify-between w-full px-5 mb-8">
           {/* Background Line */}
-          <div className="absolute top-1/2 left-10 right-10 h-[2px] bg-secondary/50 -translate-y-1/2" />
+          {/* Line Segment 1 (Step 1 to 2) */}
+          <div className="absolute top-1/2 left-[72px] right-[calc(50%+32px)] h-[2px] bg-secondary/30 -translate-y-1/2">
+            <motion.div
+              className="h-full bg-primary origin-left"
+              initial={false}
+              animate={{ scaleX: step >= 2 ? 1 : 0 }}
+              transition={{ duration: 0.5, ease: 'easeInOut' }}
+            />
+          </div>
 
-          {/* Active Progress Line */}
-          <motion.div
-            className="absolute top-1/2 left-10 right-10 h-[2px] bg-primary -translate-y-1/2 origin-left"
-            initial={false}
-            animate={{ scaleX: (step - 1) / 2 }}
-            transition={{ duration: 0.5, ease: 'easeInOut' }}
-          />
+          {/* Line Segment 2 (Step 2 to 3) */}
+          <div className="absolute top-1/2 left-[calc(50%+32px)] right-[72px] h-[2px] bg-secondary/30 -translate-y-1/2">
+            <motion.div
+              className="h-full bg-primary origin-left"
+              initial={false}
+              animate={{ scaleX: step >= 3 ? 1 : 0 }}
+              transition={{ duration: 0.5, ease: 'easeInOut' }}
+            />
+          </div>
 
           {[1, 2, 3].map((s) => (
             <div key={s} className="relative z-10 flex flex-col items-center">
@@ -452,7 +462,7 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                   type="button"
                   onClick={handleNext}
                   className="px-8 font-semibold"
-                  disabled={step === 1 && (!watchedFullName || watchedFullName.length < 3 || usernameAvailable !== true || isCheckingUsername)}
+                  disabled={isSubmitting || (step === 1 && (!watchedFullName || watchedFullName.length < 3 || usernameAvailable !== true || isCheckingUsername))}
                 >
                   Next <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

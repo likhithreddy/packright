@@ -17,7 +17,7 @@ describe('onboardingSchema', () => {
         const result = onboardingSchema.safeParse({ ...validData, full_name: 'Jo' });
         expect(result.success).toBe(false);
         if (!result.success) {
-            expect(result.error.errors[0].message).toBe('Full name must be at least 3 characters');
+            expect(result.error.issues[0].message).toBe('Full name must be at least 3 characters');
         }
     });
 

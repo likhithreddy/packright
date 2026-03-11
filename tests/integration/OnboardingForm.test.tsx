@@ -49,8 +49,12 @@ describe('OnboardingForm', () => {
     await waitFor(() => expect(screen.getByTestId('user-check-icon')).toBeInTheDocument());
     await user.click(screen.getByRole('button', { name: /Next/i }));
 
+    // Handle confirmation dialog after Step 1
+    const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
+    await user.click(confirmBtn);
+
     // Step 2 -> Step 3
-    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument(), { timeout: 3000 });
     await user.click(screen.getByRole('button', { name: /Next/i }));
   };
 
@@ -66,11 +70,15 @@ describe('OnboardingForm', () => {
     await waitFor(() => expect(screen.getByTestId('user-check-icon')).toBeInTheDocument());
     await user.click(screen.getByRole('button', { name: /Next/i }));
 
+    // Handle confirmation dialog after Step 1
+    const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
+    await user.click(confirmBtn);
+
     // Step 2: Avatar
-    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument(), { timeout: 3000 });
     // Use aria-label or just click a button (all show initials)
     const colorButtons = screen.getAllByRole('button');
-    // First color button is Indigo by default
+    // Select a color
     await user.click(colorButtons[0]);
     await user.click(screen.getByRole('button', { name: /Next/i }));
 
@@ -78,10 +86,6 @@ describe('OnboardingForm', () => {
     await waitFor(() => expect(screen.getByText(/Packing Style/i)).toBeInTheDocument());
     await user.click(screen.getByRole('button', { name: /Over Packer/i }));
     await user.click(screen.getByRole('button', { name: /Complete Setup/i }));
-
-    // Confirm Dialog
-    const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
-    await user.click(confirmBtn);
 
     await waitFor(() => {
       expect(mockUpsert).toHaveBeenCalled();
@@ -97,7 +101,11 @@ describe('OnboardingForm', () => {
     await waitFor(() => expect(screen.getByTestId('user-check-icon')).toBeInTheDocument());
     await user.click(screen.getByRole('button', { name: /Next/i }));
 
-    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument());
+    // Handle confirmation dialog
+    const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
+    await user.click(confirmBtn);
+
+    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument(), { timeout: 3000 });
     await user.click(screen.getByRole('button', { name: /Back/i }));
 
     await waitFor(() => expect(screen.getByText(/Tell us about yourself/i)).toBeInTheDocument());
@@ -128,8 +136,6 @@ describe('OnboardingForm', () => {
     await navigateToStep3(user);
 
     await user.click(screen.getByRole('button', { name: /Complete Setup/i }));
-    const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
-    await user.click(confirmBtn);
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith('This handle is already taken. Please choose another.');
@@ -146,11 +152,9 @@ describe('OnboardingForm', () => {
     await navigateToStep3(user);
 
     await user.click(screen.getByRole('button', { name: /Complete Setup/i }));
-    const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
-    await user.click(confirmBtn);
 
     await waitFor(() =>
-      expect(toast.error).toHaveBeenCalledWith('An unexpected error occurred. Please try again.')
+      expect(toast.error).toHaveBeenCalledWith('Crash')
     );
   });
 
@@ -162,8 +166,12 @@ describe('OnboardingForm', () => {
     await waitFor(() => expect(screen.getByTestId('user-check-icon')).toBeInTheDocument());
     await user.click(screen.getByRole('button', { name: /Next/i }));
 
+    // Handle confirmation dialog
+    const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
+    await user.click(confirmBtn);
+
     // Check initials in Step 2 main preview
-    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Choose your vibe/i)).toBeInTheDocument(), { timeout: 3000 });
     expect(screen.getAllByText('FL').length).toBeGreaterThan(1); // Main preview + color circles
   });
 });

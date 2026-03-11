@@ -28,16 +28,8 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Loader2, User, AtSign, Palette, Backpack, Lock } from 'lucide-react';
 
-const editProfileSchema = z.object({
-  full_name: z
-    .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(50, 'Name must be at most 50 characters'),
-  avatar_theme: z.string().min(1, 'Please select an avatar color'),
-  packing_style: z.string().min(1, 'Please select a packing style'),
-});
-
-type EditProfileFormValues = z.infer<typeof editProfileSchema>;
+import { getInitials } from '@/lib/profile-utils';
+import { editProfileSchema, type EditProfileFormValues } from '@/types/edit-profile.schema';
 
 interface EditProfileModalProps {
   profile: Profile;
@@ -64,12 +56,6 @@ export default function EditProfileModal({
     },
   });
 
-  const getInitials = (name: string): string => {
-    if (!name) return '?';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length === 1) return parts[0][0]?.toUpperCase() || '?';
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  };
 
   const handleSubmit = async (values: EditProfileFormValues) => {
     setIsSubmitting(true);
@@ -193,11 +179,10 @@ export default function EditProfileModal({
                           key={color.value}
                           type="button"
                           onClick={() => field.onChange(color.value)}
-                          className={`w-9 h-9 rounded-full transition-all duration-200 border-2 ${
-                            field.value === color.value
+                          className={`w-9 h-9 rounded-full transition-all duration-200 border-2 ${field.value === color.value
                               ? 'border-foreground scale-110 shadow-md'
                               : 'border-transparent hover:scale-105'
-                          }`}
+                            }`}
                           style={{ backgroundColor: color.value }}
                           title={color.name}
                           aria-label={`Select ${color.name} avatar color`}
@@ -227,11 +212,10 @@ export default function EditProfileModal({
                           key={style}
                           type="button"
                           onClick={() => field.onChange(style)}
-                          className={`py-2.5 px-3 rounded-lg text-sm font-medium transition-all duration-200 border ${
-                            field.value === style
+                          className={`py-2.5 px-3 rounded-lg text-sm font-medium transition-all duration-200 border ${field.value === style
                               ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                               : 'bg-secondary/30 text-foreground/70 border-border/50 hover:bg-secondary/50'
-                          }`}
+                            }`}
                         >
                           {style}
                         </button>

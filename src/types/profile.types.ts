@@ -9,14 +9,14 @@ export interface Profile {
 }
 
 export const AVATAR_COLORS = [
-  { name: 'Indigo', value: '#4F46E5' },
-  { name: 'Slate', value: '#475569' },
-  { name: 'Emerald', value: '#059669' },
-  { name: 'Amber', value: '#D97706' },
-  { name: 'Rose', value: '#E11D48' },
-  { name: 'Cyan', value: '#0891B2' },
-  { name: 'Gray', value: '#4B5563' },
-  { name: 'Violet', value: '#7C3AED' },
+  { name: 'Neutral Gray', value: '#b3b3b3' },
+  { name: 'Professional Blue', value: '#2E67A0' },
+  { name: 'Soft Cyan', value: '#5AACCF' },
+  { name: 'Light Blue', value: '#718699' },
+  { name: 'Subtle Green', value: '#80C271' },
+  { name: 'Warm Beige', value: '#e5c494' },
+  { name: 'Subtle Red', value: '#f08080' },
+  { name: 'Soft Purple', value: '#e78ac3' },
 ] as const;
 
 export const PACKING_STYLES = [
