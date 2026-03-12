@@ -35,7 +35,9 @@ describe('POST /api/generate-list', () => {
 
     const request = new Request('http://localhost:3000/api/generate-list', {
       method: 'POST',
-      body: JSON.stringify({ description: 'This is a long enough description to pass initial check.' }),
+      body: JSON.stringify({
+        description: 'This is a long enough description to pass initial check.',
+      }),
     });
 
     const response = await POST(request);
@@ -149,7 +151,9 @@ describe('POST /api/generate-list', () => {
     expect(mockFetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
-        body: expect.stringContaining('Destination: Switzerland. Duration: 7 days. Description: A week long ski trip'),
+        body: expect.stringContaining(
+          'Destination: Switzerland. Duration: 7 days. Description: A week long ski trip'
+        ),
       })
     );
   });
@@ -174,7 +178,11 @@ describe('POST /api/generate-list', () => {
     // First two calls fail, third succeeds
     mockFetch
       .mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({ error: 'Fail' }) })
-      .mockResolvedValueOnce({ ok: false, status: 502, json: async () => ({ error: 'Bad Gateway' }) })
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 502,
+        json: async () => ({ error: 'Bad Gateway' }),
+      })
       .mockResolvedValueOnce({ ok: true, json: async () => mockGroqResponse });
 
     const request = new Request('http://localhost:3000/api/generate-list', {

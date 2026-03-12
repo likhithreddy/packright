@@ -13,7 +13,18 @@ export const newTripSchema = z.object({
       path: ['to'],
     }),
   aiPrompt: z.string().optional(),
-  items: z.array(z.string()).optional(),
+  items: z
+    .array(
+      z.union([
+        z.string(),
+        z.object({
+          name: z.string(),
+          quantity: z.number().default(1),
+          category: z.string().default('Essentials'),
+        }),
+      ])
+    )
+    .optional(),
 });
 
 export type NewTripInput = z.infer<typeof newTripSchema>;

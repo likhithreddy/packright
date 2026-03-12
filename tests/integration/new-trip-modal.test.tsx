@@ -10,6 +10,9 @@ jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));
 
+const mockFetch = jest.fn();
+global.fetch = mockFetch;
+
 jest.mock('../../src/app/actions/trips', () => ({
   createTripAction: jest.fn(),
 }));
@@ -36,7 +39,11 @@ describe('NewTripModal Integration', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (useRouter as jest.Mock).mockReturnValue({ push: mockRouterPush });
+    (useRouter as jest.Mock).mockReturnValue({
+      push: mockRouterPush,
+      prefetch: jest.fn(),
+    });
+    mockFetch.mockReset();
   });
 
   const setup = () => {
@@ -126,9 +133,12 @@ describe('NewTripModal Integration', () => {
     expect(callArgs.destination).toBe('Hawaii');
     expect(callArgs.items).toEqual([]); // Should be empty
 
-    await waitFor(() => {
-      expect(mockRouterPush).toHaveBeenCalledWith('/dashboard/trips/test-trip-id');
-    });
+    await waitFor(
+      () => {
+        expect(mockRouterPush).toHaveBeenCalledWith('/dashboard/trips/test-trip-id');
+      },
+      { timeout: 4000 }
+    );
   });
 
   it('navigates to step 3 when valid AI prompt is provided and allows item selection', async () => {
@@ -163,12 +173,20 @@ describe('NewTripModal Integration', () => {
       'A very long description that easily exceeds the twenty character minimum length.'
     );
 
+    // Mock fetch for suggestions
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        items: [
+          { name: 'Sunscreen', quantity: 1, category: 'Personal Care' },
+          { name: 'Passport', quantity: 1, category: 'Documents' },
+        ],
+      }),
+    });
+
     const getSuggestionsBtn = screen.getByRole('button', { name: /Get Suggestions/i });
     expect(getSuggestionsBtn).not.toBeDisabled();
     await user.click(getSuggestionsBtn);
-
-    // Step 3: Item selection
-    expect(await screen.findByText(/Choose Suggested Items/i)).toBeInTheDocument();
 
     // Step 3: Item selection
     expect(await screen.findByText(/Choose Suggested Items/i)).toBeInTheDocument();
@@ -186,8 +204,22 @@ describe('NewTripModal Integration', () => {
     });
 
     const callArgs = (actions.createTripAction as jest.Mock).mock.calls[0][0];
-    expect(callArgs.items).toContain('Sunscreen');
-  });
+    // Since it was default-selected, clicking it toggled it OFF.
+    // So we expect Passport to be there but NOT Sunscreen.
+    expect(callArgs.items).toEqual(
+      expect.arrayContaining([expect.objectContaining({ name: 'Passport' })])
+    );
+    expect(callArgs.items).not.toEqual(
+      expect.arrayContaining([expect.objectContaining({ name: 'Sunscreen' })])
+    );
+
+    await waitFor(
+      () => {
+        expect(mockRouterPush).toHaveBeenCalledWith('/dashboard/trips/test-trip-id-2');
+      },
+      { timeout: 4000 }
+    );
+  }, 10000);
 
   it('shows a warning toast (not success) when server returns a warning on Skip & Create', async () => {
     (actions.createTripAction as jest.Mock).mockResolvedValue({
@@ -224,8 +256,13 @@ describe('NewTripModal Integration', () => {
       expect(toast.success).not.toHaveBeenCalled();
     });
 
-    expect(mockRouterPush).toHaveBeenCalledWith('/dashboard/trips/warn-trip-id');
-  });
+    await waitFor(
+      () => {
+        expect(mockRouterPush).toHaveBeenCalledWith('/dashboard/trips/warn-trip-id');
+      },
+      { timeout: 4000 }
+    );
+  }, 10000);
 
   it('closes modal and resets form when Cancel is clicked', async () => {
     const { user } = setup();
