@@ -119,7 +119,7 @@ http {
         # CORS headers for all locations
         add_header 'Access-Control-Allow-Origin' '*' always;
         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE, PATCH' always;
-        add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,apikey,x-client-info,prefer' always;
+        add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,apikey,x-client-info,prefer,content-profile,accept-profile' always;
         add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range' always;
 
         location /auth/v1/ {
