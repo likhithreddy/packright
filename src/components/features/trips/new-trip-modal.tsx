@@ -172,7 +172,7 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
         setIsRedirecting(false); // Reset redirecting state
         router.push(`/dashboard/trips/${result.data.tripId}`);
       }, 3000);
-    } catch (error) {
+    } catch {
       toast.error('An unexpected error occurred. Please try again.');
       setIsPending(false);
     }
