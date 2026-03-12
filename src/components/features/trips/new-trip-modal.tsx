@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PlaneTakeoff, MapPin, Sparkles, ArrowRight, ArrowLeft } from 'lucide-react';
+import { PlaneTakeoff, MapPin, Sparkles, ArrowRight, ArrowLeft, Plane, Check } from 'lucide-react';
 
 import {
   Dialog,
@@ -32,29 +32,33 @@ import { cn } from '@/lib/utils';
 import { newTripSchema, NewTripInput } from '@/types/new-trip.schema';
 import { createTripAction } from '@/app/actions/trips';
 
-const MOCK_ITEMS = [
-  'Sunscreen',
-  'First Aid Kit',
-  'Portable Charger',
-  'Water Bottles',
-  'Rain Jacket',
-  'Snacks',
-  'Camera',
-  'Torch / Flashlight',
-  'Insect Repellent',
-  'Hand Sanitizer',
-  'Medications',
-  'Cash',
-  'Power Bank',
-  'Travel Pillow',
-  'Reusable Bag',
-  'Sunglasses',
-];
-
 export function NewTripModal({ children }: { children?: React.ReactNode }) {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
+  const [isFetchingSuggestions, setIsFetchingSuggestions] = React.useState(false);
   const [isPending, setIsPending] = React.useState(false);
+  const [isRedirecting, setIsRedirecting] = React.useState(false);
+  const [currentPhraseIndex, setCurrentPhraseIndex] = React.useState(0);
+
+  const WITTY_PHRASES = [
+    'Rolling your socks like a pro...',
+    'Negotiating with the suitcase zipper...',
+    'Consulting the weather gods for your destination...',
+    'Practicing your "Out of Office" face...',
+    'Double checking for that one thing you\'ll definitely forget...',
+    'Weight lifting your luggage to avoid fees...',
+  ];
+
+  // Rotate phrases while redirecting
+  React.useEffect(() => {
+    if (!isRedirecting) return;
+
+    const interval = setInterval(() => {
+      setCurrentPhraseIndex((prev) => (prev + 1) % WITTY_PHRASES.length);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [isRedirecting]);
 
   // Multistep Form State
   const [step, setStep] = React.useState<1 | 2 | 3>(1);
@@ -93,15 +97,15 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
 
     setIsFetchingSuggestions(true);
     try {
-      const { destination, dateRange } = form.getValues();
+      const { aiPrompt, destination, dateRange } = form.getValues();
       const response = await fetch('/api/generate-list', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          description: promptValue,
-          destination: destination,
-          startDate: dateRange?.from?.toISOString(),
-          endDate: dateRange?.to?.toISOString(),
+          description: aiPrompt,
+          destination,
+          startDate: dateRange?.from?.toISOString(), // Keep original logic for safety
+          endDate: dateRange?.to?.toISOString(), // Keep original logic for safety
         }),
       });
 
@@ -116,8 +120,9 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
       setSuggestedItems(items);
       setSelectedItems(items); // Default to all selected
       setStep(3);
-    } catch (error: any) {
-      toast.error(error.message || 'Error generating suggestions');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error generating suggestions';
+      toast.error(errorMessage);
     } finally {
       setIsFetchingSuggestions(false);
     }
@@ -126,33 +131,103 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
   async function onSubmit(data: NewTripInput) {
     setIsPending(true);
     try {
-      // In a real scenario, we would map the selectedItems array to the final payload.
-      // But we can just use the state variable override or let RHF handle it.
-      // Actually let's manually combine just in case RHF gets out of sync from state:
-      data.items = step === 3 ? selectedItems : [];
+      // Prefetch dashboard early to warm up the cache
+      router.prefetch('/dashboard');
 
-      const response = await createTripAction(data);
+      const response = await createTripAction({
+        ...data,
+        items: selectedItems,
+      });
 
       if (response.success && response.data) {
+        setIsRedirecting(true);
+        // Prefetch the specific trip page
+        router.prefetch(`/dashboard/trips/${response.data.tripId}`);
+        
         if (response.warning) {
           toast.warning(response.warning);
         } else {
           toast.success(`Trip to ${data.destination} created successfully!`);
         }
-        setOpen(false);
-        form.reset();
-        setStep(1);
-        setSelectedItems([]);
-        router.push(`/dashboard/trips/${response.data.tripId}`);
+
+        // Small delay to ensure they see the witty redirection state
+        setTimeout(() => {
+          setOpen(false);
+          form.reset();
+          setStep(1);
+          setSelectedItems([]);
+          setIsRedirecting(false);
+          router.push(`/dashboard/trips/${response.data.tripId}`);
+        }, 3000);
       } else {
         toast.error(response.error || 'Failed to create trip');
+        setIsPending(false);
       }
     } catch {
       toast.error('An unexpected error occurred. Please try again.');
-    } finally {
       setIsPending(false);
     }
   }
+
+  const WittyRedirectView = () => (
+    <div className="flex flex-col items-center justify-center py-12 px-4 text-center space-y-6 animate-in fade-in zoom-in duration-500 min-h-[400px]">
+      <div className="relative">
+        <div className="w-20 h-20 bg-[#F5F3ED] rounded-3xl flex items-center justify-center">
+          <motion.div
+            animate={{ 
+              y: [0, -10, 0],
+              rotate: [0, -5, 5, 0]
+            }}
+            transition={{ 
+              duration: 2, 
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            <Plane className="w-10 h-10 text-[#2D3A30]" />
+          </motion.div>
+        </div>
+        <motion.div 
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="absolute -top-1 -right-1 w-6 h-6 bg-[#2D3A30] rounded-full flex items-center justify-center"
+        >
+          <Check className="w-4 h-4 text-white" />
+        </motion.div>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="font-serif text-2xl text-[#2D3A30]">Trip Created!</h3>
+        <div className="h-8 flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={currentPhraseIndex}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.5 }}
+              className="text-stone-500 italic text-sm"
+            >
+              {WITTY_PHRASES[currentPhraseIndex]}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+      </div>
+
+      <div className="w-48 h-1.5 bg-stone-100 rounded-full overflow-hidden">
+        <motion.div
+          className="h-full bg-[#2D3A30]"
+          initial={{ width: '0%' }}
+          animate={{ width: '100%' }}
+          transition={{ duration: 3, ease: 'linear' }}
+        />
+      </div>
+      
+      <p className="text-[10px] text-stone-400 uppercase tracking-widest font-bold">
+        Preparing your destination dashboard
+      </p>
+    </div>
+  );
 
   // Handle dialog open/close manually to reset form if canceled
   const onOpenChange = (newOpen: boolean) => {
@@ -193,24 +268,28 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
       )}
       <DialogContent className="sm:max-w-fit md:min-w-[500px] max-w-[95vw] p-0 overflow-hidden border-stone-200 bg-[#FAFAF8] rounded-2xl shadow-xl flex flex-col max-h-[90vh] transition-all duration-300">
         <div className="px-6 pt-6 pb-2 shrink-0">
-          <DialogHeader className="flex flex-row justify-between items-start">
-            <div>
-              <DialogTitle className="font-serif text-2xl text-[#2D3A30]">
-                {step === 3 ? 'Choose Suggested Items' : 'Plan a New Trip'}
-              </DialogTitle>
-              <DialogDescription className="text-stone-500 font-sans mt-1">
-                {step === 3
-                  ? 'Pick what to add to your board — you can always add more later.'
-                  : 'Fill in trip details. Optionally let AI suggest what to pack.'}
-              </DialogDescription>
-            </div>
-            {/* Shadcn automatically includes a close X icon by default but we can hide it via CSS if we prefer our own header layout */}
-          </DialogHeader>
+          {!isRedirecting && (
+            <DialogHeader className="flex flex-row justify-between items-start">
+              <div>
+                <DialogTitle className="font-serif text-2xl text-[#2D3A30]">
+                  {step === 3 ? 'Choose Suggested Items' : 'Plan a New Trip'}
+                </DialogTitle>
+                <DialogDescription className="text-stone-500 font-sans mt-1">
+                  {step === 3
+                    ? 'Pick what to add to your board — you can always add more later.'
+                    : 'Fill in trip details. Optionally let AI suggest what to pack.'}
+                </DialogDescription>
+              </div>
+            </DialogHeader>
+          )}
         </div>
 
         <Form {...form}>
           <form className="flex-1 overflow-y-auto px-6 pb-6 font-sans scrollbar-hide">
-            <AnimatePresence mode="wait">
+            {isRedirecting ? (
+              <WittyRedirectView />
+            ) : (
+              <AnimatePresence mode="wait">
               {step === 1 && (
                 <motion.div
                   key="step1"
@@ -492,6 +571,7 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
                 </motion.div>
               )}
             </AnimatePresence>
+            )}
           </form>
         </Form>
       </DialogContent>

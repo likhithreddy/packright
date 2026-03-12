@@ -119,8 +119,9 @@ export async function POST(request: Request) {
 
         // Successfully generated and parsed
         return NextResponse.json({ items: parsedContent.items });
-      } catch (err: any) {
-        console.warn(`Attempt ${attempts} failed:`, err.message);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error during generation';
+        console.warn(`Attempt ${attempts} failed:`, errorMessage);
         lastError = err;
         // Wait a bit before retrying (exponential backoff could be added here if needed)
         if (attempts < maxAttempts) {
