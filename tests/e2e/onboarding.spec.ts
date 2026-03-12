@@ -129,15 +129,19 @@ test.describe.serial('Onboarding Flow', () => {
 
     // ── Step 1: Identity ──────────────────────────────────────────────────────
     await page.fill('input[name="full_name"]', 'E2E Test User');
-    await page.fill('input[name="username"]', uniqueUsername);
+    await page.type('input[name="username"]', uniqueUsername, { delay: 50 });
 
     // Wait for the availability check icon
     await page.waitForSelector('[data-testid="user-check-icon"]', { timeout: 10000 });
 
     // Click Next -> Shows "Confirm your handle"
-    await page.click('button:has-text("Next")');
+    // We explicitly wait for the button to be enabled to avoid WebKit race conditions
+    const nextBtn = page.getByRole('button', { name: 'Next', exact: true });
+    await expect(nextBtn).toBeEnabled();
+    await nextBtn.click();
+
     await expect(page.getByRole('alertdialog')).toBeVisible();
-    await page.click('button:has-text("Yes, I\'m sure")');
+    await page.getByRole('button', { name: "Yes, I'm sure" }).click();
 
     // ── Step 2: Avatar Color ──────────────────────────────────────────────────
     await page.click('button[aria-label="Select Deep Gold avatar color"]');

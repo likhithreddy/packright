@@ -40,6 +40,11 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
+  /* Timeout for each assertion in expect() */
+  expect: {
+    timeout: process.env.CI ? 10000 : 5000,
+  },
+
   /* Configure projects for major browsers */
   projects: [
     {

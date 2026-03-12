@@ -72,11 +72,12 @@ test.describe('Create New Trip Flow', () => {
     await expect(skipBtn).toBeEnabled();
     await skipBtn.click();
 
-    // The modal should close and the user should be redirected to the new trip dashboard.
-    await expect(page).toHaveURL(/\/dashboard\/trips\/[a-zA-Z0-9-]+/);
-
-    // A success toast should be visible
+    // A success toast should be visible immediately after the API call finishes
+    // and before the 3-second witty redirect completes.
     await expect(page.getByText('Trip created successfully!')).toBeVisible();
+
+    // The modal should close and the user should be redirected to the new trip dashboard.
+    await expect(page).toHaveURL(/\/dashboard\/trips\/[a-zA-Z0-9-]+/, { timeout: 10000 });
   });
 
   test('should block Step 2 transition when required fields are empty', async ({ page }) => {
