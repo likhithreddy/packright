@@ -72,15 +72,26 @@ export async function createTrip(
     }
 
     let itemsWarning = null;
-    // 3. Bulk insert mocked AI items if provided
+    // 3. Bulk insert AI items if provided
     if (input.items && input.items.length > 0) {
-      const itemsToInsert = input.items.map((itemName) => ({
-        trip_id: trip.id,
-        name: itemName,
-        required_count: 1,
-        category: 'Essentials',
-        status: 'needed',
-      }));
+      const itemsToInsert = input.items.map((item) => {
+        if (typeof item === 'string') {
+          return {
+            trip_id: trip.id,
+            name: item,
+            required_count: 1,
+            category: 'Essentials',
+            status: 'needed',
+          };
+        }
+        return {
+          trip_id: trip.id,
+          name: item.name,
+          required_count: item.quantity,
+          category: item.category,
+          status: 'needed',
+        };
+      });
 
       const { error: itemsError } = await supabase.from('items').insert(itemsToInsert);
       if (itemsError) {

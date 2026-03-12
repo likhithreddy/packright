@@ -13,6 +13,7 @@ const mockActiveTrip: Trip = {
   destination: 'Paris, France',
   date_start: new Date(new Date().setDate(new Date().getDate() + 5)).toISOString(),
   date_end: new Date(new Date().setDate(new Date().getDate() + 15)).toISOString(),
+  is_archived: false,
   created_at: new Date().toISOString(),
 };
 
@@ -23,6 +24,7 @@ const mockPastTrip: Trip = {
   destination: 'Aspen, Colorado',
   date_start: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString(),
   date_end: new Date(new Date().setDate(new Date().getDate() - 25)).toISOString(),
+  is_archived: false,
   created_at: new Date().toISOString(),
 };
 
