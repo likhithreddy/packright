@@ -64,7 +64,6 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
   const [step, setStep] = React.useState<1 | 2 | 3>(1);
   const [suggestedItems, setSuggestedItems] = React.useState<string[]>([]);
   const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
-  const [isFetchingSuggestions, setIsFetchingSuggestions] = React.useState(false);
 
   const form = useForm<NewTripInput>({
     resolver: zodResolver(newTripSchema),
