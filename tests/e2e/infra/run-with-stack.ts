@@ -1,7 +1,7 @@
 import { spawn } from 'child_process';
 import path from 'path';
 import fs from 'fs';
-import { startSupabaseStack } from './supabase-stack';
+import { startSupabaseStack } from './supabase-stack.js';
 
 /**
  * Wrapper script to run a command (like 'playwright test') with an ephemeral Supabase stack.

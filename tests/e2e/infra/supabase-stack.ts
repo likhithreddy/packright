@@ -1,6 +1,6 @@
 import { GenericContainer, Network, Wait } from 'testcontainers';
 import path from 'path';
-import { generateSupabaseKeys } from './jwt-utils';
+import { generateSupabaseKeys } from './jwt-utils.js';
 
 export interface SupabaseStack {
   supabaseUrl: string;

@@ -155,7 +155,6 @@ async function globalSetup(config: FullConfig) {
       }
 
       // 3. Sign in and capture storage state
-      // 3. Sign in and capture storage state
       const browserInstance = await chromium.launch({
         args: ['--disable-web-security'],
       });
