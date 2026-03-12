@@ -1,43 +1,49 @@
 -- [BASE SCHEMA DUMP]
--- Consolidated roles, schemas, mocks, and tables for Testcontainers.
--- Last updated: 2026-03-12
-
--- Essential Roles and Schemas
-DO $$ 
-BEGIN
-  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'anon') THEN
-    CREATE ROLE anon NOLOGIN;
-  END IF;
-  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'authenticated') THEN
-    CREATE ROLE authenticated NOLOGIN;
-  END IF;
-  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'service_role') THEN
-    CREATE ROLE service_role NOLOGIN;
-  END IF;
-  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'supabase_admin') THEN
-    CREATE ROLE supabase_admin WITH SUPERUSER CREATEDB CREATEROLE LOGIN;
-  END IF;
-END $$;
-
-CREATE SCHEMA IF NOT EXISTS auth;
-CREATE SCHEMA IF NOT EXISTS extensions;
-
-GRANT ALL ON SCHEMA auth TO postgres, supabase_admin;
-GRANT ALL ON SCHEMA extensions TO postgres, supabase_admin;
-GRANT ALL ON SCHEMA public TO postgres, supabase_admin, authenticated, anon, service_role;
-
--- Auth Mocks (Required for RLS policies using auth.uid())
-CREATE OR REPLACE FUNCTION auth.uid() RETURNS uuid AS $$
-  SELECT NULLIF(current_setting('request.jwt.claims', true)::json->>'sub', '')::uuid;
-$$ LANGUAGE sql STABLE;
-
-CREATE OR REPLACE FUNCTION auth.role() RETURNS text AS $$
-  SELECT NULLIF(current_setting('request.jwt.claims', true)::json->>'role', '')::text;
-$$ LANGUAGE sql STABLE;
+-- Extracted from remote database for Testcontainers migration.
 
 -- Extensions
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA extensions;
-CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA extensions;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Custom Functions
+CREATE OR REPLACE FUNCTION public.handle_updated_at()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$function$;
+
+CREATE OR REPLACE FUNCTION public.check_username_available(username_to_check text)
+ RETURNS boolean
+ LANGUAGE sql
+ SECURITY DEFINER
+AS $function$
+  SELECT NOT EXISTS (
+    SELECT 1 
+    FROM public.profiles 
+    WHERE LOWER(username) = LOWER(username_to_check)
+  );
+$function$;
+
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+BEGIN
+  INSERT INTO public.profiles (id, full_name, username, avatar_theme, packing_style)
+  VALUES (
+    new.id,
+    new.raw_user_meta_data->>'full_name',
+    new.raw_user_meta_data->>'username',
+    new.raw_user_meta_data->>'avatar_theme',
+    new.raw_user_meta_data->>'packing_style'
+  );
+  RETURN new;
+END;
+$function$;
 
 -- Tables
 
@@ -85,59 +91,6 @@ CREATE TABLE IF NOT EXISTS public.items (
   assigned_to uuid,
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now())
 );
-
--- Custom Functions
-CREATE OR REPLACE FUNCTION public.handle_updated_at()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$
-BEGIN
-  NEW.updated_at = NOW();
-  RETURN NEW;
-END;
-$function$;
-
-CREATE OR REPLACE FUNCTION public.check_username_available(username_to_check text)
- RETURNS boolean
- LANGUAGE sql
- SECURITY DEFINER
-AS $function$
-  SELECT NOT EXISTS (
-    SELECT 1 
-    FROM public.profiles 
-    WHERE LOWER(username) = LOWER(username_to_check)
-  );
-$function$;
-
-CREATE OR REPLACE FUNCTION public.handle_new_user()
- RETURNS trigger
- LANGUAGE plpgsql
- SECURITY DEFINER
-AS $function$
-BEGIN
-  INSERT INTO public.profiles (id, full_name, username, avatar_theme, packing_style)
-  VALUES (
-    new.id,
-    new.raw_user_meta_data->>'full_name',
-    new.raw_user_meta_data->>'username',
-    new.raw_user_meta_data->>'avatar_theme',
-    new.raw_user_meta_data->>'packing_style'
-  );
-  RETURN new;
-END;
-$function$;
-
-
--- Triggers
-CREATE TRIGGER on_profile_updated
-  BEFORE UPDATE ON public.profiles
-  FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
-
--- Note: In a real Supabase environment, this trigger is on auth.users.
--- Since the Testcontainers PG instance will have an 'auth' schema created by GoTrue,
--- we should ideally apply this to auth.users if we are managing it.
--- For local PG tests, we may need to create the 'auth' schema and 'users' table or let GoTrue do it.
--- This is handled by the Supabase Testcontainers strategy.
 
 -- RLS Logic Functions (Required for Policies)
 CREATE OR REPLACE FUNCTION public.is_member_of(trip_uuid uuid)
