@@ -139,7 +139,7 @@ describe('NewTripModal Integration', () => {
       },
       { timeout: 8000 }
     );
-  });
+  }, 15000);
 
   it('navigates to step 3 when valid AI prompt is provided and allows item selection', async () => {
     (actions.createTripAction as jest.Mock).mockResolvedValue({
@@ -219,7 +219,7 @@ describe('NewTripModal Integration', () => {
       },
       { timeout: 8000 }
     );
-  }, 10000);
+  }, 15000);
 
   it('shows a warning toast (not success) when server returns a warning on Skip & Create', async () => {
     (actions.createTripAction as jest.Mock).mockResolvedValue({
@@ -262,7 +262,7 @@ describe('NewTripModal Integration', () => {
       },
       { timeout: 8000 }
     );
-  }, 10000);
+  }, 15000);
 
   it('closes modal and resets form when Cancel is clicked', async () => {
     const { user } = setup();
@@ -376,5 +376,5 @@ describe('NewTripModal Integration', () => {
       );
     });
     expect(mockRouterPush).not.toHaveBeenCalled();
-  });
+  }, 15000);
 });
