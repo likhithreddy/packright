@@ -16,6 +16,7 @@ jest.mock('../../src/lib/supabase/trips', () => ({
 
 jest.mock('next/navigation', () => ({
   redirect: jest.fn(),
+  useRouter: jest.fn().mockReturnValue({ push: jest.fn() }),
 }));
 
 const mockTrips: Trip[] = [
@@ -27,6 +28,7 @@ const mockTrips: Trip[] = [
     date_start: new Date(new Date().setDate(new Date().getDate() + 5)).toISOString(),
     date_end: new Date(new Date().setDate(new Date().getDate() + 15)).toISOString(),
     created_at: new Date().toISOString(),
+    is_archived: false,
   },
   {
     id: 'trip-2',
@@ -36,6 +38,7 @@ const mockTrips: Trip[] = [
     date_start: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString(),
     date_end: new Date(new Date().setDate(new Date().getDate() - 25)).toISOString(),
     created_at: new Date().toISOString(),
+    is_archived: false,
   },
 ];
 

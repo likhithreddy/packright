@@ -1,4 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
+
+const test = base.extend({
+  storageState: async ({}, use, testInfo) => {
+    await use(`playwright/.auth/onboarding-${testInfo.project.name}.json`);
+  },
+});
 
 // We no longer use a single storageState at the file level.
 // Instead, playwright.config.ts assigns separate storageStates per project
@@ -15,9 +21,9 @@ test.describe.serial('Onboarding Flow', () => {
       process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY ??
       '';
 
-    // Each project has its own unique user: e2e-chromium, e2e-firefox, etc.
+    // Each project has its own unique user: e2e-onboarding-chromium, e2e-onboarding-firefox, etc.
     const project = testInfo.project.name;
-    const testEmail = `e2e-${project}@packright.test`;
+    const testEmail = `e2e-onboarding-${project}@packright.test`;
 
     if (!serviceRoleKey) return;
 

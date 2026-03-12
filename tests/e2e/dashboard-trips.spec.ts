@@ -14,14 +14,16 @@ test.describe('Dashboard Trips', () => {
     // Wait for either the "My Trips" header or the redirect to login
     const isLogin = await page.url().includes('/login');
     if (!isLogin) {
+      // Header check
       await expect(page.getByRole('heading', { name: 'My Trips' })).toBeVisible();
 
-      // We expect to see either the empty state or the "Active Trips" / "Past Trips" sections
-      const hasEmptyState = await page.locator('text=No trips planned yet').isVisible();
-      const hasActiveTrips = await page.locator('text=Active Trips').isVisible();
-      const hasPastTrips = await page.locator('text=Past Trips').isVisible();
-
-      expect(hasEmptyState || hasActiveTrips || hasPastTrips).toBeTruthy();
+      // Ensure either empty state or trip sections are eventually visible
+      const contentLoaded = page
+        .locator(
+          ':has-text("No trips planned yet"), :has-text("Active Trips"), :has-text("Past Trips")'
+        )
+        .first();
+      await expect(contentLoaded).toBeVisible();
     }
   });
 });

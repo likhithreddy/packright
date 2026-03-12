@@ -18,9 +18,8 @@ test.describe('Dashboard E2E Flow', () => {
     await expect(page.getByRole('heading', { name: 'My Trips' })).toBeVisible();
 
     // Verify "New Trip" button
-    const newTripBtn = page.getByRole('link', { name: 'New Trip' });
+    const newTripBtn = page.getByRole('button', { name: 'New Trip' });
     await expect(newTripBtn).toBeVisible();
-    await expect(newTripBtn).toHaveAttribute('href', '/dashboard/trips/new');
 
     // Check for trips or empty state
     const emptyState = page.locator('text=No trips planned yet');
@@ -28,7 +27,7 @@ test.describe('Dashboard E2E Flow', () => {
 
     if (!hasTrips) {
       await expect(emptyState).toBeVisible();
-      await expect(page.getByRole('link', { name: 'Plan Your First Trip' })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Plan Your First Trip' })).toBeVisible();
     } else {
       // Check for at least one trip card
       const tripCards = page.locator('a[href^="/dashboard/trips/"]');
