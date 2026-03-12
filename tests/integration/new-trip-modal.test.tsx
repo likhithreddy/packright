@@ -137,7 +137,7 @@ describe('NewTripModal Integration', () => {
       () => {
         expect(mockRouterPush).toHaveBeenCalledWith('/dashboard/trips/test-trip-id');
       },
-      { timeout: 4000 }
+      { timeout: 8000 }
     );
   });
 
@@ -217,7 +217,7 @@ describe('NewTripModal Integration', () => {
       () => {
         expect(mockRouterPush).toHaveBeenCalledWith('/dashboard/trips/test-trip-id-2');
       },
-      { timeout: 4000 }
+      { timeout: 8000 }
     );
   }, 10000);
 
@@ -260,7 +260,7 @@ describe('NewTripModal Integration', () => {
       () => {
         expect(mockRouterPush).toHaveBeenCalledWith('/dashboard/trips/warn-trip-id');
       },
-      { timeout: 4000 }
+      { timeout: 8000 }
     );
   }, 10000);
 

@@ -47,8 +47,8 @@ test.describe('Authentication UI Flow', () => {
     // Intercept the Supabase Auth API call to mock a successful login response.
     // This allows the E2E test to verify the UI flow (loading state, toast, redirect)
 
-    // Mock the POST token request
-    await page.route(/\/auth\/v1\/token\?grant_type=password/, async (route) => {
+    // Mock the POST token request - use more permissive regex and handle any origin
+    await page.route('**/auth/v1/token*', async (route) => {
       const json = {
         access_token: 'fake-access-token',
         token_type: 'bearer',
@@ -56,27 +56,44 @@ test.describe('Authentication UI Flow', () => {
         refresh_token: 'fake-refresh-token',
         user: { id: 'mock-user-123', email: 'testuser@example.com' },
       };
-      await route.fulfill({ status: 200, json });
+      await route.fulfill({
+        status: 200,
+        json,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+        },
+      });
     });
 
-    // Mock any GET user/session requests that Supabase might make to verify session
-    await page.route(/\/auth\/v1\/user/, async (route) => {
+    // Mock any GET user/session requests
+    await page.route('**/auth/v1/user*', async (route) => {
       const json = { id: 'mock-user-123', email: 'testuser@example.com' };
-      await route.fulfill({ status: 200, json });
+      await route.fulfill({
+        status: 200,
+        json,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*',
+        },
+      });
     });
 
-    await page.goto('/login');
+    await page.goto('/login', { waitUntil: 'networkidle' });
 
     // Fill the login form
     await page.fill('input[name="email"]', 'testuser@example.com');
     await page.fill('input[name="password"]', 'TestPass123!');
 
     // Set up a response listener BEFORE clicking submit to avoid race conditions.
-    // We verify at the network level (not DOM level) because toast.success() and
-    // router.push() fire on the same synchronous tick — in WebKit on CI runners,
-    // the navigation can start before React flushes the toast to the DOM.
-    const responsePromise = page.waitForResponse(/\/auth\/v1\/token/);
-    await page.click('button[type="submit"]');
+    // Increase timeout for WebKit resilience.
+    const responsePromise = page.waitForResponse(/\/auth\/v1\/token/, { timeout: 15000 });
+
+    // Use explicit submit button location/click
+    const submitBtn = page.getByRole('button', { name: /sign in|log in/i });
+    await expect(submitBtn).toBeEnabled();
+    await submitBtn.click();
+
     const response = await responsePromise;
 
     // A 200 status from our mock proves the full login flow executed:

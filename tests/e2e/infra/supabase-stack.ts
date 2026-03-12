@@ -23,18 +23,33 @@ export async function startSupabaseStack(): Promise<SupabaseStack> {
 
   const postgresContainer = await new GenericContainer('supabase/postgres:15.1.1.78')
     .withNetwork(network)
-    .withNetworkAliases('db')
+    .withNetworkAliases('postgres')
     .withExposedPorts(5432)
     .withEnvironment({
       POSTGRES_PASSWORD: 'postgres',
-      POSTGRES_DB: 'postgres',
-      POSTGRES_USER: 'postgres',
-      POSTGRES_HOST_AUTH_METHOD: 'trust',
     })
-    .withWaitStrategy(Wait.forListeningPorts().withStartupTimeout(120000))
+    .withWaitStrategy(
+      Wait.forLogMessage(/database system is ready to accept connections/, 2).withStartupTimeout(
+        120000
+      )
+    )
     .withLogConsumer((stream) => stream.on('data', (line) => console.log(`[Postgres] ${line}`)));
 
+  // Wait for Postgres to be fully ready
   const startedPostgres = await postgresContainer.start();
+  console.log('[SupabaseStack] Injecting utility functions...');
+
+  // Custom functions that might be missing or need to be overridden in ephemeral stack
+  const utilsSql = `
+    CREATE OR REPLACE FUNCTION auth.uid() RETURNS uuid AS $$
+      SELECT nullif(current_setting('request.jwt.claims', true)::json->>'sub', '')::uuid;
+    $$ LANGUAGE sql STABLE;
+
+    CREATE OR REPLACE FUNCTION auth.email() RETURNS text AS $$
+      SELECT nullif(current_setting('request.jwt.claims', true)::json->>'email', '')::text;
+    $$ LANGUAGE sql STABLE;
+  `;
+  await startedPostgres.exec(['psql', '-U', 'postgres', '-d', 'postgres', '-c', utilsSql]);
 
   console.log('[SupabaseStack] Applying schema dump...');
   // We exec manually to avoid conflicts with image's internal init scripts
@@ -58,6 +73,7 @@ export async function startSupabaseStack(): Promise<SupabaseStack> {
     throw new Error(`[SupabaseStack] Schema application failed: ${stderr}`);
   }
 
+  const dbIp = startedPostgres.getIpAddress(network.getName());
   const dbUrl = `postgresql://postgres:postgres@localhost:${startedPostgres.getMappedPort(5432)}/postgres`;
 
   console.log('[SupabaseStack] Starting GoTrue (Auth)...');
@@ -67,8 +83,7 @@ export async function startSupabaseStack(): Promise<SupabaseStack> {
     .withExposedPorts(8081)
     .withEnvironment({
       GOTRUE_DB_DRIVER: 'postgres',
-      GOTRUE_DB_DATABASE_URL:
-        'postgresql://postgres:postgres@db:5432/postgres?sslmode=disable&search_path=auth,public',
+      GOTRUE_DB_DATABASE_URL: `postgresql://postgres:postgres@${dbIp}:5432/postgres?sslmode=disable&search_path=auth,public`,
       GOTRUE_SITE_URL: 'http://localhost:3000',
       GOTRUE_JWT_SECRET: jwtSecret,
       GOTRUE_JWT_EXP: '3600',
@@ -83,18 +98,18 @@ export async function startSupabaseStack(): Promise<SupabaseStack> {
       API_EXTERNAL_URL: 'http://localhost:8081',
       GOTRUE_JWT_DEFAULT_GROUP_NAME: 'authenticated',
     })
-    .withWaitStrategy(Wait.forHttp('/health', 8081).withStartupTimeout(60000))
+    .withWaitStrategy(Wait.forHttp('/health', 8081).withStartupTimeout(120000))
     .withLogConsumer((stream) => stream.on('data', (line) => console.log(`[GoTrue] ${line}`)));
 
   const startedGotrue = await gotrueContainer.start();
 
   console.log('[SupabaseStack] Starting PostgREST...');
-  const postgrestContainer = await new GenericContainer('postgrest/postgrest:v10.1.1')
+  const postgrestContainer = await new GenericContainer('postgrest/postgrest:v12.2.0')
     .withNetwork(network)
     .withNetworkAliases('rest')
     .withExposedPorts(3000)
     .withEnvironment({
-      PGRST_DB_URI: 'postgresql://postgres:postgres@db:5432/postgres?sslmode=disable',
+      PGRST_DB_URI: `postgresql://postgres:postgres@${dbIp}:5432/postgres?sslmode=disable`,
       PGRST_DB_SCHEMA: 'public',
       PGRST_DB_ANON_ROLE: 'anon',
       PGRST_JWT_SECRET: jwtSecret,
@@ -102,10 +117,12 @@ export async function startSupabaseStack(): Promise<SupabaseStack> {
       PGRST_DB_CONFIG: 'true',
       PGRST_DB_SCHEMAS: 'public,auth',
     })
-    .withWaitStrategy(Wait.forListeningPorts().withStartupTimeout(120000))
+    .withWaitStrategy(Wait.forHttp('/', 3000).withStartupTimeout(120000))
     .withLogConsumer((stream) => stream.on('data', (line) => console.log(`[PostgREST] ${line}`)));
 
   const startedPostgrest = await postgrestContainer.start();
+  const restIp = startedPostgrest.getIpAddress(network.getName());
+  const authIp = startedGotrue.getIpAddress(network.getName());
 
   console.log('[SupabaseStack] Starting Nginx Proxy...');
   const nginxConfig = `
@@ -116,31 +133,50 @@ http {
     server {
         listen 80;
         
-        # CORS headers for all locations
-        add_header 'Access-Control-Allow-Origin' '*' always;
-        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE, PATCH' always;
-        add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,apikey,x-client-info,prefer,content-profile,accept-profile' always;
-        add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range' always;
+        # Health check
+        location /health {
+            return 200 'ok';
+        }
 
         location /auth/v1/ {
             if ($request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' 'http://localhost:3000' always;
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS' always;
+                add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,apikey,x-client-info,Accept-Profile,Content-Profile,Prefer' always;
+                add_header 'Access-Control-Max-Age' 1728000;
+                add_header 'Content-Type' 'text/plain; charset=utf-8';
+                add_header 'Content-Length' 0;
                 return 204;
             }
+            add_header 'Access-Control-Allow-Origin' 'http://localhost:3000' always;
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS' always;
+            add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,apikey,x-client-info,Accept-Profile,Content-Profile,Prefer' always;
+
             proxy_hide_header 'Access-Control-Allow-Origin';
             proxy_hide_header 'Access-Control-Allow-Methods';
             proxy_hide_header 'Access-Control-Allow-Headers';
-            proxy_pass http://auth:8081/;
+            proxy_pass http://${authIp}:8081/;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
         }
         location /rest/v1/ {
             if ($request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' 'http://localhost:3000' always;
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS' always;
+                add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,apikey,x-client-info,Accept-Profile,Content-Profile,Prefer' always;
+                add_header 'Access-Control-Max-Age' 1728000;
+                add_header 'Content-Type' 'text/plain; charset=utf-8';
+                add_header 'Content-Length' 0;
                 return 204;
             }
+            add_header 'Access-Control-Allow-Origin' 'http://localhost:3000' always;
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS' always;
+            add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,apikey,x-client-info,Accept-Profile,Content-Profile,Prefer' always;
+
             proxy_hide_header 'Access-Control-Allow-Origin';
             proxy_hide_header 'Access-Control-Allow-Methods';
             proxy_hide_header 'Access-Control-Allow-Headers';
-            proxy_pass http://rest:3000/;
+            proxy_pass http://${restIp}:3000/;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
         }
@@ -158,7 +194,7 @@ http {
         target: '/etc/nginx/nginx.conf',
       },
     ])
-    .withWaitStrategy(Wait.forListeningPorts())
+    .withWaitStrategy(Wait.forHttp('/health', 80).withStartupTimeout(120000))
     .withLogConsumer((stream) => stream.on('data', (line) => console.log(`[Nginx] ${line}`)));
 
   const startedNginx = await nginxContainer.start();
