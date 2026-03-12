@@ -95,7 +95,7 @@ export async function startSupabaseStack(): Promise<SupabaseStack> {
     .withExposedPorts(3000)
     .withEnvironment({
       PGRST_DB_URI: 'postgresql://postgres:postgres@db:5432/postgres?sslmode=disable',
-      PGRST_DB_SCHEMA: 'public,auth',
+      PGRST_DB_SCHEMA: 'public',
       PGRST_DB_ANON_ROLE: 'anon',
       PGRST_JWT_SECRET: jwtSecret,
       PGRST_SERVER_PORT: '3000',

@@ -36,9 +36,13 @@ async function main() {
   }
 
   // Backup existing .env.local
+  let originalEnv = '';
   if (fs.existsSync(envLocalPath)) {
     console.log('[run-with-stack] Backing up existing .env.local...');
+    originalEnv = fs.readFileSync(envLocalPath, 'utf8');
     fs.renameSync(envLocalPath, envLocalBakPath);
+  } else if (fs.existsSync(envLocalBakPath)) {
+    originalEnv = fs.readFileSync(envLocalBakPath, 'utf8');
   }
 
   // Create ephemeral .env.local and stack-env.json
@@ -49,13 +53,19 @@ async function main() {
     NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY: stack.serviceRoleKey,
   };
 
-  const ephemeralEnvContent = `
+  const filteredEnv = originalEnv
+    .split('\n')
+    .filter((line) => !line.trim().startsWith('NEXT_PUBLIC_SUPABASE_') && !line.trim().startsWith('SUPABASE_'))
+    .join('\n');
+
+  const ephemeralEnvContent = filteredEnv + `
+# EPHEMERAL SUPABASE VARIABLES
 NEXT_PUBLIC_SUPABASE_URL=${stack.supabaseUrl}
 NEXT_PUBLIC_SUPABASE_ANON_KEY=${stack.anonKey}
 SUPABASE_SERVICE_ROLE_KEY=${stack.serviceRoleKey}
 NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=${stack.serviceRoleKey}
 `;
-  console.log('[run-with-stack] Ephemeral .env.local content:', ephemeralEnvContent);
+  console.log('[run-with-stack] Ephemeral .env.local created with preserved non-Supabase keys.');
   fs.writeFileSync(envLocalPath, ephemeralEnvContent);
   fs.writeFileSync(stackEnvPath, JSON.stringify(envData, null, 2));
 
