@@ -591,11 +591,8 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                   className="px-8 font-semibold"
                   disabled={
                     isSubmitting ||
-                    (step === 1 &&
-                      (!watchedFullName ||
-                        watchedFullName.length < 3 ||
-                        usernameAvailable !== true ||
-                        isCheckingUsername))
+                    isCheckingUsername ||
+                    (step === 1 && (usernameAvailable !== true || !form.formState.isValid))
                   }
                 >
                   Next <ArrowRight className="ml-2 h-4 w-4" />

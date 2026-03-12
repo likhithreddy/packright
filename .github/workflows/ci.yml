@@ -63,21 +63,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
-        with:
-          version: latest
-
-      - name: Start local Supabase
-        run: supabase start
-
-      - name: Export Supabase environment variables
-        run: |
-          echo "NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321" >> $GITHUB_ENV
-          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$(supabase status -o json | jq -r '.anon_key')" >> $GITHUB_ENV
-          echo "SUPABASE_SERVICE_ROLE_KEY=$(supabase status -o json | jq -r '.service_role_key')" >> $GITHUB_ENV
-          echo "NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=$(supabase status -o json | jq -r '.service_role_key')" >> $GITHUB_ENV
-
       - name: Get installed Playwright version
         id: playwright-version
         run: echo "version=$(yarn list --pattern @playwright/test --depth=0 | grep '@playwright/test' | awk -F@ '{print $3}')" >> "$GITHUB_OUTPUT"

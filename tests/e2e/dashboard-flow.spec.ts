@@ -22,15 +22,15 @@ test.describe('Dashboard E2E Flow', () => {
     await expect(newTripBtn).toBeVisible();
 
     // Check for trips or empty state
-    const emptyState = page.locator('text=No trips planned yet');
-    const hasTrips = (await page.locator('section').count()) > 0;
+    const tripCards = page.locator('a[href^="/dashboard/trips/"]');
+    const hasTrips = (await tripCards.count()) > 0;
 
     if (!hasTrips) {
+      const emptyState = page.locator('text=No trips planned yet');
       await expect(emptyState).toBeVisible();
       await expect(page.getByRole('button', { name: 'Plan Your First Trip' })).toBeVisible();
     } else {
       // Check for at least one trip card
-      const tripCards = page.locator('a[href^="/dashboard/trips/"]');
       await expect(tripCards.first()).toBeVisible();
     }
   });

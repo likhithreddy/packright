@@ -2,6 +2,18 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Create New Trip Flow', () => {
   test.beforeEach(async ({ page }) => {
+    // Mock the external Groq API to ensure determinism and prevent failures from missing keys
+    await page.route('**/api/generate-list', async (route) => {
+      const json = {
+        items: [
+          { name: 'Sunscreen', category: 'Health', quantity: 1 },
+          { name: 'Passport', category: 'Documents', quantity: 1 },
+          { name: 'Camera', category: 'Electronics', quantity: 1 },
+        ],
+      };
+      await route.fulfill({ json, status: 200 });
+    });
+
     // Navigate to dashboard
     await page.goto('/dashboard');
     if (page.url().includes('/login')) {
@@ -53,18 +65,19 @@ test.describe('Create New Trip Flow', () => {
     await nextBtn.click();
 
     // Verify Step 2 AI Suggestion Heading
-    await expect(page.getByText('AI Packing Suggestions — Optional')).toBeVisible();
+    await expect(page.getByText(/AI Packing Suggestions/i)).toBeVisible();
 
     // Click Skip & Create
     const skipBtn = page.getByRole('button', { name: 'Skip & Create' });
     await expect(skipBtn).toBeEnabled();
     await skipBtn.click();
 
-    // The modal should close and the user should be redirected to the new trip dashboard.
-    await expect(page).toHaveURL(/\/dashboard\/trips\/[a-zA-Z0-9-]+/);
+    // A success toast should be visible immediately after the API call finishes
+    // and before the 3-second witty redirect completes.
+    await expect(page.getByText('Trip created successfully!')).toBeVisible();
 
-    // A success toast should be visible
-    await expect(page.getByText('Trip to Tokyo, Japan created successfully!')).toBeVisible();
+    // The modal should close and the user should be redirected to the new trip dashboard.
+    await expect(page).toHaveURL(/\/dashboard\/trips\/[a-zA-Z0-9-]+/, { timeout: 10000 });
   });
 
   test('should block Step 2 transition when required fields are empty', async ({ page }) => {
@@ -80,7 +93,7 @@ test.describe('Create New Trip Flow', () => {
     // Should remain on Step 1 - validation errors visible
     await expect(page.getByText('Plan a New Trip')).toBeVisible();
     // Step 2 content should NOT be visible
-    await expect(page.getByText('AI Packing Suggestions — Optional')).not.toBeVisible();
+    await expect(page.getByText(/AI Packing Suggestions/i)).not.toBeVisible();
   });
 
   test('should navigate Step 1 → Step 2 → Step 3 via Get Suggestions', async ({ page }) => {
@@ -92,18 +105,18 @@ test.describe('Create New Trip Flow', () => {
     await page.getByLabel(/TRIP NAME/i).fill('AI Suggestions Trip');
     await page.getByLabel(/DESTINATION/i).fill('Bali, Indonesia');
 
-    const startDateTrigger = page.getByRole('button', { name: /Start Date/i });
+    const startDateTrigger = page.locator('button:has(svg.lucide-calendar)').nth(0);
     await startDateTrigger.click();
     let dayButtons = page.locator('.rdp-day:not(.rdp-day_disabled)');
     await dayButtons.nth(1).click();
 
-    const endDateTrigger = page.getByRole('button', { name: /End Date/i });
+    const endDateTrigger = page.locator('button:has(svg.lucide-calendar)').nth(1);
     await endDateTrigger.click();
     dayButtons = page.locator('.rdp-day:not(.rdp-day_disabled)');
     await dayButtons.nth(5).click();
 
     await page.getByRole('button', { name: 'Next', exact: true }).click();
-    await expect(page.getByText('AI Packing Suggestions — Optional')).toBeVisible();
+    await expect(page.getByText(/AI Packing Suggestions/i)).toBeVisible();
 
     // Get Suggestions should be disabled before 20 chars
     const getSuggestionsBtn = page.getByRole('button', { name: /Get Suggestions/i });
@@ -129,12 +142,12 @@ test.describe('Create New Trip Flow', () => {
     await page.getByLabel(/TRIP NAME/i).fill('Step 3 Trip');
     await page.getByLabel(/DESTINATION/i).fill('Lisbon');
 
-    const startDateTrigger = page.getByRole('button', { name: /Start Date/i });
+    const startDateTrigger = page.locator('button:has(svg.lucide-calendar)').nth(0);
     await startDateTrigger.click();
     let dayButtons = page.locator('.rdp-day:not(.rdp-day_disabled)');
     await dayButtons.nth(0).click();
 
-    const endDateTrigger = page.getByRole('button', { name: /End Date/i });
+    const endDateTrigger = page.locator('button:has(svg.lucide-calendar)').nth(1);
     await endDateTrigger.click();
     dayButtons = page.locator('.rdp-day:not(.rdp-day_disabled)');
     await dayButtons.nth(3).click();

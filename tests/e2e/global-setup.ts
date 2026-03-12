@@ -1,45 +1,168 @@
-import { chromium, type FullConfig } from '@playwright/test';
+import { type FullConfig } from '@playwright/test';
 import path from 'path';
 import fs from 'fs';
+
+declare global {
+  var __SUPABASE_STACK_STOP__: (() => Promise<void>) | undefined;
+}
+
+/**
+ * Encode a string as base64url (URL-safe base64, no padding).
+ * This mirrors what @supabase/ssr does internally.
+ */
+function toBase64URL(str: string): string {
+  return Buffer.from(str, 'utf-8')
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
+}
+
+/**
+ * Split an encoded cookie value into chunks of MAX_CHUNK_SIZE (3180 chars),
+ * matching the @supabase/ssr chunker logic exactly.
+ */
+const MAX_CHUNK_SIZE = 3180;
+function createChunks(key: string, value: string): { name: string; value: string }[] {
+  let encodedValue = encodeURIComponent(value);
+  if (encodedValue.length <= MAX_CHUNK_SIZE) {
+    return [{ name: key, value }];
+  }
+
+  const chunks: string[] = [];
+  while (encodedValue.length > 0) {
+    let encodedChunkHead = encodedValue.slice(0, MAX_CHUNK_SIZE);
+    const lastEscapePos = encodedChunkHead.lastIndexOf('%');
+    if (lastEscapePos > MAX_CHUNK_SIZE - 3) {
+      encodedChunkHead = encodedChunkHead.slice(0, lastEscapePos);
+    }
+    let valueHead = '';
+    while (encodedChunkHead.length > 0) {
+      try {
+        valueHead = decodeURIComponent(encodedChunkHead);
+        break;
+      } catch (error) {
+        if (
+          error instanceof URIError &&
+          encodedChunkHead.at(-3) === '%' &&
+          encodedChunkHead.length > 3
+        ) {
+          encodedChunkHead = encodedChunkHead.slice(0, encodedChunkHead.length - 3);
+        } else {
+          throw error;
+        }
+      }
+    }
+    chunks.push(valueHead);
+    encodedValue = encodedValue.slice(encodedChunkHead.length);
+  }
+  return chunks.map((chunkValue, i) => ({ name: `${key}.${i}`, value: chunkValue }));
+}
+
+/**
+ * Build a Playwright storageState JSON from a Supabase session token using
+ * the exact @supabase/ssr cookie encoding (base64url, chunked).
+ *
+ * @param session   Raw session object returned from Supabase auth REST API
+ * @param storageKey  The cookie/localStorage key (e.g. "sb-localhost-auth-token")
+ * @param origin    The app origin (e.g. "http://localhost:3000")
+ */
+function buildStorageState(
+  session: object,
+  storageKey: string,
+  origin: string
+): { cookies: object[]; origins: object[] } {
+  const sessionJson = JSON.stringify(session);
+
+  // @supabase/ssr encodes as "base64-<base64url(value)>"
+  const encoded = 'base64-' + toBase64URL(sessionJson);
+
+  // Chunk the encoded value, matching @supabase/ssr chunker
+  const chunks = createChunks(storageKey, encoded);
+
+  const cookies = chunks.map(({ name, value }) => ({
+    name,
+    value,
+    domain: 'localhost',
+    path: '/',
+    expires: -1,
+    httpOnly: false,
+    secure: false,
+    sameSite: 'Lax',
+  }));
+
+  // localStorage also stores raw JSON (used by browser supabase-js client)
+  const origins = [
+    {
+      origin,
+      localStorage: [
+        {
+          name: storageKey,
+          value: sessionJson,
+        },
+      ],
+    },
+  ];
+
+  return { cookies, origins };
+}
 
 /**
  * Global setup for E2E tests.
  *
- * This script creates and initializes 3 distinct E2E test users (one per browser
- * project) to ensure full database isolation during parallel test runs.
- * Each user is reset to a null-username state via the Supabase Service Role API.
+ * Uses direct REST API authentication to capture sessions, then constructs
+ * Playwright storageState JSON files using @supabase/ssr's base64url cookie
+ * encoding — no headless browser required.
  */
 async function globalSetup(config: FullConfig) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'http://127.0.0.1:54321';
-  const serviceRoleKey =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ??
-    process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY ??
-    '';
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  const projects = ['chromium', 'firefox', 'webkit'];
+  if (!supabaseUrl || !serviceRoleKey || !anonKey) {
+    throw new Error(
+      '[globalSetup] SUPABASE_URL, ANON_KEY, or SERVICE_ROLE_KEY is missing. ' +
+        'Did you run this using the run-with-stack wrapper?'
+    );
+  }
+
+  console.log(`[globalSetup] Using Supabase Stack: ${supabaseUrl}`);
+
   const authDir = path.join(process.cwd(), 'playwright/.auth');
-
-  // Ensure auth directory exists
   if (!fs.existsSync(authDir)) {
     fs.mkdirSync(authDir, { recursive: true });
   }
 
-  // Use the first project's baseURL which is standard localhost:3000
-  const baseURL = config.projects[0].use.baseURL || 'http://localhost:3000';
+  // Save dynamic environment for test workers
+  const envData = {
+    NEXT_PUBLIC_SUPABASE_URL: supabaseUrl,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: anonKey,
+    SUPABASE_SERVICE_ROLE_KEY: serviceRoleKey,
+  };
+  fs.writeFileSync(path.join(authDir, 'stack-env.json'), JSON.stringify(envData, null, 2));
+  console.log(`[globalSetup] Stack environment saved.`);
 
-  // --- Warmup: Wait for dev server to be ready ---
-  console.log(`[globalSetup] Waiting for server at ${baseURL}...`);
-  let attempts = 0;
-  while (attempts < 30) {
-    try {
-      const res = await fetch(baseURL);
-      if (res.ok) break;
-    } catch {
-      // ignore
+  const baseURL = config.projects[0]?.use?.baseURL ?? 'http://localhost:3000';
+
+  // Derive the cookie storage key from the Supabase URL
+  // @supabase/ssr uses: sb-<project-ref>-auth-token
+  // Project ref = hostname (e.g. "localhost" from http://localhost:33278)
+  const supabaseUrlObj = new URL(supabaseUrl);
+  const projectRef = supabaseUrlObj.hostname; // e.g. "localhost"
+  const storageKey = `sb-${projectRef}-auth-token`;
+
+  console.log(`[globalSetup] Cookie storage key: ${storageKey}`);
+
+  const projects = ['chromium', 'firefox', 'webkit'];
+  const testPassword = 'Password123!';
+
+  const throwErrorIfFailed = async (res: Response, msg: string) => {
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(`${msg}: ${res.status} ${res.statusText} - ${body}`);
     }
-    attempts++;
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  }
+    return res;
+  };
 
   for (const project of projects) {
     const testUsers = [
@@ -69,94 +192,106 @@ async function globalSetup(config: FullConfig) {
 
     for (const testUser of testUsers) {
       const testEmail = testUser.email;
-      const testPassword = 'Password123!';
       const authPath = testUser.authPath;
 
-      console.log(`[globalSetup:${project}] Preparing user: ${testEmail}`);
+      console.log(`[globalSetup:${project}:${testUser.type}] Preparing user: ${testEmail}`);
 
-      if (serviceRoleKey) {
-        // 1. Create or fetch user via Admin API
-        try {
-          const authAdminUrl = `${supabaseUrl}/auth/v1/admin/users`;
-          const listRes = await fetch(`${authAdminUrl}?page=1&per_page=1000`, {
+      try {
+        // 1. List users via Admin API
+        const authAdminUrl = `${supabaseUrl}/auth/v1/admin/users`;
+        const listRes = await fetch(`${authAdminUrl}?page=1&per_page=1000`, {
+          headers: {
+            apikey: serviceRoleKey,
+            Authorization: `Bearer ${serviceRoleKey}`,
+          },
+        });
+        await throwErrorIfFailed(listRes, 'Failed to list users');
+        const { users } = (await listRes.json()) as {
+          users?: { id: string; email?: string }[];
+        };
+        let user = users?.find((u) => u.email === testEmail);
+
+        // 2. Create user if not exists
+        if (!user) {
+          console.log(`[globalSetup:${project}:${testUser.type}] Creating new user via Admin...`);
+          const createRes = await fetch(authAdminUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              apikey: serviceRoleKey,
+              Authorization: `Bearer ${serviceRoleKey}`,
+            },
+            body: JSON.stringify({
+              email: testEmail,
+              password: testPassword,
+              email_confirm: true,
+            }),
+          });
+          user = (await (await throwErrorIfFailed(createRes, 'Failed to create user')).json()) as {
+            id: string;
+          };
+        }
+
+        if (!user?.id) {
+          throw new Error(`User not found or created: ${testEmail}`);
+        }
+
+        // 3. Reset profile via service role (use UPSERT to ensure it exists)
+        const profilePayload = { id: user.id, ...testUser.profile };
+        const patchRes = await fetch(`${supabaseUrl}/rest/v1/profiles`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: serviceRoleKey,
+            Authorization: `Bearer ${serviceRoleKey}`,
+            Prefer: 'resolution=merge-duplicates,return=minimal',
+          },
+          body: JSON.stringify(profilePayload),
+        });
+        await throwErrorIfFailed(patchRes, 'Failed to upsert profile');
+
+        // Verify profile actually exists
+        const verifyRes = await fetch(
+          `${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}`,
+          {
             headers: {
               apikey: serviceRoleKey,
               Authorization: `Bearer ${serviceRoleKey}`,
             },
-          });
-
-          if (listRes.ok) {
-            const { users } = (await listRes.json()) as {
-              users?: { id: string; email?: string }[];
-            };
-            let user = users?.find((u) => u.email === testEmail);
-
-            if (!user) {
-              console.log(`[globalSetup:${project}] Creating new user...`);
-              const createRes = await fetch(authAdminUrl, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  apikey: serviceRoleKey,
-                  Authorization: `Bearer ${serviceRoleKey}`,
-                },
-                body: JSON.stringify({
-                  email: testEmail,
-                  password: testPassword,
-                  email_confirm: true,
-                }),
-              });
-              user = await createRes.json();
-            }
-
-            if (user && user.id) {
-              // 2. Reset Profile via PATCH (set username to null)
-              const profilePatchRes = await fetch(
-                `${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}`,
-                {
-                  method: 'PATCH',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    apikey: serviceRoleKey,
-                    Authorization: `Bearer ${serviceRoleKey}`,
-                    Prefer: 'return=minimal',
-                  },
-                  body: JSON.stringify(testUser.profile),
-                }
-              );
-              console.log(
-                `[globalSetup:${project}] Profile reset status: ${profilePatchRes.status}`
-              );
-            }
           }
-        } catch (adminErr) {
-          console.error(`[globalSetup:${project}] Admin setup failed:`, adminErr);
+        );
+        const profiles = await verifyRes.json();
+        if (!profiles || profiles.length === 0) {
+          throw new Error(`Profile not found in database for user ${user.id} after upserting!`);
         }
-      }
 
-      // 3. Sign in and capture storage state
-      // We use Chromium to capture all auth states because it's most stable
-      // for this one-time capture.
-      const browserInstance = await chromium.launch();
-      const page = await browserInstance.newPage();
-      try {
-        await page.goto(`${baseURL}/login`);
-        await page.fill('input[name="email"]', testEmail);
-        await page.fill('input[name="password"]', testPassword);
-        await page.click('button[type="submit"]');
+        // 4. Authenticate via REST to get a fresh session
+        console.log(`[globalSetup:${project}:${testUser.type}] Authenticating via REST...`);
+        const loginRes = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: anonKey,
+          },
+          body: JSON.stringify({ email: testEmail, password: testPassword }),
+        });
+        const session = await (await throwErrorIfFailed(loginRes, 'Auth failed')).json();
 
-        // Wait for redirect depending on user setup
-        const targetUrl = testUser.type === 'onboarding' ? /\/onboarding/ : /\/dashboard/;
-        await page.waitForURL(targetUrl, { timeout: 20000 });
-        await page.context().storageState({ path: authPath });
-        console.log(`[globalSetup:${project}] Auth state saved to ${authPath}`);
+        // 5. Construct storageState using @supabase/ssr cookie encoding (no browser required)
+        const storageState = buildStorageState(session, storageKey, baseURL);
+        fs.writeFileSync(authPath, JSON.stringify(storageState, null, 2));
+        console.log(
+          `[globalSetup:${project}:${testUser.type}] Auth state saved to ${authPath} ` +
+            `(${storageState.cookies.length} cookie chunk(s))`
+        );
       } catch (err) {
-        console.error(`[globalSetup:${project}] Auth capture failed:`, err);
-      } finally {
-        await browserInstance.close();
+        console.error(`[globalSetup:${project}:${testUser.type}] Setup failed:`, err);
+        throw err;
       }
     }
   }
+
+  console.log(`[globalSetup] All sessions generated successfully.`);
 }
 
 export default globalSetup;

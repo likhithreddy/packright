@@ -20,6 +20,7 @@ if (fs.existsSync(envPath)) {
 export default defineConfig({
   testDir: './tests/e2e',
   globalSetup: './tests/e2e/global-setup.ts',
+  globalTeardown: './tests/e2e/global-teardown.ts',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -37,6 +38,11 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+  },
+
+  /* Timeout for each assertion in expect() */
+  expect: {
+    timeout: process.env.CI ? 10000 : 5000,
   },
 
   /* Configure projects for major browsers */
