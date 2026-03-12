@@ -8,6 +8,7 @@ export type ActionResponse<T> = {
   success: boolean;
   data?: T;
   error?: string;
+  warning?: string;
 };
 
 export async function createTripAction(
@@ -35,11 +36,11 @@ export async function createTripAction(
     }
 
     // 3. Perform database operations via library
-    const { data: newTrip, error: dbError } = await createTrip(
-      supabase,
-      validationResult.data,
-      authData.user.id
-    );
+    const {
+      data: newTrip,
+      error: dbError,
+      warning: dbWarning,
+    } = await createTrip(supabase, validationResult.data, authData.user.id);
 
     if (dbError || !newTrip) {
       console.error('Database error in createTripAction:', dbError);
@@ -49,10 +50,11 @@ export async function createTripAction(
       };
     }
 
-    // 4. Return success with the new trip ID
+    // 4. Return success with the new trip ID and any warnings
     return {
       success: true,
       data: { tripId: newTrip.id },
+      warning: dbWarning || undefined,
     };
   } catch (err) {
     console.error('Unexpected error in createTripAction:', err);

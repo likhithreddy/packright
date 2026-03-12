@@ -15,10 +15,10 @@ test.describe('Dashboard E2E Flow', () => {
     if (page.url().includes('/login')) return;
 
     // Verify Header
-    await expect(page.getByRole('heading', { name: 'Plan Your Trips' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My Trips' })).toBeVisible();
 
-    // Verify "Plan New Trip" button
-    const newTripBtn = page.getByRole('button', { name: 'Plan New Trip' });
+    // Verify "New Trip" button
+    const newTripBtn = page.getByRole('button', { name: 'New Trip' });
     await expect(newTripBtn).toBeVisible();
 
     // Check for trips or empty state
@@ -53,13 +53,13 @@ test.describe('Dashboard E2E Flow', () => {
 
     // Mobile view
     await page.setViewportSize({ width: 375, height: 667 });
-    await expect(page.getByRole('heading', { name: 'Plan Your Trips' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My Trips' })).toBeVisible();
     // Header often collapses or wraps on mobile, check for visibility
-    const header = page.getByText('Plan Your Trips');
+    const header = page.getByText('My Trips');
     await expect(header).toBeVisible();
 
     // Desktop view
     await page.setViewportSize({ width: 1280, height: 800 });
-    await expect(page.getByRole('heading', { name: 'Plan Your Trips' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My Trips' })).toBeVisible();
   });
 });

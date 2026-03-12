@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { DatePickerWithRange } from '@/components/ui/date-range-picker';
+import { DatePicker } from '@/components/ui/date-picker';
 import { cn } from '@/lib/utils';
 
 import { newTripSchema, NewTripInput } from '@/types/new-trip.schema';
@@ -72,6 +72,7 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
   });
 
   const promptValue = form.watch('aiPrompt') || '';
+  const titleValue = form.watch('title') || '';
 
   // Step Navigators
   const goToStep2 = async () => {
@@ -103,7 +104,11 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
       const response = await createTripAction(data);
 
       if (response.success && response.data) {
-        toast.success(`Trip to ${data.destination} created successfully!`);
+        if (response.warning) {
+          toast.warning(response.warning);
+        } else {
+          toast.success(`Trip to ${data.destination} created successfully!`);
+        }
         setOpen(false);
         form.reset();
         setStep(1);
@@ -156,7 +161,7 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
           }
         />
       )}
-      <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden border-stone-200 bg-[#FAFAF8] rounded-2xl shadow-xl flex flex-col max-h-[90vh]">
+      <DialogContent className="sm:max-w-fit md:min-w-[500px] max-w-[95vw] p-0 overflow-hidden border-stone-200 bg-[#FAFAF8] rounded-2xl shadow-xl flex flex-col max-h-[90vh] transition-all duration-300">
         <div className="px-6 pt-6 pb-2 shrink-0">
           <DialogHeader className="flex flex-row justify-between items-start">
             <div>
@@ -231,18 +236,34 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
                     control={form.control}
                     name="dateRange"
                     render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel className="text-stone-700 font-bold text-xs uppercase tracking-wider mb-1">
+                      <FormItem className="flex flex-col gap-1.5 w-full">
+                        <FormLabel className="text-stone-700 font-bold text-xs uppercase tracking-wider mb-2">
                           TRAVEL DATES
                         </FormLabel>
-                        <FormControl>
-                          <DatePickerWithRange
-                            date={field.value}
-                            setDate={field.onChange}
-                            className="w-full"
-                          />
-                        </FormControl>
-                        <FormMessage className="text-red-500 font-medium text-xs mt-1" />
+                        <div className="flex flex-col sm:flex-row gap-4 w-full">
+                          <div className="flex-1 w-full space-y-1.5">
+                            <span className="text-[10px] text-stone-500 font-bold uppercase tracking-wider block pl-1">
+                              START DATE
+                            </span>
+                            <DatePicker
+                              date={field.value?.from}
+                              setDate={(d) => field.onChange({ ...field.value, from: d })}
+                              placeholder="Start Date"
+                            />
+                          </div>
+                          <div className="flex-1 w-full space-y-1.5">
+                            <span className="text-[10px] text-stone-500 font-bold uppercase tracking-wider block pl-1">
+                              END DATE
+                            </span>
+                            <DatePicker
+                              date={field.value?.to}
+                              setDate={(d) => field.onChange({ ...field.value, to: d })}
+                              placeholder="End Date"
+                              minDate={field.value?.from}
+                            />
+                          </div>
+                        </div>
+                        <FormMessage className="text-red-500 font-medium text-xs mt-2" />
                       </FormItem>
                     )}
                   />
@@ -259,7 +280,8 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
                     <Button
                       type="button"
                       onClick={goToStep2}
-                      className="bg-[#3D2925] hover:bg-[#2b1d1a] text-white focus-visible:ring-0 transition-colors px-6 flex items-center gap-2"
+                      disabled={titleValue.trim().length === 0}
+                      className="bg-[#3D2925] hover:bg-[#2b1d1a] disabled:bg-[#d6d3d1] disabled:text-[#78716c] text-white focus-visible:ring-0 transition-colors px-6 flex items-center gap-2"
                     >
                       Next <ArrowRight className="w-4 h-4" />
                     </Button>

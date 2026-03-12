@@ -42,94 +42,119 @@ async function globalSetup(config: FullConfig) {
   }
 
   for (const project of projects) {
-    const testEmail = `e2e-${project}@packright.test`;
-    const testPassword = 'Password123!';
-    const authPath = path.join(authDir, `user-${project}.json`);
+    const testUsers = [
+      {
+        type: 'main',
+        email: `e2e-${project}@packright.test`,
+        authPath: path.join(authDir, `user-${project}.json`),
+        profile: {
+          username: `e2e_${project}`,
+          full_name: `E2E ${project} User`,
+          avatar_theme: 'emerald',
+          packing_style: 'Light Packer',
+        },
+      },
+      {
+        type: 'onboarding',
+        email: `e2e-onboarding-${project}@packright.test`,
+        authPath: path.join(authDir, `onboarding-${project}.json`),
+        profile: {
+          username: null,
+          full_name: `E2E Onboarding ${project}`,
+          avatar_theme: null,
+          packing_style: null,
+        },
+      },
+    ];
 
-    console.log(`[globalSetup:${project}] Preparing user: ${testEmail}`);
+    for (const testUser of testUsers) {
+      const testEmail = testUser.email;
+      const testPassword = 'Password123!';
+      const authPath = testUser.authPath;
 
-    if (serviceRoleKey) {
-      // 1. Create or fetch user via Admin API
-      try {
-        const authAdminUrl = `${supabaseUrl}/auth/v1/admin/users`;
-        const listRes = await fetch(`${authAdminUrl}?page=1&per_page=1000`, {
-          headers: {
-            apikey: serviceRoleKey,
-            Authorization: `Bearer ${serviceRoleKey}`,
-          },
-        });
+      console.log(`[globalSetup:${project}] Preparing user: ${testEmail}`);
 
-        if (listRes.ok) {
-          const { users } = (await listRes.json()) as {
-            users?: { id: string; email?: string }[];
-          };
-          let user = users?.find((u) => u.email === testEmail);
+      if (serviceRoleKey) {
+        // 1. Create or fetch user via Admin API
+        try {
+          const authAdminUrl = `${supabaseUrl}/auth/v1/admin/users`;
+          const listRes = await fetch(`${authAdminUrl}?page=1&per_page=1000`, {
+            headers: {
+              apikey: serviceRoleKey,
+              Authorization: `Bearer ${serviceRoleKey}`,
+            },
+          });
 
-          if (!user) {
-            console.log(`[globalSetup:${project}] Creating new user...`);
-            const createRes = await fetch(authAdminUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                apikey: serviceRoleKey,
-                Authorization: `Bearer ${serviceRoleKey}`,
-              },
-              body: JSON.stringify({
-                email: testEmail,
-                password: testPassword,
-                email_confirm: true,
-              }),
-            });
-            user = await createRes.json();
-          }
+          if (listRes.ok) {
+            const { users } = (await listRes.json()) as {
+              users?: { id: string; email?: string }[];
+            };
+            let user = users?.find((u) => u.email === testEmail);
 
-          if (user && user.id) {
-            // 2. Reset Profile via PATCH (set username to null)
-            const profilePatchRes = await fetch(
-              `${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}`,
-              {
-                method: 'PATCH',
+            if (!user) {
+              console.log(`[globalSetup:${project}] Creating new user...`);
+              const createRes = await fetch(authAdminUrl, {
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   apikey: serviceRoleKey,
                   Authorization: `Bearer ${serviceRoleKey}`,
-                  Prefer: 'return=minimal',
                 },
                 body: JSON.stringify({
-                  username: null,
-                  full_name: `E2E ${project} User`,
-                  avatar_theme: null,
-                  packing_style: null,
+                  email: testEmail,
+                  password: testPassword,
+                  email_confirm: true,
                 }),
-              }
-            );
-            console.log(`[globalSetup:${project}] Profile reset status: ${profilePatchRes.status}`);
+              });
+              user = await createRes.json();
+            }
+
+            if (user && user.id) {
+              // 2. Reset Profile via PATCH (set username to null)
+              const profilePatchRes = await fetch(
+                `${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}`,
+                {
+                  method: 'PATCH',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    apikey: serviceRoleKey,
+                    Authorization: `Bearer ${serviceRoleKey}`,
+                    Prefer: 'return=minimal',
+                  },
+                  body: JSON.stringify(testUser.profile),
+                }
+              );
+              console.log(
+                `[globalSetup:${project}] Profile reset status: ${profilePatchRes.status}`
+              );
+            }
           }
+        } catch (adminErr) {
+          console.error(`[globalSetup:${project}] Admin setup failed:`, adminErr);
         }
-      } catch (adminErr) {
-        console.error(`[globalSetup:${project}] Admin setup failed:`, adminErr);
       }
-    }
 
-    // 3. Sign in and capture storage state
-    // We use Chromium to capture all auth states because it's most stable
-    // for this one-time capture.
-    const browserInstance = await chromium.launch();
-    const page = await browserInstance.newPage();
-    try {
-      await page.goto(`${baseURL}/login`);
-      await page.fill('input[name="email"]', testEmail);
-      await page.fill('input[name="password"]', testPassword);
-      await page.click('button[type="submit"]');
+      // 3. Sign in and capture storage state
+      // We use Chromium to capture all auth states because it's most stable
+      // for this one-time capture.
+      const browserInstance = await chromium.launch();
+      const page = await browserInstance.newPage();
+      try {
+        await page.goto(`${baseURL}/login`);
+        await page.fill('input[name="email"]', testEmail);
+        await page.fill('input[name="password"]', testPassword);
+        await page.click('button[type="submit"]');
 
-      // Wait for redirect to onboarding
-      await page.waitForURL(/\/onboarding/, { timeout: 20000 });
-      await page.context().storageState({ path: authPath });
-      console.log(`[globalSetup:${project}] Auth state saved to ${authPath}`);
-    } catch (err) {
-      console.error(`[globalSetup:${project}] Auth capture failed:`, err);
-    } finally {
-      await browserInstance.close();
+        // Wait for redirect depending on user setup
+        const targetUrl = testUser.type === 'onboarding' ? /\/onboarding/ : /\/dashboard/;
+        await page.waitForURL(targetUrl, { timeout: 20000 });
+        await page.context().storageState({ path: authPath });
+        console.log(`[globalSetup:${project}] Auth state saved to ${authPath}`);
+      } catch (err) {
+        console.error(`[globalSetup:${project}] Auth capture failed:`, err);
+      } finally {
+        await browserInstance.close();
+      }
     }
   }
 }

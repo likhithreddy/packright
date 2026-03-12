@@ -60,6 +60,110 @@ describe('Supabase Trips Library', () => {
     const mockUserId = 'user-123';
     const mockTrip = { id: 'trip-123', title: 'Summer Vacation' };
 
+    it('formats dates as YYYY-MM-DD (not ISO timestamps with time/timezone)', async () => {
+      // IDEAL: dates must be stored as YYYY-MM-DD so Postgres DATE column accepts them
+      let capturedInsertPayload: Record<string, unknown> = {};
+      mockInsert.mockImplementationOnce((payload: Record<string, unknown>) => {
+        capturedInsertPayload = payload;
+        return {
+          select: jest.fn().mockReturnValue({
+            single: jest.fn().mockResolvedValue({ data: mockTrip, error: null }),
+          }),
+        };
+      });
+      mockInsert.mockResolvedValueOnce({ error: null }); // member
+
+      await createTrip(mockSupabase, mockInput, mockUserId);
+
+      expect(capturedInsertPayload.date_start).toBe('2026-06-01');
+      expect(capturedInsertPayload.date_end).toBe('2026-06-10');
+      // Must NOT contain time component
+      expect(capturedInsertPayload.date_start).not.toContain('T');
+      expect(capturedInsertPayload.date_end).not.toContain('T');
+    });
+
+    it('inserts is_archived as false by default', async () => {
+      let capturedInsertPayload: Record<string, unknown> = {};
+      mockInsert.mockImplementationOnce((payload: Record<string, unknown>) => {
+        capturedInsertPayload = payload;
+        return {
+          select: jest.fn().mockReturnValue({
+            single: jest.fn().mockResolvedValue({ data: mockTrip, error: null }),
+          }),
+        };
+      });
+      mockInsert.mockResolvedValueOnce({ error: null }); // member
+
+      await createTrip(mockSupabase, mockInput, mockUserId);
+
+      expect(capturedInsertPayload.is_archived).toBe(false);
+    });
+
+    it('returns warning=null when items insert succeeds', async () => {
+      const mockInputWithItems = { ...mockInput, items: ['Sunscreen'] };
+      mockInsert.mockReturnValueOnce({
+        select: jest.fn().mockReturnValue({
+          single: mockSingle.mockResolvedValue({ data: mockTrip, error: null }),
+        }),
+      });
+      mockInsert.mockResolvedValueOnce({ error: null }); // member
+      mockInsert.mockResolvedValueOnce({ error: null }); // items
+
+      const { warning } = await createTrip(mockSupabase, mockInputWithItems, mockUserId);
+      expect(warning).toBeNull();
+    });
+
+    it('returns warning message when items insert fails', async () => {
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const mockInputWithItems = { ...mockInput, items: ['Boots'] };
+      mockInsert.mockReturnValueOnce({
+        select: jest.fn().mockReturnValue({
+          single: mockSingle.mockResolvedValue({ data: mockTrip, error: null }),
+        }),
+      });
+      mockInsert.mockResolvedValueOnce({ error: null }); // member
+      mockInsert.mockResolvedValueOnce({ error: new Error('Items DB error') }); // items fail
+
+      const { data, error, warning } = await createTrip(
+        mockSupabase,
+        mockInputWithItems,
+        mockUserId
+      );
+
+      expect(data).toEqual(mockTrip);
+      expect(error).toBeNull();
+      expect(warning).toContain("Trip created, but we couldn't fetch AI suggestions");
+      consoleSpy.mockRestore();
+    });
+
+    it('does not call items table when items array is empty', async () => {
+      const mockInputEmpty = { ...mockInput, items: [] };
+      mockInsert.mockReturnValueOnce({
+        select: jest.fn().mockReturnValue({
+          single: mockSingle.mockResolvedValue({ data: mockTrip, error: null }),
+        }),
+      });
+      mockInsert.mockResolvedValueOnce({ error: null }); // member
+
+      await createTrip(mockSupabase, mockInputEmpty, mockUserId);
+
+      // Only 2 calls: trips + trip_members, NOT items
+      expect(mockSupabase.from).toHaveBeenCalledTimes(2);
+    });
+
+    it('does not call items table when items is undefined', async () => {
+      mockInsert.mockReturnValueOnce({
+        select: jest.fn().mockReturnValue({
+          single: mockSingle.mockResolvedValue({ data: mockTrip, error: null }),
+        }),
+      });
+      mockInsert.mockResolvedValueOnce({ error: null }); // member
+
+      await createTrip(mockSupabase, mockInput, mockUserId); // no items field
+
+      expect(mockSupabase.from).toHaveBeenCalledTimes(2);
+    });
+
     it('creates a trip and adds the user as an admin member successfully', async () => {
       // Setup insert mock for trips returning .select().single()
       mockInsert.mockReturnValueOnce({

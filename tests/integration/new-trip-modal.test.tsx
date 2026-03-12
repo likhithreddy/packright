@@ -18,8 +18,11 @@ jest.mock('sonner', () => ({
   toast: {
     success: jest.fn(),
     error: jest.fn(),
+    warning: jest.fn(),
   },
 }));
+
+import { toast } from 'sonner';
 
 // Mock ResizeObserver for Framer Motion
 global.ResizeObserver = class ResizeObserver {
@@ -58,19 +61,21 @@ describe('NewTripModal Integration', () => {
     expect(screen.getByText(/Next/i)).toBeInTheDocument();
   });
 
-  it('shows validation errors if next is clicked without filling details', async () => {
+  it('disables the Next button if title is not filled', async () => {
     const { user } = setup();
 
     await user.click(screen.getByTestId('trigger-btn'));
 
-    // In step 1, the button says "Next"
     const nextBtn = screen.getByRole('button', { name: /^Next$/i });
+    expect(nextBtn).toBeDisabled();
+
+    const titleInput = await screen.findByLabelText(/TRIP NAME/i);
+    await user.type(titleInput, 'My Title');
+    expect(nextBtn).not.toBeDisabled();
+
     await user.click(nextBtn);
 
-    // Zod validation messages
-    expect(await screen.findByText(/Title must be at least 2 characters/i)).toBeInTheDocument();
-
-    // Should NOT go to step 2 (AI Suggestions shouldn't be visible)
+    expect(await screen.findByText(/Destination must be at least/i)).toBeInTheDocument();
     expect(screen.queryByText(/AI Packing Suggestions/i)).not.toBeInTheDocument();
   });
 
@@ -92,12 +97,14 @@ describe('NewTripModal Integration', () => {
     await user.type(destInput, 'Hawaii');
 
     // Pick dates
-    const datePickerTrigger = screen.getByRole('button', { name: /Pick the trip dates/i });
-    await user.click(datePickerTrigger);
-
+    const startDateTrigger = screen.getByRole('button', { name: /Start Date/i });
+    await user.click(startDateTrigger);
     const day10Buttons = await screen.findAllByRole('button', { name: /10/ });
-    const day15Buttons = await screen.findAllByRole('button', { name: /15/ });
     await user.click(day10Buttons[0]);
+
+    const endDateTrigger = screen.getByRole('button', { name: /End Date/i });
+    await user.click(endDateTrigger);
+    const day15Buttons = await screen.findAllByRole('button', { name: /15/ });
     await user.click(day15Buttons[0]);
 
     const nextBtn = screen.getByRole('button', { name: /^Next$/i });
@@ -137,13 +144,14 @@ describe('NewTripModal Integration', () => {
     await user.type(await screen.findByLabelText(/TRIP NAME/i), 'Another Trip');
     await user.type(screen.getByLabelText(/DESTINATION/i), 'Paris');
 
-    const datePickerTrigger = screen.getByRole('button', { name: /Pick the trip dates/i });
-    await user.click(datePickerTrigger);
-
-    // Select dates by day numbers (10 and 15). Use getAll to avoid ambiguity and pick first
+    const startDateTrigger = screen.getByRole('button', { name: /Start Date/i });
+    await user.click(startDateTrigger);
     const day10Buttons = await screen.findAllByRole('button', { name: /10/ });
-    const day15Buttons = await screen.findAllByRole('button', { name: /15/ });
     await user.click(day10Buttons[0]);
+
+    const endDateTrigger = screen.getByRole('button', { name: /End Date/i });
+    await user.click(endDateTrigger);
+    const day15Buttons = await screen.findAllByRole('button', { name: /15/ });
     await user.click(day15Buttons[0]);
 
     await user.click(screen.getByRole('button', { name: /^Next$/i }));
@@ -179,5 +187,157 @@ describe('NewTripModal Integration', () => {
 
     const callArgs = (actions.createTripAction as jest.Mock).mock.calls[0][0];
     expect(callArgs.items).toContain('Sunscreen');
+  });
+
+  it('shows a warning toast (not success) when server returns a warning on Skip & Create', async () => {
+    (actions.createTripAction as jest.Mock).mockResolvedValue({
+      success: true,
+      data: { tripId: 'warn-trip-id' },
+      warning:
+        "Trip created, but we couldn't fetch AI suggestions. You can add items manually later.",
+    });
+
+    const { user } = setup();
+    await user.click(screen.getByTestId('trigger-btn'));
+
+    await user.type(await screen.findByLabelText(/TRIP NAME/i), 'Warning Trip');
+    await user.type(screen.getByLabelText(/DESTINATION/i), 'Berlin');
+
+    const startDateTrigger = screen.getByRole('button', { name: /Start Date/i });
+    await user.click(startDateTrigger);
+    const day10Buttons = await screen.findAllByRole('button', { name: /10/ });
+    await user.click(day10Buttons[0]);
+
+    const endDateTrigger = screen.getByRole('button', { name: /End Date/i });
+    await user.click(endDateTrigger);
+    const day15Buttons = await screen.findAllByRole('button', { name: /15/ });
+    await user.click(day15Buttons[0]);
+
+    await user.click(screen.getByRole('button', { name: /^Next$/i }));
+    await user.click(await screen.findByRole('button', { name: /Skip & Create/i }));
+
+    await waitFor(() => {
+      expect(toast.warning).toHaveBeenCalledWith(
+        expect.stringContaining("couldn't fetch AI suggestions")
+      );
+      // Must NOT call success toast
+      expect(toast.success).not.toHaveBeenCalled();
+    });
+
+    expect(mockRouterPush).toHaveBeenCalledWith('/dashboard/trips/warn-trip-id');
+  });
+
+  it('closes modal and resets form when Cancel is clicked', async () => {
+    const { user } = setup();
+    await user.click(screen.getByTestId('trigger-btn'));
+
+    await user.type(await screen.findByLabelText(/TRIP NAME/i), 'Trip To Cancel');
+    const cancelBtn = screen.getByRole('button', { name: /Cancel/i });
+    await user.click(cancelBtn);
+
+    // Modal should be gone
+    await waitFor(() => {
+      expect(screen.queryByText('Plan a New Trip')).not.toBeInTheDocument();
+    });
+
+    // Reopen: field should be empty (form was reset)
+    await user.click(screen.getByTestId('trigger-btn'));
+    const titleInput = await screen.findByLabelText(/TRIP NAME/i);
+    expect((titleInput as HTMLInputElement).value).toBe('');
+  });
+
+  it('navigates back from step 2 to step 1 when Back is clicked', async () => {
+    const { user } = setup();
+    await user.click(screen.getByTestId('trigger-btn'));
+
+    await user.type(await screen.findByLabelText(/TRIP NAME/i), 'Round Trip');
+    await user.type(screen.getByLabelText(/DESTINATION/i), 'Rome');
+
+    const startDateTrigger = screen.getByRole('button', { name: /Start Date/i });
+    await user.click(startDateTrigger);
+    const day11Buttons = await screen.findAllByRole('button', { name: /11/ });
+    await user.click(day11Buttons[0]);
+
+    const endDateTrigger = screen.getByRole('button', { name: /End Date/i });
+    await user.click(endDateTrigger);
+    const day16Buttons = await screen.findAllByRole('button', { name: /16/ });
+    await user.click(day16Buttons[0]);
+
+    await user.click(screen.getByRole('button', { name: /^Next$/i }));
+
+    // Verify step 2 is showing
+    expect(await screen.findByText(/AI Packing Suggestions/i)).toBeInTheDocument();
+
+    // Go back to step 1
+    await user.click(screen.getByRole('button', { name: /Back/i }));
+    // Verify step 1 heading is visible (not step 2 / step 3)
+    expect(await screen.findByText('Plan a New Trip')).toBeInTheDocument();
+    // Step 2 heading should no longer be visible (wait for AnimatePresence exit)
+    await waitFor(() => {
+      expect(screen.queryByText(/AI Packing Suggestions/i)).not.toBeInTheDocument();
+    });
+  });
+
+  it('disables Get Suggestions btn below 20 chars and enables it at exactly 20 chars', async () => {
+    const { user } = setup();
+    await user.click(screen.getByTestId('trigger-btn'));
+
+    await user.type(await screen.findByLabelText(/TRIP NAME/i), 'Char Limit Trip');
+    await user.type(screen.getByLabelText(/DESTINATION/i), 'Oslo');
+
+    const startDateTrigger = screen.getByRole('button', { name: /Start Date/i });
+    await user.click(startDateTrigger);
+    const day12Buttons = await screen.findAllByRole('button', { name: /12/ });
+    await user.click(day12Buttons[0]);
+
+    const endDateTrigger = screen.getByRole('button', { name: /End Date/i });
+    await user.click(endDateTrigger);
+    const day17Buttons = await screen.findAllByRole('button', { name: /17/ });
+    await user.click(day17Buttons[0]);
+
+    await user.click(screen.getByRole('button', { name: /^Next$/i }));
+
+    const promptInput = await screen.findByPlaceholderText(/e.g. 5 day hiking trip/i);
+    const getSuggestionsBtn = screen.getByRole('button', { name: /Get Suggestions/i });
+
+    // Below 20 chars: disabled
+    await user.type(promptInput, '19 characters long!'); // 19 chars
+    expect(getSuggestionsBtn).toBeDisabled();
+
+    // At exactly 20 chars: enabled
+    await user.type(promptInput, 'X'); // now 20 chars
+    expect(getSuggestionsBtn).not.toBeDisabled();
+  });
+
+  it('shows error toast when createTripAction fails', async () => {
+    (actions.createTripAction as jest.Mock).mockResolvedValue({
+      success: false,
+      error: 'Failed to create the trip. Please try again later.',
+    });
+
+    const { user } = setup();
+    await user.click(screen.getByTestId('trigger-btn'));
+    await user.type(await screen.findByLabelText(/TRIP NAME/i), 'Error Trip');
+    await user.type(screen.getByLabelText(/DESTINATION/i), 'Nowhere');
+
+    const startDateTrigger = screen.getByRole('button', { name: /Start Date/i });
+    await user.click(startDateTrigger);
+    const day13Buttons = await screen.findAllByRole('button', { name: /13/ });
+    await user.click(day13Buttons[0]);
+
+    const endDateTrigger = screen.getByRole('button', { name: /End Date/i });
+    await user.click(endDateTrigger);
+    const day18Buttons = await screen.findAllByRole('button', { name: /18/ });
+    await user.click(day18Buttons[0]);
+
+    await user.click(screen.getByRole('button', { name: /^Next$/i }));
+    await user.click(await screen.findByRole('button', { name: /Skip & Create/i }));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        expect.stringContaining('Failed to create the trip')
+      );
+    });
+    expect(mockRouterPush).not.toHaveBeenCalled();
   });
 });

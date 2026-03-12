@@ -33,7 +33,11 @@ export async function createTrip(
   supabase: SupabaseClient,
   input: NewTripInput,
   userId: string
-): Promise<{ data: Trip | null; error: PostgrestError | Error | null | unknown }> {
+): Promise<{
+  data: Trip | null;
+  error: PostgrestError | Error | null | unknown;
+  warning?: string | null;
+}> {
   try {
     // 1. Insert the trip
     const { data: trip, error: tripError } = await supabase
@@ -41,8 +45,8 @@ export async function createTrip(
       .insert({
         title: input.title,
         destination: input.destination,
-        date_start: input.dateRange.from.toISOString(),
-        date_end: input.dateRange.to.toISOString(),
+        date_start: input.dateRange.from.toISOString().split('T')[0],
+        date_end: input.dateRange.to.toISOString().split('T')[0],
         created_by: userId,
         is_archived: false,
       })
@@ -67,6 +71,7 @@ export async function createTrip(
       return { data: trip as Trip, error: memberError };
     }
 
+    let itemsWarning = null;
     // 3. Bulk insert mocked AI items if provided
     if (input.items && input.items.length > 0) {
       const itemsToInsert = input.items.map((itemName) => ({
@@ -80,11 +85,12 @@ export async function createTrip(
       const { error: itemsError } = await supabase.from('items').insert(itemsToInsert);
       if (itemsError) {
         console.error('Failed to auto-insert trip items:', itemsError);
-        // We don't fail the whole trip creation if item suggestions fail
+        itemsWarning =
+          "Trip created, but we couldn't fetch AI suggestions. You can add items manually later.";
       }
     }
 
-    return { data: trip as Trip, error: null };
+    return { data: trip as Trip, error: null, warning: itemsWarning };
   } catch (err) {
     return { data: null, error: err };
   }

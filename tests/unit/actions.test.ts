@@ -92,4 +92,41 @@ describe('Server Actions - Trips', () => {
     expect(result.success).toBe(false);
     expect(result.error).toBe('An unexpected error occurred.');
   });
+
+  it('returns warning in response when createTrip returns a warning', async () => {
+    mockGetUser.mockResolvedValue({ data: { user: { id: 'user-123' } }, error: null });
+    mockCreateTrip.mockResolvedValue({
+      data: { id: 'trip-789' },
+      error: null,
+      warning:
+        "Trip created, but we couldn't fetch AI suggestions. You can add items manually later.",
+    });
+
+    const result = await createTripAction(validData);
+
+    expect(result.success).toBe(true);
+    expect(result.data?.tripId).toBe('trip-789');
+    expect(result.warning).toContain("couldn't fetch AI suggestions");
+  });
+
+  it('returns no warning when createTrip returns warning=null', async () => {
+    mockGetUser.mockResolvedValue({ data: { user: { id: 'user-123' } }, error: null });
+    mockCreateTrip.mockResolvedValue({ data: { id: 'trip-101' }, error: null, warning: null });
+
+    const result = await createTripAction(validData);
+
+    expect(result.success).toBe(true);
+    expect(result.warning).toBeUndefined(); // null gets coerced to undefined via `|| undefined`
+  });
+
+  it('fails when createTrip returns data=null even without error', async () => {
+    // Edge case: implementation returns null data with no error
+    mockGetUser.mockResolvedValue({ data: { user: { id: 'user-123' } }, error: null });
+    mockCreateTrip.mockResolvedValue({ data: null, error: null });
+
+    const result = await createTripAction(validData);
+
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('Failed to create');
+  });
 });
