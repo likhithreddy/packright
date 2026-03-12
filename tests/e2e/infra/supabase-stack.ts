@@ -81,6 +81,7 @@ export async function startSupabaseStack(): Promise<SupabaseStack> {
       GOTRUE_API_PORT: '8081',
       GOTRUE_API_EXTERNAL_URL: 'http://localhost:8081',
       API_EXTERNAL_URL: 'http://localhost:8081',
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: 'authenticated',
     })
     .withWaitStrategy(Wait.forHttp('/health', 8081).withStartupTimeout(60000))
     .withLogConsumer((stream) => stream.on('data', (line) => console.log(`[GoTrue] ${line}`)));
@@ -114,12 +115,31 @@ events {
 http {
     server {
         listen 80;
+        
+        # CORS headers for all locations
+        add_header 'Access-Control-Allow-Origin' '*' always;
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE, PATCH' always;
+        add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,apikey,x-client-info,prefer' always;
+        add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range' always;
+
         location /auth/v1/ {
+            if ($request_method = 'OPTIONS') {
+                return 204;
+            }
+            proxy_hide_header 'Access-Control-Allow-Origin';
+            proxy_hide_header 'Access-Control-Allow-Methods';
+            proxy_hide_header 'Access-Control-Allow-Headers';
             proxy_pass http://auth:8081/;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
         }
         location /rest/v1/ {
+            if ($request_method = 'OPTIONS') {
+                return 204;
+            }
+            proxy_hide_header 'Access-Control-Allow-Origin';
+            proxy_hide_header 'Access-Control-Allow-Methods';
+            proxy_hide_header 'Access-Control-Allow-Headers';
             proxy_pass http://rest:3000/;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;

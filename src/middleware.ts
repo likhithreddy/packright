@@ -36,9 +36,12 @@ export async function middleware(request: NextRequest) {
    * IMPORTANT: getUser() verifies the JWT with Supabase.
    * This is more secure than getSession() which only reads the cookie locally.
    */
+  console.log(`[MIDDLEWARE] URL: ${process.env.NEXT_PUBLIC_SUPABASE_URL}`);
   const {
     data: { user },
+    error,
   } = await supabase.auth.getUser();
+  console.log(`[MIDDLEWARE] User: ${user?.id ?? 'null'}, Error: ${error?.message ?? 'none'}`);
 
   const { pathname } = request.nextUrl;
 

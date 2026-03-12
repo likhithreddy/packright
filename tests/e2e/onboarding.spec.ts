@@ -1,8 +1,12 @@
 import { test as base, expect } from '@playwright/test';
+import path from 'path';
+import fs from 'fs';
 
 const test = base.extend({
   storageState: async ({}, use, testInfo) => {
-    await use(`playwright/.auth/onboarding-${testInfo.project.name}.json`);
+    await use(
+      path.join(process.cwd(), `playwright/.auth/onboarding-${testInfo.project.name}.json`)
+    );
   },
 });
 
@@ -15,11 +19,25 @@ test.describe.serial('Onboarding Flow', () => {
   // This ensures that even within one browser runner's serial execution,
   // each test starts with a clean slate (no username).
   test.beforeEach(async ({}, testInfo) => {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'http://127.0.0.1:54321';
-    const serviceRoleKey =
-      process.env.SUPABASE_SERVICE_ROLE_KEY ??
-      process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY ??
-      '';
+    // 1. Load dynamic environment from the shared stack-env.json
+    const authDir = path.join(process.cwd(), 'playwright/.auth');
+    const envPath = path.join(authDir, 'stack-env.json');
+    let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    let serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (fs.existsSync(envPath)) {
+      try {
+        const env = JSON.parse(fs.readFileSync(envPath, 'utf-8'));
+        supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+        serviceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY;
+      } catch (err) {
+        console.error('[E2E Worker] Failed to read stack-env.json:', err);
+      }
+    }
+
+    // Fallback to defaults if still missing
+    supabaseUrl = supabaseUrl ?? 'http://127.0.0.1:54321';
+    serviceRoleKey = serviceRoleKey ?? '';
 
     // Each project has its own unique user: e2e-onboarding-chromium, e2e-onboarding-firefox, etc.
     const project = testInfo.project.name;
@@ -68,7 +86,10 @@ test.describe.serial('Onboarding Flow', () => {
     await expect(page.locator('h1')).toContainText('Almost there!');
   });
 
-  test('allows completing onboarding and then entering dashboard', async ({ page }) => {
+  test('allows completing onboarding and then entering dashboard', async ({
+    page,
+    browserName,
+  }) => {
     // Use a unique username to avoid any potential collision within the same DB
     const uniqueUsername = `user_${Math.random().toString(36).slice(2, 8)}`;
 
@@ -80,6 +101,28 @@ test.describe.serial('Onboarding Flow', () => {
         contentType: 'application/json',
         body: JSON.stringify(true),
       });
+    });
+
+    // Log browser console messages
+    page.on('console', (msg) =>
+      console.log(`[browser:${browserName}] ${msg.type()}: ${msg.text()}`)
+    );
+    page.on('pageerror', (err) => console.error(`[browser:${browserName}] ERROR: ${err.message}`));
+    page.on('response', async (response) => {
+      const url = response.url();
+      if (url.includes('/auth/v1/') || url.includes('/rest/v1/')) {
+        const status = response.status();
+        const method = response.request().method();
+        console.log(`[browser:${browserName}] ${method} ${url} -> ${status}`);
+        if (status >= 400) {
+          try {
+            const body = await response.json();
+            console.log(`[browser:${browserName}] ERROR BODY: ${JSON.stringify(body)}`);
+          } catch {
+            console.log(`[browser:${browserName}] ERROR BODY: (not JSON)`);
+          }
+        }
+      }
     });
 
     await page.goto('/onboarding');

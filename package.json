@@ -11,7 +11,8 @@
     "test": "jest tests/unit",
     "test:integration": "jest tests/integration",
     "test:watch": "jest --watch",
-    "test:e2e": "playwright test"
+    "test:e2e": "npx tsx tests/e2e/infra/run-with-stack.ts playwright test",
+    "test:e2e:direct": "playwright test"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
