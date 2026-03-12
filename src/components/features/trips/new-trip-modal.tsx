@@ -58,7 +58,9 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
 
   // Multistep Form State
   const [step, setStep] = React.useState<1 | 2 | 3>(1);
+  const [suggestedItems, setSuggestedItems] = React.useState<string[]>([]);
   const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
+  const [isFetchingSuggestions, setIsFetchingSuggestions] = React.useState(false);
 
   const form = useForm<NewTripInput>({
     resolver: zodResolver(newTripSchema),
@@ -86,10 +88,38 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
     form.handleSubmit(onSubmit)();
   };
 
-  const getSuggestions = () => {
-    if (promptValue.length >= 20) {
-      // Transition to suggestion selection screen
+  const getSuggestions = async () => {
+    if (promptValue.length < 20) return;
+
+    setIsFetchingSuggestions(true);
+    try {
+      const { destination, dateRange } = form.getValues();
+      const response = await fetch('/api/generate-list', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          description: promptValue,
+          destination: destination,
+          startDate: dateRange?.from?.toISOString(),
+          endDate: dateRange?.to?.toISOString(),
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch suggestions');
+      }
+
+      const data = await response.json();
+      const items = data.items.map((item: { name: string }) => item.name);
+
+      setSuggestedItems(items);
+      setSelectedItems(items); // Default to all selected
       setStep(3);
+    } catch (error: any) {
+      toast.error(error.message || 'Error generating suggestions');
+    } finally {
+      setIsFetchingSuggestions(false);
     }
   };
 
@@ -357,10 +387,24 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
                       <Button
                         type="button"
                         onClick={getSuggestions}
-                        disabled={promptValue.length < 20 || isPending}
-                        className="bg-[#3D2925] hover:bg-[#2b1d1a] disabled:bg-stone-300 disabled:text-stone-500 text-white font-bold focus-visible:ring-0 transition-colors px-6 rounded-lg shadow-sm"
+                        disabled={promptValue.length < 20 || isPending || isFetchingSuggestions}
+                        className="bg-[#3D2925] hover:bg-[#2b1d1a] disabled:bg-stone-300 disabled:text-stone-500 text-white font-bold focus-visible:ring-0 transition-colors px-6 rounded-lg shadow-sm min-w-[140px]"
                       >
-                        Get Suggestions <ArrowRight className="w-4 h-4 ml-1" />
+                        {isFetchingSuggestions ? (
+                          <div className="flex items-center gap-2">
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                            >
+                              <Sparkles className="w-4 h-4" />
+                            </motion.div>
+                            Thinking...
+                          </div>
+                        ) : (
+                          <>
+                            Get Suggestions <ArrowRight className="w-4 h-4 ml-1" />
+                          </>
+                        )}
                       </Button>
                     </div>
                   </div>
@@ -381,8 +425,8 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
                     Based on your trip description, here are suggested items.
                   </p>
 
-                  <div className="flex flex-wrap gap-2.5 mb-6">
-                    {MOCK_ITEMS.map((item) => {
+                  <div className="flex flex-wrap gap-2.5 mb-6 max-h-[300px] overflow-y-auto p-1 scrollbar-hide">
+                    {suggestedItems.map((item) => {
                       const isSelected = selectedItems.includes(item);
                       return (
                         <button
@@ -407,7 +451,7 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={() => setSelectedItems([...MOCK_ITEMS])}
+                        onClick={() => setSelectedItems([...suggestedItems])}
                         className="border-stone-800 text-stone-800 rounded-lg hover:bg-stone-100 focus-visible:ring-0 h-9 font-bold"
                       >
                         Select All

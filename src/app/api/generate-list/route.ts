@@ -1,7 +1,27 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
-import { createTripItems } from '@/lib/supabase/trips';
-import { Item } from '@/types/database.types';
+
+const SYSTEM_PROMPT = `You are a smart, practical, and essentialist trip packing assistant. 
+Your goal is to generate a comprehensive but efficient packing list based on a user's trip description. 
+
+REQUIRMENTS:
+1. INFERS CONTEXT: Deduce trip duration, destination, climate, and activities.
+2. CITY TRAVEL: Even if a specific event is mentioned (like a wedding), always include general city travel essentials.
+3. STRICT CATEGORIES: Use ONLY these categories: Clothing, Toiletries, Electronics, Documents, Gear, Footwear, Miscellaneous.
+4. QUANTITY & BUFFER: Suggest logical quantities. For clothing, use a "Duration + 1" buffer rule.
+5. SHARED VS PERSONAL: Differentiate items that can be shared among a group vs personal items.
+6. GENERIC NAMES: Use generic, concise item names (e.g., "Socks" instead of "7 pairs of moisture-wicking wool socks").
+7. JSON FORMAT: Return a JSON object with a single "items" key containing an array of objects.
+
+ITEM SCHEMA:
+{
+  "name": string,
+  "category": "Clothing" | "Toiletries" | "Electronics" | "Documents" | "Gear" | "Footwear" | "Miscellaneous",
+  "quantity": number,
+  "is_shared": boolean
+}
+
+TONE: Practical and essentialist. No fluff.`;
 
 export async function POST(request: Request) {
   try {
@@ -18,17 +38,33 @@ export async function POST(request: Request) {
 
     // 2. Parse and validate request body
     const body = await request.json();
-    const { description, tripId } = body;
+    const { description, destination, startDate, endDate } = body;
 
     if (!description || typeof description !== 'string') {
       return NextResponse.json({ error: 'Trip description is required' }, { status: 400 });
     }
 
-    if (!tripId || typeof tripId !== 'string') {
-      return NextResponse.json({ error: 'Trip ID is required' }, { status: 400 });
+    if (description.length < 20) {
+      return NextResponse.json(
+        { error: 'Trip description must be at least 20 characters long' },
+        { status: 400 }
+      );
     }
 
-    // 3. Call Groq API via fetch
+    // Calculate duration if dates are provided
+    let durationInfo = '';
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const diffTime = Math.abs(end.getTime() - start.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+      durationInfo = `Duration: ${diffDays} days.`;
+    }
+
+    const destinationInfo = destination ? `Destination: ${destination}.` : '';
+    const userContext = `${destinationInfo} ${durationInfo} Description: ${description}`.trim();
+
+    // 3. Prepare Groq API call configuration
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       console.error('GROQ_API_KEY is not defined in environment variables');
@@ -38,75 +74,67 @@ export async function POST(request: Request) {
       );
     }
 
-    const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [
-          {
-            role: 'system',
-            content:
-              'You are a smart trip packing assistant. Generate a packing list as a JSON object with an "items" key containing an array of items. Each item must have "name" (string), "category" (string), and "quantity" (number).',
+    let attempts = 0;
+    const maxAttempts = 3;
+    let lastError = null;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+      try {
+        const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
           },
-          {
-            role: 'user',
-            content: description,
-          },
-        ],
-        response_format: { type: 'json_object' },
-      }),
-    });
+          body: JSON.stringify({
+            model: 'llama-3.3-70b-versatile',
+            messages: [
+              {
+                role: 'system',
+                content: SYSTEM_PROMPT,
+              },
+              {
+                role: 'user',
+                content: userContext,
+              },
+            ],
+            response_format: { type: 'json_object' },
+            temperature: 0.3, // Lower temperature for more consistent JSON
+          }),
+        });
 
-    if (!groqResponse.ok) {
-      const errorData = await groqResponse.json();
-      console.error('Groq API Error:', errorData);
-      return NextResponse.json(
-        { error: 'Failed to generate list from Groq' },
-        { status: groqResponse.status }
-      );
+        if (!groqResponse.ok) {
+          const errorData = await groqResponse.json();
+          throw new Error(`Groq API Error: ${JSON.stringify(errorData)}`);
+        }
+
+        const groqData = await groqResponse.json();
+        const content = groqData.choices[0].message.content;
+        const parsedContent = JSON.parse(content);
+
+        if (!parsedContent.items || !Array.isArray(parsedContent.items)) {
+          throw new Error('Invalid response format: missing items array');
+        }
+
+        // Successfully generated and parsed
+        return NextResponse.json({ items: parsedContent.items });
+      } catch (err: any) {
+        console.warn(`Attempt ${attempts} failed:`, err.message);
+        lastError = err;
+        // Wait a bit before retrying (exponential backoff could be added here if needed)
+        if (attempts < maxAttempts) {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        }
+      }
     }
 
-    const groqData = await groqResponse.json();
-    const content = groqData.choices[0].message.content;
-    const parsedContent = JSON.parse(content);
-
-    if (!parsedContent.items || !Array.isArray(parsedContent.items)) {
-      throw new Error('Invalid response format from Groq');
-    }
-
-    interface GroqItem {
-      name: string;
-      category: string;
-      quantity: number;
-    }
-
-    // 4. Transform and persist items to Supabase
-    const itemsToInsert: Omit<Item, 'id' | 'created_at'>[] = parsedContent.items.map(
-      (item: GroqItem) => ({
-        trip_id: tripId,
-        name: item.name,
-        category: item.category || 'General',
-        required_count: item.quantity || 1,
-        status: 'needed' as const,
-        assigned_to: null,
-      })
+    // 4. Exhausted retries
+    console.error('All Groq API attempts failed:', lastError);
+    return NextResponse.json(
+      { error: 'We encountered an issue generating your packing list. Please try again later.' },
+      { status: 500 }
     );
-
-    const { data: savedItems, error: insertError } = await createTripItems(supabase, itemsToInsert);
-
-    if (insertError) {
-      console.error('Supabase Insert Error:', insertError);
-      return NextResponse.json(
-        { error: 'Failed to save generated items to database' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({ items: savedItems });
   } catch (error) {
     console.error('API Route Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
