@@ -1,5 +1,5 @@
 import { SupabaseClient, PostgrestError } from '@supabase/supabase-js';
-import { Trip } from '@/types/database.types';
+import { Trip, Item } from '@/types/database.types';
 import { NewTripInput } from '@/types/new-trip.schema';
 
 /**
@@ -94,4 +94,16 @@ export async function createTrip(
   } catch (err) {
     return { data: null, error: err };
   }
+}
+
+/**
+ * Batch inserts packing items for a specific trip.
+ */
+export async function createTripItems(
+  supabase: SupabaseClient,
+  items: Omit<Item, 'id' | 'created_at'>[]
+): Promise<{ data: Item[] | null; error: PostgrestError | null }> {
+  const { data, error } = await supabase.from('items').insert(items).select();
+
+  return { data: data as Item[], error };
 }
