@@ -95,12 +95,12 @@ export async function startSupabaseStack(): Promise<SupabaseStack> {
     .withExposedPorts(3000)
     .withEnvironment({
       PGRST_DB_URI: 'postgresql://postgres:postgres@db:5432/postgres?sslmode=disable',
-      PGRST_DB_SCHEMA: 'public,auth,extensions',
+      PGRST_DB_SCHEMA: 'public,auth',
       PGRST_DB_ANON_ROLE: 'anon',
       PGRST_JWT_SECRET: jwtSecret,
       PGRST_SERVER_PORT: '3000',
       PGRST_DB_CONFIG: 'true',
-      PGRST_DB_SCHEMAS: 'public,auth,extensions',
+      PGRST_DB_SCHEMAS: 'public,auth',
     })
     .withWaitStrategy(Wait.forListeningPorts().withStartupTimeout(60000))
     .withLogConsumer((stream) => stream.on('data', (line) => console.log(`[PostgREST] ${line}`)));
