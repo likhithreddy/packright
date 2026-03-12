@@ -128,24 +128,31 @@ test.describe.serial('Onboarding Flow', () => {
     await page.goto('/onboarding');
 
     // ── Step 1: Identity ──────────────────────────────────────────────────────
-    await page.fill('input[name="full_name"]', 'E2E Test User');
+    await page.click('input[name="full_name"]');
+    await page.type('input[name="full_name"]', 'E2E Test User', { delay: 50 });
+    await page.click('input[name="username"]');
     await page.type('input[name="username"]', uniqueUsername, { delay: 50 });
 
     // Wait for the availability check icon
     await page.waitForSelector('[data-testid="user-check-icon"]', { timeout: 10000 });
 
     // Click Next -> Shows "Confirm your handle"
-    // We explicitly wait for the button to be enabled to avoid WebKit race conditions
+    // We explicitly wait for the button to be enabled to avoid WebKit race conditions.
+    // Small timeout ensures react-hook-form state is fully synced.
+    await page.waitForTimeout(500);
     const nextBtn = page.getByRole('button', { name: 'Next', exact: true });
     await expect(nextBtn).toBeEnabled();
     await nextBtn.click();
 
     await expect(page.getByRole('alertdialog')).toBeVisible();
+    await expect(page.getByText('Confirm your handle')).toBeVisible();
     await page.getByRole('button', { name: "Yes, I'm sure" }).click();
 
     // ── Step 2: Avatar Color ──────────────────────────────────────────────────
     await page.click('button[aria-label="Select Deep Gold avatar color"]');
-    await page.click('button:has-text("Next")');
+    const step2NextBtn = page.getByRole('button', { name: 'Next', exact: true });
+    await expect(step2NextBtn).toBeEnabled();
+    await step2NextBtn.click();
 
     // ── Step 3: Packing Style ─────────────────────────────────────────────────
     await page.click('button:has-text("Light Packer")');
