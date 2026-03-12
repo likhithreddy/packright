@@ -55,10 +55,15 @@ async function main() {
 
   const filteredEnv = originalEnv
     .split('\n')
-    .filter((line) => !line.trim().startsWith('NEXT_PUBLIC_SUPABASE_') && !line.trim().startsWith('SUPABASE_'))
+    .filter(
+      (line) =>
+        !line.trim().startsWith('NEXT_PUBLIC_SUPABASE_') && !line.trim().startsWith('SUPABASE_')
+    )
     .join('\n');
 
-  const ephemeralEnvContent = filteredEnv + `
+  const ephemeralEnvContent =
+    filteredEnv +
+    `
 # EPHEMERAL SUPABASE VARIABLES
 NEXT_PUBLIC_SUPABASE_URL=${stack.supabaseUrl}
 NEXT_PUBLIC_SUPABASE_ANON_KEY=${stack.anonKey}

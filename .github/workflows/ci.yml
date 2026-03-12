@@ -63,7 +63,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-    
       - name: Get installed Playwright version
         id: playwright-version
         run: echo "version=$(yarn list --pattern @playwright/test --depth=0 | grep '@playwright/test' | awk -F@ '{print $3}')" >> "$GITHUB_OUTPUT"

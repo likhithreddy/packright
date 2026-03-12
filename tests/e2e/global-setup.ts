@@ -227,9 +227,9 @@ async function globalSetup(config: FullConfig) {
               email_confirm: true,
             }),
           });
-          user = (await (
-            await throwErrorIfFailed(createRes, 'Failed to create user')
-          ).json()) as { id: string };
+          user = (await (await throwErrorIfFailed(createRes, 'Failed to create user')).json()) as {
+            id: string;
+          };
         }
 
         if (!user?.id) {
@@ -238,33 +238,32 @@ async function globalSetup(config: FullConfig) {
 
         // 3. Reset profile via service role (use UPSERT to ensure it exists)
         const profilePayload = { id: user.id, ...testUser.profile };
-        const patchRes = await fetch(
-          `${supabaseUrl}/rest/v1/profiles`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              apikey: serviceRoleKey,
-              Authorization: `Bearer ${serviceRoleKey}`,
-              Prefer: 'resolution=merge-duplicates,return=minimal',
-            },
-            body: JSON.stringify(profilePayload),
-          }
-        );
+        const patchRes = await fetch(`${supabaseUrl}/rest/v1/profiles`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: serviceRoleKey,
+            Authorization: `Bearer ${serviceRoleKey}`,
+            Prefer: 'resolution=merge-duplicates,return=minimal',
+          },
+          body: JSON.stringify(profilePayload),
+        });
         await throwErrorIfFailed(patchRes, 'Failed to upsert profile');
 
         // Verify profile actually exists
-        const verifyRes = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}`, {
-           headers: {
-             apikey: serviceRoleKey,
-             Authorization: `Bearer ${serviceRoleKey}`,
-           }
-        });
+        const verifyRes = await fetch(
+          `${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}`,
+          {
+            headers: {
+              apikey: serviceRoleKey,
+              Authorization: `Bearer ${serviceRoleKey}`,
+            },
+          }
+        );
         const profiles = await verifyRes.json();
         if (!profiles || profiles.length === 0) {
-           throw new Error(`Profile not found in database for user ${user.id} after upserting!`);
+          throw new Error(`Profile not found in database for user ${user.id} after upserting!`);
         }
-
 
         // 4. Authenticate via REST to get a fresh session
         console.log(`[globalSetup:${project}:${testUser.type}] Authenticating via REST...`);
