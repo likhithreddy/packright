@@ -4,46 +4,33 @@
 -- Extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Custom Functions
-CREATE OR REPLACE FUNCTION public.handle_updated_at()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$
+-- Roles (Supabase standard)
+DO $$
 BEGIN
-  NEW.updated_at = NOW();
-  RETURN NEW;
-END;
-$function$;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'anon') THEN
+    CREATE ROLE anon NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'authenticated') THEN
+    CREATE ROLE authenticated NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'service_role') THEN
+    CREATE ROLE service_role NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'supabase_admin') THEN
+    CREATE ROLE supabase_admin NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'authenticator') THEN
+    CREATE ROLE authenticator NOINHERIT LOGIN PASSWORD 'postgres';
+  END IF;
+END
+$$;
 
-CREATE OR REPLACE FUNCTION public.check_username_available(username_to_check text)
- RETURNS boolean
- LANGUAGE sql
- SECURITY DEFINER
-AS $function$
-  SELECT NOT EXISTS (
-    SELECT 1 
-    FROM public.profiles 
-    WHERE LOWER(username) = LOWER(username_to_check)
-  );
-$function$;
+GRANT anon, authenticated, service_role TO authenticator;
 
-CREATE OR REPLACE FUNCTION public.handle_new_user()
- RETURNS trigger
- LANGUAGE plpgsql
- SECURITY DEFINER
-AS $function$
-BEGIN
-  INSERT INTO public.profiles (id, full_name, username, avatar_theme, packing_style)
-  VALUES (
-    new.id,
-    new.raw_user_meta_data->>'full_name',
-    new.raw_user_meta_data->>'username',
-    new.raw_user_meta_data->>'avatar_theme',
-    new.raw_user_meta_data->>'packing_style'
-  );
-  RETURN new;
-END;
-$function$;
+-- Schemas
+CREATE SCHEMA IF NOT EXISTS auth;
+GRANT USAGE ON SCHEMA auth TO anon, authenticated, service_role;
+GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
 
 -- Tables
 
@@ -91,6 +78,48 @@ CREATE TABLE IF NOT EXISTS public.items (
   assigned_to uuid,
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now())
 );
+
+-- Custom Functions
+
+CREATE OR REPLACE FUNCTION public.handle_updated_at()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$function$;
+
+CREATE OR REPLACE FUNCTION public.check_username_available(username_to_check text)
+ RETURNS boolean
+ LANGUAGE sql
+ SECURITY DEFINER
+AS $function$
+  SELECT NOT EXISTS (
+    SELECT 1 
+    FROM public.profiles 
+    WHERE LOWER(username) = LOWER(username_to_check)
+  );
+$function$;
+
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+BEGIN
+  INSERT INTO public.profiles (id, full_name, username, avatar_theme, packing_style)
+  VALUES (
+    new.id,
+    new.raw_user_meta_data->>'full_name',
+    new.raw_user_meta_data->>'username',
+    new.raw_user_meta_data->>'avatar_theme',
+    new.raw_user_meta_data->>'packing_style'
+  );
+  RETURN new;
+END;
+$function$;
 
 -- RLS Logic Functions (Required for Policies)
 CREATE OR REPLACE FUNCTION public.is_member_of(trip_uuid uuid)

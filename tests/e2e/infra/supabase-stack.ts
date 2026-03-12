@@ -55,7 +55,7 @@ export async function startSupabaseStack(): Promise<SupabaseStack> {
   ]);
 
   if (exitCode !== 0) {
-    console.error(`[SupabaseStack] Schema application failed: ${stderr}`);
+    throw new Error(`[SupabaseStack] Schema application failed: ${stderr}`);
   }
 
   const dbUrl = `postgresql://postgres:postgres@localhost:${startedPostgres.getMappedPort(5432)}/postgres`;
@@ -102,7 +102,7 @@ export async function startSupabaseStack(): Promise<SupabaseStack> {
       PGRST_DB_CONFIG: 'true',
       PGRST_DB_SCHEMAS: 'public,auth',
     })
-    .withWaitStrategy(Wait.forListeningPorts().withStartupTimeout(60000))
+    .withWaitStrategy(Wait.forListeningPorts().withStartupTimeout(120000))
     .withLogConsumer((stream) => stream.on('data', (line) => console.log(`[PostgREST] ${line}`)));
 
   const startedPostgrest = await postgrestContainer.start();
