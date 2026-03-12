@@ -13,10 +13,21 @@ describe('getUserTrips lib function', () => {
   });
 
   it('successfully fetches trips for a user', async () => {
-    const mockData = [{ id: '1', title: 'Trip 1' }] as Trip[];
+    const mockData = [
+      {
+        id: '1',
+        title: 'Trip 1',
+        created_by: 'user-1',
+        destination: 'Destination 1',
+        date_start: new Date().toISOString(),
+        date_end: new Date().toISOString(),
+        is_archived: false,
+        created_at: new Date().toISOString(),
+      },
+    ] as Trip[];
     (mockSupabase.order as jest.Mock).mockResolvedValue({ data: mockData, error: null });
 
-    const result = await getUserTrips(mockSupabase);
+    const result = await getUserTrips(mockSupabase as any);
 
     expect(result.data).toEqual(mockData);
     expect(result.error).toBeNull();
@@ -28,7 +39,7 @@ describe('getUserTrips lib function', () => {
   it('returns an empty array when no trips are found', async () => {
     (mockSupabase.order as jest.Mock).mockResolvedValue({ data: [], error: null });
 
-    const result = await getUserTrips(mockSupabase);
+    const result = await getUserTrips(mockSupabase as any);
 
     expect(result.data).toEqual([]);
     expect(result.error).toBeNull();
@@ -38,7 +49,7 @@ describe('getUserTrips lib function', () => {
     const mockError = { code: 'P0001', message: 'Database error' };
     (mockSupabase.order as jest.Mock).mockResolvedValue({ data: [], error: mockError });
 
-    const result = await getUserTrips(mockSupabase);
+    const result = await getUserTrips(mockSupabase as any);
 
     expect(result.data).toEqual([]);
     expect(result.error).toEqual(mockError);
@@ -48,7 +59,7 @@ describe('getUserTrips lib function', () => {
     const error = new Error('Connection failed');
     (mockSupabase.order as jest.Mock).mockRejectedValue(error);
 
-    const result = await getUserTrips(mockSupabase);
+    const result = await getUserTrips(mockSupabase as any);
 
     expect(result.data).toBeNull();
     expect(result.error).toEqual(error);

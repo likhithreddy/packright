@@ -18,6 +18,7 @@ describe('POST /api/generate-list', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
     mockSupabase = {
       auth: {
         getSession: jest.fn(),

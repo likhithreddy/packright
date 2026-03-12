@@ -29,14 +29,8 @@ import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import { cn } from '@/lib/utils';
 
-import { newTripSchema, NewTripInput } from '@/types/new-trip.schema';
+import { newTripSchema, NewTripInput, AIItem } from '@/types/new-trip.schema';
 import { createTripAction } from '@/app/actions/trips';
-
-type AIItem = {
-  name: string;
-  quantity: number;
-  category: string;
-};
 
 export function NewTripModal({ children }: { children?: React.ReactNode }) {
   const router = useRouter();
@@ -144,7 +138,7 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
         items: selectedItems,
       });
 
-      if (!result.success) {
+      if (!result.success || !result.data) {
         toast.error(result.error || 'Failed to create trip');
         setIsPending(false); // Ensure pending state is reset on error
         return;
@@ -163,6 +157,8 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
       // Step into redirection view
       setIsRedirecting(true);
 
+      const tripId = result.data.tripId;
+
       // Controlled redirection
       setTimeout(() => {
         setOpen(false);
@@ -170,7 +166,7 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
         setStep(1); // Reset step
         setSelectedItems([]); // Clear selected items
         setIsRedirecting(false); // Reset redirecting state
-        router.push(`/dashboard/trips/${result.data.tripId}`);
+        router.push(`/dashboard/trips/${tripId}`);
       }, 3000);
     } catch {
       toast.error('An unexpected error occurred. Please try again.');
