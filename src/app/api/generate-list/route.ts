@@ -78,9 +78,15 @@ export async function POST(request: Request) {
       throw new Error('Invalid response format from Groq');
     }
 
+    interface GroqItem {
+      name: string;
+      category: string;
+      quantity: number;
+    }
+
     // 4. Transform and persist items to Supabase
     const itemsToInsert: Omit<Item, 'id' | 'created_at'>[] = parsedContent.items.map(
-      (item: any) => ({
+      (item: GroqItem) => ({
         trip_id: tripId,
         name: item.name,
         category: item.category || 'General',
