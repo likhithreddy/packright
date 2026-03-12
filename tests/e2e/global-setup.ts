@@ -11,6 +11,7 @@ declare global {
  *
  * This script creates and initializes 3 distinct E2E test users (one per browser
  * project) to ensure full database isolation during parallel test runs.
+ * Each user is reset to a null-username state via the Supabase Service Role API.
  */
 async function globalSetup(config: FullConfig) {
   // 1. Validate that the ephemeral Supabase stack is accessible
@@ -20,7 +21,7 @@ async function globalSetup(config: FullConfig) {
   if (!supabaseUrl || !serviceRoleKey) {
     throw new Error(
       '[globalSetup] SUPABASE_URL or SERVICE_ROLE_KEY is missing. ' +
-        'Did you run this using the run-with-stack wrapper?'
+      'Did you run this using the run-with-stack wrapper?'
     );
   }
 
@@ -97,41 +98,56 @@ async function globalSetup(config: FullConfig) {
         // 1. Create or fetch user via Admin API
         try {
           const authAdminUrl = `${supabaseUrl}/auth/v1/admin/users`;
-
-          // In an ephemeral stack, we know the user doesn't exist yet, but we'll follow the flow
-          console.log(`[globalSetup:${project}] Creating new user...`);
-          const createRes = await fetch(authAdminUrl, {
-            method: 'POST',
+          const listRes = await fetch(`${authAdminUrl}?page=1&per_page=1000`, {
             headers: {
-              'Content-Type': 'application/json',
               apikey: serviceRoleKey,
               Authorization: `Bearer ${serviceRoleKey}`,
             },
-            body: JSON.stringify({
-              email: testEmail,
-              password: testPassword,
-              email_confirm: true,
-            }),
           });
 
-          const user = await createRes.json();
+          if (listRes.ok) {
+            const { users } = (await listRes.json()) as {
+              users?: { id: string; email?: string }[];
+            };
+            let user = users?.find((u) => u.email === testEmail);
 
-          if (user && user.id) {
-            // 2. Reset Profile via PATCH (set values)
-            const profilePatchRes = await fetch(
-              `${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}`,
-              {
-                method: 'PATCH',
+            if (!user) {
+              console.log(`[globalSetup:${project}] Creating new user...`);
+              const createRes = await fetch(authAdminUrl, {
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   apikey: serviceRoleKey,
                   Authorization: `Bearer ${serviceRoleKey}`,
-                  Prefer: 'return=minimal',
                 },
-                body: JSON.stringify(testUser.profile),
-              }
-            );
-            console.log(`[globalSetup:${project}] Profile setup status: ${profilePatchRes.status}`);
+                body: JSON.stringify({
+                  email: testEmail,
+                  password: testPassword,
+                  email_confirm: true,
+                }),
+              });
+              user = await createRes.json();
+            }
+
+            if (user && user.id) {
+              // 2. Reset Profile via PATCH (set username to null)
+              const profilePatchRes = await fetch(
+                `${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}`,
+                {
+                  method: 'PATCH',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    apikey: serviceRoleKey,
+                    Authorization: `Bearer ${serviceRoleKey}`,
+                    Prefer: 'return=minimal',
+                  },
+                  body: JSON.stringify(testUser.profile),
+                }
+              );
+              console.log(
+                `[globalSetup:${project}] Profile reset status: ${profilePatchRes.status}`
+              );
+            }
           }
         } catch (adminErr) {
           console.error(`[globalSetup:${project}] Admin setup failed:`, adminErr);
@@ -161,7 +177,7 @@ async function globalSetup(config: FullConfig) {
             console.error(
               `[globalSetup:browser:${project}:${testUser.type}] AUTH FAIL: ${response.status()} ${JSON.stringify(body)}`
             );
-          } catch {}
+          } catch { }
         }
       });
 
@@ -181,7 +197,7 @@ async function globalSetup(config: FullConfig) {
               ready = true;
               break;
             }
-          } catch {}
+          } catch { }
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }
 
