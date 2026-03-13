@@ -154,7 +154,8 @@ export async function inviteTripMemberAction(
 
     if (error) {
       // Check for unique constraint violation (user already a member)
-      if (error.code === '23505') {
+      const pgError = error as { code?: string };
+      if (pgError.code === '23505') {
         return {
           success: false,
           error: `${userFullName} is already a trip member.`,
