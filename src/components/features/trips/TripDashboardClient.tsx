@@ -2,23 +2,31 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Users } from 'lucide-react';
+import { ArrowLeft, Users, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarGroup } from '@/components/ui/avatar';
 import { MemberInviteInput } from '@/components/features/trips/member-invite-input';
 import { MembersModal } from '@/components/features/trips/members-modal';
+import { PackingBoard } from '@/components/features/packing-board';
+import { ViewToggle } from '@/components/features/view-toggle';
+import { BoardViewToggle } from '@/components/features/board-view-toggle';
 import { getInitials } from '@/lib/profile-utils';
 import { TripMemberWithProfile } from '@/lib/supabase/trip-members';
+import { Trip } from '@/types/database.types';
 
 /**
  * Trip Dashboard Client Component
  *
- * ISSUE-#45: Client-side interactive component for trip dashboard.
+ * ISSUE-#46: Client-side interactive component for trip dashboard.
  * Receives data from server component and handles user interactions.
  *
  * Features:
+ * - View trip details (title, dates, destination)
+ * - View trip statistics (items, % claimed, % packed, unassigned)
+ * - View and toggle between Kanban/List views
+ * - View and toggle between My View/All Items View
  * - View trip members
  * - Invite new members (admin only)
  * - View all members in modal
@@ -29,6 +37,7 @@ export interface TripDashboardClientProps {
   currentUserId: string;
   members: TripMemberWithProfile[];
   currentUserIsAdmin: boolean;
+  trip: Trip | null;
 }
 
 export function TripDashboardClient({
@@ -36,9 +45,30 @@ export function TripDashboardClient({
   currentUserId,
   members,
   currentUserIsAdmin,
+  trip,
 }: TripDashboardClientProps) {
   const router = useRouter();
   const [isMembersModalOpen, setIsMembersModalOpen] = React.useState(false);
+
+  // Stats state (updated by PackingBoard via custom event)
+  const [stats, setStats] = React.useState({
+    totalItems: 0,
+    percentClaimed: 0,
+    percentPacked: 0,
+    unassignedItems: 0,
+  });
+
+  // Listen for stats updates from PackingBoard
+  React.useEffect(() => {
+    const handleStatsUpdate = (event: CustomEvent) => {
+      setStats(event.detail);
+    };
+
+    window.addEventListener('tripStatsUpdate', handleStatsUpdate as EventListener);
+    return () => {
+      window.removeEventListener('tripStatsUpdate', handleStatsUpdate as EventListener);
+    };
+  }, []);
 
   // Handle successful invitation
   const handleInviteSuccess = React.useCallback(() => {
@@ -59,29 +89,68 @@ export function TripDashboardClient({
   // Create a Set of existing member IDs for quick lookup
   const existingMemberIds = React.useMemo(() => new Set(members.map((m) => m.user_id)), [members]);
 
+  // Format dates
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
   return (
     <div className="flex flex-col h-full bg-[#FAFAF8] font-sans">
       {/* Header */}
-      <header className="border-b border-stone-200 bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+      <header className="border-b border-stone-200 bg-white flex-shrink-0">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+          {/* Top row: Back button, Trip info, View toggles, Members */}
+          <div className="flex items-center justify-between gap-3 sm:gap-4">
+            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
               <Button
                 variant="ghost"
+                size="icon"
                 onClick={() => router.push('/dashboard')}
-                className="text-stone-500 hover:text-stone-800 hover:bg-stone-100/50"
+                className="text-stone-500 hover:text-stone-800 hover:bg-stone-100/50 h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
+                <ArrowLeft className="w-3.5 w-3.5 sm:w-4 sm:h-4" />
               </Button>
-              <div className="h-6 w-px bg-stone-200" />
-              <h1 className="font-serif text-xl text-[#2D3A30]">Trip Dashboard</h1>
+
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <h1 className="font-serif text-xl sm:text-2xl truncate text-[#2D3A30]">
+                    {trip?.title || 'Loading...'}
+                  </h1>
+                  {trip?.destination && (
+                    <>
+                      <MapPin className="h-4 w-4 text-red-500 flex-shrink-0" />
+                      <span className="text-sm text-stone-600 truncate">{trip.destination}</span>
+                    </>
+                  )}
+                </div>
+                <p className="text-xs sm:text-sm text-stone-500">
+                  {trip && formatDate(trip.date_start) + ' - ' + formatDate(trip.date_end)}
+                </p>
+              </div>
             </div>
 
-            {/* Members section */}
-            <div className="flex items-center gap-4">
-              {/* Avatar group */}
-              <div className="flex items-center gap-3">
+            {/* Members section + Invite (admin-only) */}
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+              {/* Invite input - admin only, visible on md+ screens */}
+              {currentUserIsAdmin && (
+                <div className="hidden md:flex items-center gap-2">
+                  <label className="text-sm font-medium text-stone-700 whitespace-nowrap">
+                    Invite members:
+                  </label>
+                  <div className="w-full max-w-[200px] sm:max-w-[250px] lg:max-w-[300px]">
+                    <MemberInviteInput
+                      tripId={tripId}
+                      currentUserId={currentUserId}
+                      existingMemberIds={existingMemberIds}
+                      onInviteSuccess={handleInviteSuccess}
+                      compactPlaceholder
+                    />
+                  </div>
+                </div>
+              )}
+              {/* Avatar group - hide on very small screens */}
+              <div className="hidden sm:flex -space-x-2">
                 {visibleMembers.length > 0 && (
                   <AvatarGroup>
                     {visibleMembers.map((member) => (
@@ -101,11 +170,8 @@ export function TripDashboardClient({
                   </AvatarGroup>
                 )}
                 {remainingCount > 0 && (
-                  <span className="text-sm text-stone-500">+{remainingCount}</span>
+                  <span className="text-xs sm:text-sm text-stone-500">+{remainingCount}</span>
                 )}
-                <span className="text-sm text-stone-600">
-                  {members.length} member{members.length !== 1 ? 's' : ''}
-                </span>
               </div>
 
               {/* View all members button */}
@@ -113,51 +179,55 @@ export function TripDashboardClient({
                 variant="outline"
                 size="sm"
                 onClick={() => setIsMembersModalOpen(true)}
-                className="border-stone-200 text-stone-600 hover:bg-stone-50"
+                className="border-stone-200 text-stone-600 hover:bg-stone-50 h-7 sm:h-8 px-2 sm:px-3 text-xs sm:text-sm"
               >
-                <Users className="w-4 h-4 mr-2" />
-                View all
+                <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">View all</span>
               </Button>
             </div>
           </div>
 
-          {/* Invite input row */}
+          {/* Admin section: Stats + Toggles + Progress Bar - ADMIN ONLY */}
           {currentUserIsAdmin && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 pt-4 border-t border-stone-100"
+              className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-stone-100"
             >
-              <div className="flex items-center gap-3">
-                <label className="text-sm font-medium text-stone-700 whitespace-nowrap">
-                  Invite members:
-                </label>
-                <div className="flex-1 max-w-md">
-                  <MemberInviteInput
-                    tripId={tripId}
-                    currentUserId={currentUserId}
-                    existingMemberIds={existingMemberIds}
-                    onInviteSuccess={handleInviteSuccess}
-                  />
+              {/* Stats + Toggles row */}
+              <div className="flex items-center justify-between gap-3 sm:gap-4">
+                {/* Stats (left) */}
+                <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm flex-wrap">
+                  <span className="font-semibold text-sm sm:text-base uppercase tracking-wide">
+                    {stats.totalItems} ITEMS
+                  </span>
+                  <span className="text-stone-500">{stats.percentClaimed}% claimed</span>
+                  <span className="text-stone-500">{stats.percentPacked}% packed</span>
+                  <span className="text-stone-500">{stats.unassignedItems} unassigned</span>
                 </div>
+
+                {/* Toggles (right) */}
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <BoardViewToggle />
+                  <ViewToggle />
+                </div>
+              </div>
+
+              {/* Progress bar */}
+              <div className="h-1.5 sm:h-2 bg-stone-100 rounded-full overflow-hidden mt-2">
+                <div
+                  className="h-full bg-gradient-to-r from-green-400 to-green-600 transition-all duration-500"
+                  style={{ width: `${stats.percentPacked}%` }}
+                />
               </div>
             </motion.div>
           )}
         </div>
       </header>
 
-      {/* Main content area - placeholder for future packing board */}
-      <main className="flex-1 overflow-auto p-8">
-        <div className="max-w-6xl mx-auto">
-          {/* Placeholder for packing board */}
-          <div className="bg-white border border-stone-200 rounded-3xl p-12 shadow-sm text-center space-y-6">
-            <h2 className="font-serif text-2xl text-[#2D3A30]">Packing Board Coming Soon</h2>
-            <p className="text-stone-500 max-w-md mx-auto">
-              The collaborative packing board will appear here. Trip members can claim and pack
-              items together.
-            </p>
-          </div>
-        </div>
+      {/* Main content area - Packing Board */}
+      <main className="flex-1 overflow-hidden">
+        <PackingBoard />
       </main>
 
       {/* Members Modal */}

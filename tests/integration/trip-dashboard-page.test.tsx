@@ -141,21 +141,13 @@ describe('TripDashboardClient Integration', () => {
       });
     });
 
-    it('should render main content area with placeholder', async () => {
+    it('should render PackingBoard component', async () => {
       render(<TripDashboardClient {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Packing Board Coming Soon')).toBeInTheDocument();
-      });
-    });
-
-    it('should render placeholder description text', async () => {
-      render(<TripDashboardClient {...defaultProps} />);
-
-      await waitFor(() => {
-        expect(
-          screen.getByText(/The collaborative packing board will appear here/)
-        ).toBeInTheDocument();
+        const main = container.querySelector('main');
+        expect(main).toBeInTheDocument();
+        expect(main).toHaveClass('flex-1', 'overflow-hidden');
       });
     });
   });
@@ -409,15 +401,14 @@ describe('TripDashboardClient Integration', () => {
       expect(header).toBeInTheDocument();
     });
 
-    it('should have proper main content area', async () => {
+    it('should have proper main content area for PackingBoard', async () => {
       const { container } = render(<TripDashboardClient {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Packing Board Coming Soon')).toBeInTheDocument();
+        const main = container.querySelector('main');
+        expect(main).toBeInTheDocument();
+        expect(main).toHaveClass('flex-1', 'overflow-hidden');
       });
-
-      const main = container.querySelector('main');
-      expect(main).toBeInTheDocument();
     });
   });
 
