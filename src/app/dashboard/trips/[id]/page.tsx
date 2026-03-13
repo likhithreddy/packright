@@ -21,7 +21,7 @@ export default async function TripDashboardPage({ params }: { params: Promise<{ 
   // Fetch trip members - await params
   const { id: tripId } = await params;
   const membersResult = await getTripMembersAction(tripId);
-  const members = (membersResult.success && membersResult.data) ? membersResult.data : [];
+  const members = membersResult.success && membersResult.data ? membersResult.data : [];
 
   // Determine admin status with better fallback
   // If members array is empty (data not loaded yet), don't assume non-admin
