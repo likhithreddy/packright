@@ -28,21 +28,19 @@ export function DatePicker({
 
   return (
     <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-      <PopoverTrigger
-        render={
-          <Button
-            variant={'outline'}
-            className={cn(
-              'w-full justify-start text-left font-normal bg-white border-stone-200 h-11 px-3',
-              !date && 'text-muted-foreground',
-              className
-            )}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? format(date, 'MMM d, yyyy') : <span>{placeholder}</span>}
-          </Button>
-        }
-      />
+      <PopoverTrigger asChild>
+        <Button
+          variant={'outline'}
+          className={cn(
+            'w-full justify-start text-left font-normal bg-white border-stone-200 h-11 px-3',
+            !date && 'text-muted-foreground',
+            className
+          )}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {date ? format(date, 'MMM d, yyyy') : <span>{placeholder}</span>}
+        </Button>
+      </PopoverTrigger>
       <PopoverContent
         className="w-auto p-0 z-50 bg-white shadow-2xl rounded-xl border border-stone-200"
         align="start"

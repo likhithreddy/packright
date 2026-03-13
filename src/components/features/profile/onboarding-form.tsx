@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -59,6 +60,8 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
   const [pendingValues, setPendingValues] = useState<OnboardingFormValues | null>(null);
   const [canSubmit, setCanSubmit] = useState(false);
   const [statusIndex, setStatusIndex] = useState(0);
+  const [usernameInput, setUsernameInput] = useState('');
+  const debouncedUsername = useDebounce(usernameInput, 400);
 
   const statusMessages = [
     'Packing your things...',
@@ -86,11 +89,17 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
     mode: 'onChange',
   });
 
-  const { setValue, watch, trigger, getValues } = form;
+  const {
+    setValue,
+    watch,
+    trigger,
+    getValues,
+    formState: { isValid },
+  } = form;
 
   useEffect(() => {
     if (existingFullName) {
-      setValue('full_name', existingFullName);
+      setValue('full_name', existingFullName, { shouldValidate: true });
     }
   }, [existingFullName, setValue]);
 
@@ -103,33 +112,36 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
     }
   }, [step]);
 
-  const checkUsernameAvailability = useCallback(
-    async (username: string) => {
-      if (username.length < 3) {
-        setUsernameAvailable(null);
-        return;
-      }
+  useEffect(() => {
+    // Reset availability state when input is too short
+    if (debouncedUsername.length < 3) {
+      setUsernameAvailable(null);
+      setIsCheckingUsername(false);
+      return;
+    }
 
+    // Check availability via RPC
+    const checkAvailability = async () => {
       setIsCheckingUsername(true);
       try {
         const { data, error } = await supabase.rpc('check_username_available', {
-          username_to_check: username,
+          username_to_check: debouncedUsername,
         });
 
         if (error) {
           setUsernameAvailable(null);
-          return;
+        } else {
+          setUsernameAvailable(data as boolean);
         }
-
-        setUsernameAvailable(data as boolean);
       } catch {
         setUsernameAvailable(null);
       } finally {
         setIsCheckingUsername(false);
       }
-    },
-    [supabase]
-  );
+    };
+
+    checkAvailability();
+  }, [debouncedUsername, supabase]);
 
   const handleNext = async () => {
     let fieldsToValidate: (keyof OnboardingFormValues)[] = [];
@@ -409,8 +421,9 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                                 className="h-12 bg-secondary/20 border-border/50 focus:border-primary/50 transition-colors pr-10"
                                 {...field}
                                 onChange={(e) => {
-                                  field.onChange(e);
-                                  checkUsernameAvailability(e.target.value);
+                                  const value = e.target.value;
+                                  field.onChange(value);
+                                  setUsernameInput(value);
                                 }}
                               />
                             </FormControl>
@@ -592,7 +605,7 @@ export default function OnboardingForm({ userId, existingFullName }: OnboardingF
                   disabled={
                     isSubmitting ||
                     isCheckingUsername ||
-                    (step === 1 && (usernameAvailable !== true || !form.formState.isValid))
+                    (step === 1 && (usernameAvailable !== true || !isValid))
                   }
                 >
                   Next <ArrowRight className="ml-2 h-4 w-4" />

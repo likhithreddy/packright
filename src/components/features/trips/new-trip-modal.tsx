@@ -262,16 +262,14 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {children ? (
-        <DialogTrigger render={children as React.ReactElement} />
+        <DialogTrigger asChild>{children as React.ReactElement}</DialogTrigger>
       ) : (
-        <DialogTrigger
-          render={
-            <Button className="bg-[#2D3A30] hover:bg-[#1f2821] text-white rounded-full px-6 transition-all duration-300 shadow-md flex items-center gap-2">
-              <PlaneTakeoff className="w-4 h-4" />
-              Plan New Trip
-            </Button>
-          }
-        />
+        <DialogTrigger asChild>
+          <Button className="bg-[#2D3A30] hover:bg-[#1f2821] text-white rounded-full px-6 transition-all duration-300 shadow-md flex items-center gap-2">
+            <PlaneTakeoff className="w-4 h-4" />
+            Plan New Trip
+          </Button>
+        </DialogTrigger>
       )}
       <DialogContent className="sm:max-w-fit md:min-w-[500px] max-w-[95vw] p-0 overflow-hidden border-stone-200 bg-[#FAFAF8] rounded-2xl shadow-xl flex flex-col max-h-[90vh] transition-all duration-300">
         <div className="px-6 pt-6 pb-2 shrink-0">
