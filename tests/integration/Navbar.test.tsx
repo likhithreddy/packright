@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Navbar from '@/components/layout/navbar';
 import { Profile } from '@/types/profile.types';
 
@@ -49,15 +50,16 @@ describe('Navbar Integration', () => {
   });
 
   it('handles sign out flow', async () => {
+    const user = userEvent.setup();
     render(<Navbar profile={mockProfile} />);
 
     // Open dropdown
     const trigger = screen.getByLabelText('User menu');
-    fireEvent.click(trigger);
+    await user.click(trigger);
 
-    // Click Sign Out
-    const signOutBtn = screen.getByText('Sign Out');
-    fireEvent.click(signOutBtn);
+    // Click Sign Out button
+    const signOutBtn = await screen.findByText('Sign Out');
+    await user.click(signOutBtn);
 
     await waitFor(() => {
       expect(mockSignOut).toHaveBeenCalled();
@@ -66,13 +68,16 @@ describe('Navbar Integration', () => {
     });
   });
 
-  it('shows profile info in dropdown', () => {
+  it('shows profile info in dropdown', async () => {
+    const user = userEvent.setup();
     render(<Navbar profile={mockProfile} />);
 
     const trigger = screen.getByLabelText('User menu');
-    fireEvent.click(trigger);
+    await user.click(trigger);
 
-    expect(screen.getByText('Alex Johnson')).toBeInTheDocument();
-    expect(screen.getByText('@traveler_alex')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Alex Johnson')).toBeInTheDocument();
+      expect(screen.getByText('@traveler_alex')).toBeInTheDocument();
+    });
   });
 });

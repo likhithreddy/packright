@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import OnboardingForm from '@/components/features/profile/onboarding-form';
 import { toast } from 'sonner';
@@ -48,7 +48,7 @@ describe('OnboardingForm', () => {
     await user.type(screen.getByLabelText(/Full Name/i), 'Test User');
     await user.type(screen.getByLabelText(/Unique Handle/i), 'valid_handle');
     await waitFor(() => expect(screen.getByTestId('user-check-icon')).toBeInTheDocument());
-    await user.click(screen.getByRole('button', { name: /Next/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Next/i }));
 
     // Handle confirmation dialog after Step 1
     const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
@@ -98,7 +98,7 @@ describe('OnboardingForm', () => {
 
     await user.type(screen.getByLabelText(/Unique Handle/i), 'back_test');
     await waitFor(() => expect(screen.getByTestId('user-check-icon')).toBeInTheDocument());
-    await user.click(screen.getByRole('button', { name: /Next/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Next/i }));
 
     // Handle confirmation dialog
     const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
@@ -176,7 +176,7 @@ describe('OnboardingForm', () => {
 
     await user.type(screen.getByLabelText(/Unique Handle/i), 'fl_user');
     await waitFor(() => expect(screen.getByTestId('user-check-icon')).toBeInTheDocument());
-    await user.click(screen.getByRole('button', { name: /Next/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Next/i }));
 
     // Handle confirmation dialog
     const confirmBtn = await screen.findByRole('button', { name: /Yes, I'm sure/i });
@@ -227,7 +227,10 @@ describe('OnboardingForm', () => {
 
     await user.type(screen.getByLabelText(/Unique Handle/i), 'new_handle');
     await waitFor(() => expect(screen.getByTestId('user-check-icon')).toBeInTheDocument());
-    await user.click(screen.getByRole('button', { name: /Next/i }));
+
+    const nextBtn = screen.getByRole('button', { name: /Next/i });
+
+    fireEvent.click(nextBtn);
 
     // Find and click "Wait, let me change it" (Cancel)
     const cancelBtn = await screen.findByRole('button', { name: /Wait, let me change it/i });

@@ -67,10 +67,15 @@ export function LoginForm() {
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     const supabase = createClient();
+
+    // Use environment variable for production compatibility
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+    const redirectTo = `${siteUrl}/auth/confirm`;
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/confirm`,
+        redirectTo,
         queryParams: {
           prompt: 'consent',
         },
@@ -78,6 +83,7 @@ export function LoginForm() {
     });
 
     if (error) {
+      console.error('[Google Login] OAuth error:', error);
       toast.error('Failed to log in with Google');
       setIsLoading(false);
     }

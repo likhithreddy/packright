@@ -63,23 +63,21 @@ export default function Navbar({ profile }: NavbarProps) {
 
       {/* Right side: Username + Avatar Dropdown */}
       <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <button
-              className="flex items-center gap-3 hover:opacity-90 transition-opacity focus:outline-none"
-              aria-label="User menu"
-            />
-          }
-        >
-          <span className="text-sm text-white/80 font-medium hidden sm:inline">
-            {profile.username}
-          </span>
-          <div
-            className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm cursor-pointer"
-            style={{ backgroundColor: profile.avatar_theme || '#8B6914' }}
+        <DropdownMenuTrigger asChild>
+          <button
+            className="flex items-center gap-3 hover:opacity-90 transition-opacity focus:outline-none"
+            aria-label="User menu"
           >
-            {getInitials(profile.full_name)}
-          </div>
+            <span className="text-sm text-white/80 font-medium hidden sm:inline">
+              {profile.username}
+            </span>
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm"
+              style={{ backgroundColor: profile.avatar_theme || '#8B6914' }}
+            >
+              {getInitials(profile.full_name)}
+            </div>
+          </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
           <DropdownMenuGroup>
@@ -91,13 +89,17 @@ export default function Navbar({ profile }: NavbarProps) {
             </DropdownMenuLabel>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem render={<Link href="/dashboard/profile" className="cursor-pointer" />}>
-            <UserCircle className="mr-2 h-4 w-4" />
-            <span>Your Profile</span>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/profile" className="cursor-pointer">
+              <UserCircle className="mr-2 h-4 w-4" />
+              <span>Your Profile</span>
+            </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem render={<Link href="/dashboard/settings" className="cursor-pointer" />}>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Account Settings</span>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/settings" className="cursor-pointer">
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Account Settings</span>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem

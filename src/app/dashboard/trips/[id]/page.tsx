@@ -1,57 +1,41 @@
-'use client';
+import { getProfile } from '@/lib/supabase/profile';
+import { getTripMembersAction } from '@/app/actions/trip-members';
+import { TripDashboardClient } from '@/components/features/trips/TripDashboardClient';
 
-import * as React from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Clock } from 'lucide-react';
+/**
+ * Trip Dashboard Page
+ *
+ * ISSUE-#45: Server component that fetches trip data and renders client component.
+ *
+ * This server component:
+ * 1. Fetches the current user profile
+ * 2. Fetches trip members
+ * 3. Determines admin status
+ * 4. Passes all data to the client component for interactivity
+ */
+export default async function TripDashboardPage({ params }: { params: Promise<{ id: string }> }) {
+  // Fetch current user profile
+  const currentUser = await getProfile();
+  const currentUserId = currentUser?.id || '';
 
-export default function TripDashboardPage() {
-  const params = useParams();
-  const router = useRouter();
-  const tripId = params.id as string;
+  // Fetch trip members - await params
+  const { id: tripId } = await params;
+  const membersResult = await getTripMembersAction(tripId);
+  const members = membersResult.success && membersResult.data ? membersResult.data : [];
 
+  // Determine admin status with better fallback
+  // If members array is empty (data not loaded yet), don't assume non-admin
+  // This prevents a race condition where the UI renders before data is available
+  const currentUserIsAdmin =
+    members.length > 0 && members.some((m) => m.user_id === currentUserId && m.role === 'admin');
+
+  // Pass data to client component
   return (
-    <div className="flex flex-col h-full bg-[#FAFAF8] p-8 font-sans">
-      <div className="max-w-4xl mx-auto w-full">
-        <Button
-          variant="ghost"
-          onClick={() => router.push('/dashboard')}
-          className="mb-8 -ml-2 text-stone-500 hover:text-stone-800 hover:bg-stone-100/50"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Dashboard
-        </Button>
-
-        <div className="bg-white border border-stone-200 rounded-3xl p-12 shadow-sm text-center space-y-6">
-          <div className="w-16 h-16 bg-[#F5F3ED] rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Clock className="w-8 h-8 text-[#2D3A30]" />
-          </div>
-
-          <h1 className="font-serif text-3xl text-[#2D3A30]">Trip Dashboard Incoming</h1>
-          <p className="text-stone-500 max-w-md mx-auto leading-relaxed">
-            We're setting up the collaborative packing board for trip{' '}
-            <span className="font-mono text-[#2D3A30] bg-stone-100 px-1.5 py-0.5 rounded text-sm">
-              {tripId}
-            </span>
-            . Check back soon to claim items and coordinate with your group!
-          </p>
-
-          <div className="pt-6">
-            <Button
-              onClick={() => router.push('/dashboard')}
-              className="bg-[#2D3A30] hover:bg-[#1f2821] text-white rounded-full px-8 h-12 transition-all duration-300"
-            >
-              Return to Dashboard
-            </Button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 opacity-40 grayscale pointer-events-none">
-          <div className="bg-white border border-stone-200 rounded-2xl p-6 h-48 animate-pulse" />
-          <div className="bg-white border border-stone-200 rounded-2xl p-6 h-48 animate-pulse" />
-          <div className="bg-white border border-stone-200 rounded-2xl p-6 h-48 animate-pulse" />
-        </div>
-      </div>
-    </div>
+    <TripDashboardClient
+      tripId={tripId}
+      currentUserId={currentUserId}
+      members={members}
+      currentUserIsAdmin={currentUserIsAdmin}
+    />
   );
 }
