@@ -5,7 +5,8 @@ import { startSupabaseStack } from './supabase-stack.js';
 
 /**
  * Wrapper script to run a command (like 'playwright test') with an ephemeral Supabase stack.
- * It ensures the stack is started, environment variables are set, and .env.local is safely overridden.
+ * It ensures the stack is started, environment variables are set, and creates .env.test
+ * (does NOT modify .env.local which is for local development only).
  */
 async function main() {
   const args = process.argv.slice(2);
@@ -17,8 +18,7 @@ async function main() {
   console.log('[run-with-stack] Starting ephemeral Supabase stack...');
   const stack = await startSupabaseStack();
 
-  const envLocalPath = path.join(process.cwd(), '.env.local');
-  const envLocalBakPath = path.join(process.cwd(), '.env.local.bak');
+  const envTestPath = path.join(process.cwd(), '.env.test');
   const authDir = path.join(process.cwd(), 'playwright/.auth');
   const stackEnvPath = path.join(authDir, 'stack-env.json');
 
@@ -35,17 +35,7 @@ async function main() {
     fs.mkdirSync(authDir, { recursive: true });
   }
 
-  // Backup existing .env.local
-  let originalEnv = '';
-  if (fs.existsSync(envLocalPath)) {
-    console.log('[run-with-stack] Backing up existing .env.local...');
-    originalEnv = fs.readFileSync(envLocalPath, 'utf8');
-    fs.renameSync(envLocalPath, envLocalBakPath);
-  } else if (fs.existsSync(envLocalBakPath)) {
-    originalEnv = fs.readFileSync(envLocalBakPath, 'utf8');
-  }
-
-  // Create ephemeral .env.local and stack-env.json
+  // Create ephemeral .env.test and stack-env.json (NO backup needed, we don't touch .env.local)
   const envData = {
     NEXT_PUBLIC_SUPABASE_URL: stack.supabaseUrl,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: stack.anonKey,
@@ -53,28 +43,17 @@ async function main() {
     NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY: stack.serviceRoleKey,
   };
 
-  const filteredEnv = originalEnv
-    .split('\n')
-    .filter(
-      (line) =>
-        !line.trim().startsWith('NEXT_PUBLIC_SUPABASE_') && !line.trim().startsWith('SUPABASE_')
-    )
-    .join('\n');
-
-  const ephemeralEnvContent =
-    filteredEnv +
-    `
-# EPHEMERAL SUPABASE VARIABLES
+  const ephemeralEnvContent = `# EPHEMERAL SUPABASE VARIABLES FOR E2E TESTS
 NEXT_PUBLIC_SUPABASE_URL=${stack.supabaseUrl}
 NEXT_PUBLIC_SUPABASE_ANON_KEY=${stack.anonKey}
 SUPABASE_SERVICE_ROLE_KEY=${stack.serviceRoleKey}
 NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=${stack.serviceRoleKey}
 `;
-  console.log('[run-with-stack] Ephemeral .env.local created with preserved non-Supabase keys.');
-  fs.writeFileSync(envLocalPath, ephemeralEnvContent);
+  console.log('[run-with-stack] Creating .env.test with ephemeral Supabase credentials.');
+  fs.writeFileSync(envTestPath, ephemeralEnvContent);
   fs.writeFileSync(stackEnvPath, JSON.stringify(envData, null, 2));
 
-  console.log('[run-with-stack] Stack ready. Variables exported to .env.local and stack-env.json');
+  console.log('[run-with-stack] Stack ready. Variables exported to .env.test and stack-env.json');
 
   const [command, ...commandArgs] = args;
   console.log(`[run-with-stack] Running command: ${command} ${commandArgs.join(' ')}`);
@@ -99,13 +78,10 @@ NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=${stack.serviceRoleKey}
       console.error('[run-with-stack] Error stopping stack:', err);
     }
 
-    // Restore .env.local
-    if (fs.existsSync(envLocalPath)) {
-      fs.unlinkSync(envLocalPath);
-    }
-    if (fs.existsSync(envLocalBakPath)) {
-      console.log('[run-with-stack] Restoring .env.local backup...');
-      fs.renameSync(envLocalBakPath, envLocalPath);
+    // Remove .env.test (we never touched .env.local)
+    if (fs.existsSync(envTestPath)) {
+      console.log('[run-with-stack] Removing .env.test...');
+      fs.unlinkSync(envTestPath);
     }
   };
 

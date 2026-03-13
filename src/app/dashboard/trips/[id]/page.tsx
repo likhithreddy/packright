@@ -23,14 +23,11 @@ export default async function TripDashboardPage({ params }: { params: Promise<{ 
   const membersResult = await getTripMembersAction(tripId);
   const members = membersResult.success ? membersResult.data : [];
 
-  // Determine admin status
-  const currentUserIsAdmin = members.some((m) => m.user_id === currentUserId && m.role === 'admin');
-
-  // Debug logging (remove after fixing the issue)
-  console.log('[TripDashboard] currentUserId:', currentUserId);
-  console.log('[TripDashboard] membersResult:', membersResult);
-  console.log('[TripDashboard] members count:', members.length);
-  console.log('[TripDashboard] currentUserIsAdmin:', currentUserIsAdmin);
+  // Determine admin status with better fallback
+  // If members array is empty (data not loaded yet), don't assume non-admin
+  // This prevents a race condition where the UI renders before data is available
+  const currentUserIsAdmin =
+    members.length > 0 && members.some((m) => m.user_id === currentUserId && m.role === 'admin');
 
   // Pass data to client component
   return (
