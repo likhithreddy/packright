@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Users, MapPin } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarGroup } from '@/components/ui/avatar';
@@ -12,6 +11,7 @@ import { MembersModal } from '@/components/features/trips/members-modal';
 import { PackingBoard } from '@/components/features/packing-board';
 import { ViewToggle } from '@/components/features/view-toggle';
 import { BoardViewToggle } from '@/components/features/board-view-toggle';
+import { ReadinessVisualizer } from '@/components/features/readiness-visualizer';
 import { getInitials } from '@/lib/profile-utils';
 import { TripMemberWithProfile } from '@/lib/supabase/trip-members';
 import { Trip } from '@/types/database.types';
@@ -187,41 +187,33 @@ export function TripDashboardClient({
             </div>
           </div>
 
-          {/* Admin section: Stats + Toggles + Progress Bar - ADMIN ONLY */}
-          {currentUserIsAdmin && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-stone-100"
-            >
-              {/* Stats + Toggles row */}
-              <div className="flex items-center justify-between gap-3 sm:gap-4">
-                {/* Stats (left) */}
-                <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm flex-wrap">
-                  <span className="font-semibold text-sm sm:text-base uppercase tracking-wide">
-                    {stats.totalItems} ITEMS
-                  </span>
-                  <span className="text-stone-500">{stats.percentClaimed}% claimed</span>
-                  <span className="text-stone-500">{stats.percentPacked}% packed</span>
-                  <span className="text-stone-500">{stats.unassignedItems} unassigned</span>
-                </div>
-
-                {/* Toggles (right) */}
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <BoardViewToggle />
-                  <ViewToggle />
-                </div>
+          {/* Stats + Toggles + Readiness Bar - Visible to all */}
+          <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-stone-100">
+            <div className="flex items-center justify-between gap-3 sm:gap-4 mb-2">
+              {/* Stats (left) */}
+              <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm flex-wrap text-stone-500">
+                <span className="font-semibold text-sm sm:text-base uppercase tracking-wide text-[#2D3A30]">
+                  {stats.totalItems} ITEMS
+                </span>
+                <span>{stats.percentClaimed}% claimed</span>
+                <span>{stats.percentPacked}% packed</span>
+                <span>{stats.unassignedItems} unassigned</span>
               </div>
 
-              {/* Progress bar */}
-              <div className="h-1.5 sm:h-2 bg-stone-100 rounded-full overflow-hidden mt-2">
-                <div
-                  className="h-full bg-gradient-to-r from-green-400 to-green-600 transition-all duration-500"
-                  style={{ width: `${stats.percentPacked}%` }}
-                />
+              {/* Toggles (right) */}
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <BoardViewToggle />
+                <ViewToggle />
               </div>
-            </motion.div>
-          )}
+            </div>
+
+            {/* Readiness bar */}
+            <ReadinessVisualizer 
+              percentage={stats.percentPacked} 
+              showLabel={false} 
+              className="mt-1" 
+            />
+          </div>
         </div>
       </header>
 

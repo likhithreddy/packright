@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { getUserTrips } from '@/lib/supabase/trips';
-import { TripGrid } from '@/components/features/trip-grid';
+import { DashboardTripGrid } from '@/components/features/dashboard-trip-grid';
 import { Button } from '@/components/ui/button';
 import { NewTripModal } from '@/components/features/trips/new-trip-modal';
 import { Plus, Compass } from 'lucide-react';
@@ -77,7 +77,7 @@ export default async function DashboardPage() {
                   </h2>
                   <div className="h-px flex-1 bg-border/60" />
                 </div>
-                <TripGrid trips={activeTrips} />
+                <DashboardTripGrid initialTrips={activeTrips} />
               </section>
             )}
 
@@ -90,7 +90,7 @@ export default async function DashboardPage() {
                   </h2>
                   <div className="h-px flex-1 bg-border/40" />
                 </div>
-                <TripGrid trips={pastTrips} />
+                <DashboardTripGrid initialTrips={pastTrips} />
               </section>
             )}
           </div>

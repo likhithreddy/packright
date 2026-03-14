@@ -17,7 +17,7 @@ import {
   updateItem,
   deleteItem,
 } from '@/lib/supabase/items';
-import { Trip, KanbanColumn } from '@/types/database.types';
+import { Trip, KanbanColumn, ItemWithClaims, ItemClaim } from '@/types/database.types';
 import { UserProfile } from '@/lib/utils';
 
 // Type for Supabase trip_members query result
@@ -34,7 +34,7 @@ export function PackingBoard() {
   const params = useParams();
   const router = useRouter();
   const tripId = params.id as string;
-  const supabase = createClient();
+  const supabase = React.useMemo(() => createClient(), []);
 
   const {
     items,
@@ -53,6 +53,8 @@ export function PackingBoard() {
     markAsPacked,
     unclaimItem,
     moveItem,
+    reorderItem,
+    persistReorder,
     setLoading,
     setError,
   } = useBoardStore();
@@ -81,10 +83,10 @@ export function PackingBoard() {
   const [members, setMembers] = React.useState<Array<UserProfile & { id: string }>>([]);
 
   // Load trip data
-  const loadTripData = React.useCallback(async () => {
+  const loadTripData = React.useCallback(async (silent = false) => {
     if (!tripId || !currentUserId) return;
 
-    setLoading(true);
+    if (!silent) setLoading(true);
     setError(null);
 
     try {
@@ -195,7 +197,7 @@ export function PackingBoard() {
 
   // Handle claim button click
   const handleClaimClick = (itemId: string) => {
-    const item = items.find((i) => i.id === itemId);
+    const item = items.find((i: ItemWithClaims) => i.id === itemId);
     if (!item) return;
 
     setClaimingItemId(itemId);
@@ -208,11 +210,18 @@ export function PackingBoard() {
 
     await claimItem(claimingItemId, quantity);
     setClaimingItemId(null);
+    // Force immediate silent reload as a fallback for realtime
+    await loadTripData(true);
   };
 
   // Handle mark packed
   const handleMarkPacked = async (claimId: string) => {
-    await markAsPacked(claimId);
+    try {
+      await markAsPacked(claimId);
+      await loadTripData(true);
+    } catch (err) {
+      console.error('Failed to mark as packed:', err);
+    }
   };
 
   // Handle unclaim
@@ -226,9 +235,15 @@ export function PackingBoard() {
   const handleUnclaimConfirm = async (quantity: number) => {
     if (!unclaimingClaimId) return;
 
-    await unclaimItem(unclaimingClaimId, quantity);
-    setUnclaimingClaimId(null);
-    setUnclaimingClaimQuantity(0);
+    try {
+      await unclaimItem(unclaimingClaimId, quantity);
+      setUnclaimingClaimId(null);
+      setUnclaimingClaimQuantity(0);
+      // Force immediate silent reload as a fallback for realtime
+      await loadTripData(true);
+    } catch (err) {
+      console.error('Failed to unclaim item:', err);
+    }
   };
 
   // Handle edit item
@@ -245,16 +260,24 @@ export function PackingBoard() {
   ) => {
     if (!editingItemId) return;
 
-    const { error } = await updateItem(supabase, editingItemId, {
-      name,
-      required_count: requiredCount,
-      claim_type: claimType,
-    });
-    if (error) {
-      setError(error.message);
-    } else {
-      setEditingItemId(null);
-      // Board will update via realtime
+    try {
+      const { error } = await updateItem(supabase, editingItemId, {
+        name,
+        required_count: requiredCount,
+        claim_type: claimType,
+      });
+      
+      if (error) {
+        setError(error.message);
+        throw error; // Propagate to dialog component
+      } else {
+        setEditingItemId(null);
+        // Force immediate silent reload as a fallback for realtime
+        await loadTripData(true);
+      }
+    } catch (err) {
+      console.error('Failed to edit item:', err);
+      throw err;
     }
   };
 
@@ -268,26 +291,37 @@ export function PackingBoard() {
   const handleDeleteConfirm = async () => {
     if (!deletingItemId) return;
 
-    const { error } = await deleteItem(supabase, deletingItemId);
-    if (error) {
-      setError(error.message);
-    } else {
-      setDeletingItemId(null);
-      // Board will update via realtime
+    try {
+      const { error } = await deleteItem(supabase, deletingItemId);
+      if (error) {
+        setError(error.message);
+      } else {
+        setDeletingItemId(null);
+        // Force immediate silent reload
+        await loadTripData(true);
+      }
+    } catch (err) {
+      console.error('Failed to delete item:', err);
     }
   };
 
   // Handle move item (drag and drop)
-  const handleMoveItem = (itemId: string, fromColumn: string, toColumn: string) => {
-    moveItem(itemId, fromColumn as KanbanColumn, toColumn as KanbanColumn);
+  const handleMoveItem = async (itemId: string, fromColumn: string, toColumn: string) => {
+    try {
+      await moveItem(itemId, fromColumn as KanbanColumn, toColumn as KanbanColumn);
+      // Force immediate silent reload as a fallback for realtime
+      await loadTripData(true);
+    } catch (err) {
+      console.error('Failed to move item:', err);
+    }
   };
 
   // Calculate stats for parent component
   const totalItems = items.length;
-  const totalRequiredCount = items.reduce((sum, item) => sum + item.required_count, 0);
-  const totalClaimedCount = items.reduce((sum, item) => sum + item.total_claimed, 0);
-  const totalPackedCount = items.reduce((sum, item) => sum + item.total_packed, 0);
-  const unassignedItems = items.filter((item) => item.total_claimed < item.required_count).length;
+  const totalRequiredCount = items.reduce((sum: number, item: ItemWithClaims): number => sum + item.required_count, 0);
+  const totalClaimedCount = items.reduce((sum: number, item: ItemWithClaims): number => sum + item.total_claimed, 0);
+  const totalPackedCount = items.reduce((sum: number, item: ItemWithClaims): number => sum + item.total_packed, 0);
+  const unassignedItems = items.filter((item: ItemWithClaims) => item.total_claimed < item.required_count).length;
 
   const percentClaimed =
     totalRequiredCount > 0 ? Math.round((totalClaimedCount / totalRequiredCount) * 100) : 0;
@@ -370,6 +404,7 @@ export function PackingBoard() {
           onClaim={handleClaimClick}
           onUnclaim={handleUnclaim}
           onMarkPacked={handleMarkPacked}
+          onEditItem={handleEditItem}
           onDeleteItem={handleDeleteItem}
         />
       );
@@ -387,6 +422,8 @@ export function PackingBoard() {
         onEditItem={handleEditItem}
         onDeleteItem={handleDeleteItem}
         onMoveItem={handleMoveItem}
+        onReorderItem={reorderItem}
+        onPersistReorder={persistReorder}
       />
     );
   };
@@ -427,7 +464,7 @@ export function PackingBoard() {
       <UnclaimDialog
         open={unclaimDialogOpen}
         onOpenChange={setUnclaimDialogOpen}
-        itemName={items.find((i) => i.claims.some((c) => c.id === unclaimingClaimId))?.name || ''}
+        itemName={items.find((i: ItemWithClaims) => i.claims.some((c: ItemClaim) => c.id === unclaimingClaimId))?.name || ''}
         claimedQuantity={unclaimingClaimQuantity}
         onConfirm={handleUnclaimConfirm}
       />

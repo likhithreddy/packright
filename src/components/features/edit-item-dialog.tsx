@@ -138,7 +138,7 @@ export function EditItemDialog({
                       placeholder="Enter quantity"
                       className="h-10"
                       {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       min={1}
                       max={1000}
                     />
