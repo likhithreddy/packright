@@ -18,6 +18,7 @@ interface MemberInviteInputProps {
   currentUserId: string;
   existingMemberIds: Set<string>;
   onInviteSuccess?: () => void;
+  compactPlaceholder?: boolean;
 }
 
 /**
@@ -37,6 +38,7 @@ export function MemberInviteInput({
   currentUserId,
   existingMemberIds,
   onInviteSuccess,
+  compactPlaceholder = false,
 }: MemberInviteInputProps) {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [isOpen, setIsOpen] = React.useState(false);
@@ -161,7 +163,8 @@ export function MemberInviteInput({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
           <Input
             type="text"
-            placeholder="Search by name or username..."
+            data-testid="member-invite-input"
+            placeholder={compactPlaceholder ? 'search...' : 'Search by name or username...'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9 h-10 border-stone-200 focus-visible:ring-0 focus:border-[#4A5D4E] bg-white transition-colors text-sm"

@@ -23,7 +23,29 @@ export interface Item {
   name: string;
   required_count: number;
   category: string;
-  status: 'needed' | 'claimed' | 'packed';
-  assigned_to: string | null;
+  claim_type: 'single' | 'multiple';
   created_at: string;
 }
+
+export interface ItemClaim {
+  id: string;
+  item_id: string;
+  user_id: string;
+  quantity: number;
+  is_packed: boolean;
+  created_at: string;
+  // Profile information joined from profiles table (array to match Supabase nested select format)
+  profiles?: Array<{
+    full_name: string | null;
+    username: string | null;
+    avatar_theme: string | null;
+  }> | null;
+}
+
+export interface ItemWithClaims extends Item {
+  claims: ItemClaim[];
+  total_claimed: number;
+  total_packed: number;
+}
+
+export type KanbanColumn = 'unassigned' | 'claimed' | 'packed';

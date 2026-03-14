@@ -27,6 +27,26 @@ export async function getUserTrips(
 }
 
 /**
+ * Fetches a single trip by ID.
+ */
+export async function getTrip(
+  supabase: SupabaseClient,
+  tripId: string
+): Promise<{ data: Trip | null; error: PostgrestError | Error | null }> {
+  try {
+    const { data, error } = await supabase.from('trips').select('*').eq('id', tripId).single();
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    return { data: data as Trip, error: null };
+  } catch (err) {
+    return { data: null, error: err as Error };
+  }
+}
+
+/**
  * Creates a new trip and securely adds the creator as an admin member.
  */
 export async function createTrip(

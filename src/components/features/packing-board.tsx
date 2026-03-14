@@ -1,0 +1,436 @@
+'use client';
+
+import * as React from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+import { KanbanBoard } from './kanban-board';
+import { ListView } from './list-view';
+import { ClaimQuantityDialog } from './claim-quantity-dialog';
+import { EditItemDialog } from './edit-item-dialog';
+import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
+import { UnclaimDialog } from './unclaim-dialog';
+import { useBoardStore } from '@/store/board-store';
+import {
+  getTripItems,
+  subscribeToItemClaims,
+  subscribeToTripItems,
+  updateItem,
+  deleteItem,
+} from '@/lib/supabase/items';
+import { Trip, KanbanColumn } from '@/types/database.types';
+import { UserProfile } from '@/lib/utils';
+
+// Type for Supabase trip_members query result
+type TripMemberWithProfile = {
+  user_id: string;
+  profiles: Array<{
+    full_name: string | null;
+    username: string | null;
+    avatar_theme: string | null;
+  }> | null;
+};
+
+export function PackingBoard() {
+  const params = useParams();
+  const router = useRouter();
+  const tripId = params.id as string;
+  const supabase = createClient();
+
+  const {
+    items,
+    columns,
+    isLoading,
+    error,
+    currentUserId,
+    viewMode,
+    boardViewMode,
+    isAdmin,
+    setTripId,
+    setItems,
+    setCurrentUserId,
+    setIsAdmin,
+    claimItem,
+    markAsPacked,
+    unclaimItem,
+    moveItem,
+    setLoading,
+    setError,
+  } = useBoardStore();
+
+  // State for claim dialog
+  const [claimDialogOpen, setClaimDialogOpen] = React.useState(false);
+  const [claimingItemId, setClaimingItemId] = React.useState<string | null>(null);
+
+  // State for edit dialog
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
+  const [editingItemId, setEditingItemId] = React.useState<string | null>(null);
+
+  // State for delete dialog
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const [deletingItemId, setDeletingItemId] = React.useState<string | null>(null);
+
+  // State for unclaim dialog
+  const [unclaimDialogOpen, setUnclaimDialogOpen] = React.useState(false);
+  const [unclaimingClaimId, setUnclaimingClaimId] = React.useState<string | null>(null);
+  const [unclaimingClaimQuantity, setUnclaimingClaimQuantity] = React.useState(0);
+
+  // State for trip data
+  const [trip, setTrip] = React.useState<Trip | null>(null);
+  // Note: members state is kept for potential future use
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [members, setMembers] = React.useState<Array<UserProfile & { id: string }>>([]);
+
+  // Load trip data
+  const loadTripData = React.useCallback(async () => {
+    if (!tripId || !currentUserId) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Fetch trip details
+      const { data: tripData, error: tripError } = await supabase
+        .from('trips')
+        .select('*')
+        .eq('id', tripId)
+        .single();
+
+      if (tripError) {
+        if (tripError.code === 'PGRST116') {
+          // Trip not found
+          router.push('/dashboard');
+          return;
+        }
+        throw tripError;
+      }
+
+      setTrip(tripData as Trip);
+
+      // Check if current user is admin
+      const { data: memberData } = await supabase
+        .from('trip_members')
+        .select('role')
+        .eq('trip_id', tripId)
+        .eq('user_id', currentUserId)
+        .single();
+
+      setIsAdmin(memberData?.role === 'admin');
+
+      // Fetch trip members with their profiles
+      const { data: membersData } = await supabase
+        .from('trip_members')
+        .select('user_id, profiles(full_name, username, avatar_theme)')
+        .eq('trip_id', tripId);
+
+      if (membersData) {
+        setMembers(
+          membersData.map((m: TripMemberWithProfile) => ({
+            id: m.user_id,
+            full_name: m.profiles?.[0]?.full_name || null,
+            username: m.profiles?.[0]?.username || null,
+            avatar_theme: m.profiles?.[0]?.avatar_theme || null,
+          }))
+        );
+      }
+
+      // Fetch items with claims
+      const { data: itemsData, error: itemsError } = await getTripItems(supabase, tripId);
+
+      if (itemsError) {
+        throw itemsError;
+      }
+
+      setItems(itemsData || []);
+    } catch (err) {
+      console.error('Failed to load trip data:', err);
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : typeof err === 'object' && err !== null && 'message' in err
+            ? (err as { message: string }).message
+            : 'Failed to load trip data';
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }, [tripId, currentUserId, supabase, setLoading, setError, setItems, setIsAdmin, router]);
+
+  // Set up trip ID on mount
+  React.useEffect(() => {
+    setTripId(tripId);
+  }, [tripId, setTripId]);
+
+  // Get current user
+  React.useEffect(() => {
+    const getCurrentUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        setCurrentUserId(user.id);
+      }
+    };
+    getCurrentUser();
+  }, [supabase, setCurrentUserId]);
+
+  // Load trip data when tripId and currentUserId are set
+  React.useEffect(() => {
+    if (tripId && currentUserId) {
+      loadTripData();
+    }
+  }, [tripId, currentUserId, loadTripData]);
+
+  // Set up realtime subscriptions
+  React.useEffect(() => {
+    if (!tripId || !currentUserId) return;
+
+    const itemsChannel = subscribeToTripItems(supabase, tripId, loadTripData);
+    const claimsChannel = subscribeToItemClaims(supabase, tripId, loadTripData);
+
+    return () => {
+      supabase.removeChannel(itemsChannel);
+      supabase.removeChannel(claimsChannel);
+    };
+  }, [tripId, currentUserId, supabase, loadTripData]);
+
+  // Handle claim button click
+  const handleClaimClick = (itemId: string) => {
+    const item = items.find((i) => i.id === itemId);
+    if (!item) return;
+
+    setClaimingItemId(itemId);
+    setClaimDialogOpen(true);
+  };
+
+  // Handle claim confirmation
+  const handleClaimConfirm = async (quantity: number) => {
+    if (!claimingItemId) return;
+
+    await claimItem(claimingItemId, quantity);
+    setClaimingItemId(null);
+  };
+
+  // Handle mark packed
+  const handleMarkPacked = async (claimId: string) => {
+    await markAsPacked(claimId);
+  };
+
+  // Handle unclaim
+  const handleUnclaim = (claimId: string, quantity: number) => {
+    setUnclaimingClaimId(claimId);
+    setUnclaimingClaimQuantity(quantity);
+    setUnclaimDialogOpen(true);
+  };
+
+  // Handle unclaim confirmation
+  const handleUnclaimConfirm = async (quantity: number) => {
+    if (!unclaimingClaimId) return;
+
+    await unclaimItem(unclaimingClaimId, quantity);
+    setUnclaimingClaimId(null);
+    setUnclaimingClaimQuantity(0);
+  };
+
+  // Handle edit item
+  const handleEditItem = (itemId: string) => {
+    setEditingItemId(itemId);
+    setEditDialogOpen(true);
+  };
+
+  // Handle edit save
+  const handleEditSave = async (
+    name: string,
+    requiredCount: number,
+    claimType: 'single' | 'multiple'
+  ) => {
+    if (!editingItemId) return;
+
+    const { error } = await updateItem(supabase, editingItemId, {
+      name,
+      required_count: requiredCount,
+      claim_type: claimType,
+    });
+    if (error) {
+      setError(error.message);
+    } else {
+      setEditingItemId(null);
+      // Board will update via realtime
+    }
+  };
+
+  // Handle delete item
+  const handleDeleteItem = (itemId: string) => {
+    setDeletingItemId(itemId);
+    setDeleteDialogOpen(true);
+  };
+
+  // Handle delete confirmation
+  const handleDeleteConfirm = async () => {
+    if (!deletingItemId) return;
+
+    const { error } = await deleteItem(supabase, deletingItemId);
+    if (error) {
+      setError(error.message);
+    } else {
+      setDeletingItemId(null);
+      // Board will update via realtime
+    }
+  };
+
+  // Handle move item (drag and drop)
+  const handleMoveItem = (itemId: string, fromColumn: string, toColumn: string) => {
+    moveItem(itemId, fromColumn as KanbanColumn, toColumn as KanbanColumn);
+  };
+
+  // Calculate stats for parent component
+  const totalItems = items.length;
+  const totalRequiredCount = items.reduce((sum, item) => sum + item.required_count, 0);
+  const totalClaimedCount = items.reduce((sum, item) => sum + item.total_claimed, 0);
+  const totalPackedCount = items.reduce((sum, item) => sum + item.total_packed, 0);
+  const unassignedItems = items.filter((item) => item.total_claimed < item.required_count).length;
+
+  const percentClaimed =
+    totalRequiredCount > 0 ? Math.round((totalClaimedCount / totalRequiredCount) * 100) : 0;
+  const percentPacked =
+    totalRequiredCount > 0 ? Math.round((totalPackedCount / totalRequiredCount) * 100) : 0;
+
+  // Expose stats via a ref or callback for parent (TripDashboardClient)
+  // For now, we'll use a custom event to communicate with parent
+  React.useEffect(() => {
+    if (trip) {
+      window.dispatchEvent(
+        new CustomEvent('tripStatsUpdate', {
+          detail: {
+            trip,
+            totalItems,
+            percentClaimed,
+            percentPacked,
+            unassignedItems,
+          },
+        })
+      );
+    }
+  }, [trip, totalItems, percentClaimed, percentPacked, unassignedItems]);
+
+  // Loading state
+  if (isLoading || !trip) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[#FAFAF8]">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-[#2D3A30] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-stone-500">Loading packing board...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[#FAFAF8]">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-3xl">⚠️</span>
+          </div>
+          <h2 className="font-serif text-xl text-[#2D3A30] mb-2">Failed to Load Board</h2>
+          <p className="text-stone-500 mb-4">{error}</p>
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="bg-[#2D3A30] hover:bg-[#1f2821] text-white rounded-full px-6 py-2 transition-colors"
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Get item for claim dialog
+  const claimingItem = claimingItemId ? items.find((i) => i.id === claimingItemId) : null;
+  const remainingNeeded = claimingItem
+    ? Math.max(claimingItem.required_count - claimingItem.total_claimed, 1)
+    : 1;
+
+  // Get item for edit dialog
+  const editingItem = editingItemId ? items.find((i) => i.id === editingItemId) : null;
+
+  // Get item for delete dialog
+  const deletingItem = deletingItemId ? items.find((i) => i.id === deletingItemId) : null;
+
+  // Render board based on view mode
+  const renderBoard = () => {
+    if (viewMode === 'list') {
+      return (
+        <ListView
+          items={items}
+          columns={columns}
+          currentUserId={currentUserId}
+          isAdmin={isAdmin}
+          boardViewMode={boardViewMode}
+          onClaim={handleClaimClick}
+          onUnclaim={handleUnclaim}
+          onMarkPacked={handleMarkPacked}
+          onDeleteItem={handleDeleteItem}
+        />
+      );
+    }
+
+    return (
+      <KanbanBoard
+        items={items}
+        columns={columns}
+        currentUserId={currentUserId}
+        isAdmin={isAdmin}
+        onClaim={handleClaimClick}
+        onMarkPacked={handleMarkPacked}
+        onUnclaim={handleUnclaim}
+        onEditItem={handleEditItem}
+        onDeleteItem={handleDeleteItem}
+        onMoveItem={handleMoveItem}
+      />
+    );
+  };
+
+  return (
+    <div className="flex-1 min-h-0 h-full overflow-hidden">
+      {renderBoard()}
+
+      {/* Claim Dialog */}
+      <ClaimQuantityDialog
+        open={claimDialogOpen}
+        onOpenChange={setClaimDialogOpen}
+        itemName={claimingItem?.name || ''}
+        remainingNeeded={remainingNeeded}
+        onConfirm={handleClaimConfirm}
+      />
+
+      {/* Edit Dialog */}
+      <EditItemDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        itemName={editingItem?.name || ''}
+        requiredCount={editingItem?.required_count || 1}
+        claimType={editingItem?.claim_type || 'single'}
+        onSave={handleEditSave}
+      />
+
+      {/* Delete Dialog */}
+      <DeleteConfirmationDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        itemName={deletingItem?.name || ''}
+        requiredCount={deletingItem?.required_count || 1}
+        onConfirm={handleDeleteConfirm}
+      />
+
+      {/* Unclaim Dialog */}
+      <UnclaimDialog
+        open={unclaimDialogOpen}
+        onOpenChange={setUnclaimDialogOpen}
+        itemName={items.find((i) => i.claims.some((c) => c.id === unclaimingClaimId))?.name || ''}
+        claimedQuantity={unclaimingClaimQuantity}
+        onConfirm={handleUnclaimConfirm}
+      />
+    </div>
+  );
+}
