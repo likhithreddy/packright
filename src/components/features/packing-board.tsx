@@ -18,7 +18,6 @@ import {
   deleteItem,
 } from '@/lib/supabase/items';
 import { Trip, KanbanColumn, ItemWithClaims, ItemClaim } from '@/types/database.types';
-import { Trip, KanbanColumn, ItemWithClaims, ItemClaim } from '@/types/database.types';
 import { UserProfile } from '@/lib/utils';
 
 // Type for Supabase trip_members query result
@@ -36,7 +35,6 @@ export function PackingBoard() {
   const router = useRouter();
   const tripId = params.id as string;
   const supabase = React.useMemo(() => createClient(), []);
-  const supabase = React.useMemo(() => createClient(), []);
 
   const {
     items,
@@ -50,13 +48,12 @@ export function PackingBoard() {
     setTripId,
     setItems,
     setCurrentUserId,
+    setCurrentUserProfile,
     setIsAdmin,
     claimItem,
     markAsPacked,
     unclaimItem,
     moveItem,
-    reorderItem,
-    persistReorder,
     reorderItem,
     persistReorder,
     setLoading,
@@ -87,11 +84,10 @@ export function PackingBoard() {
   const [members, setMembers] = React.useState<Array<UserProfile & { id: string }>>([]);
 
   // Load trip data
-  const loadTripData = React.useCallback(async (silent = false) => {
-    const loadTripData = React.useCallback(async (silent = false) => {
+  const loadTripData = React.useCallback(
+    async (silent = false) => {
       if (!tripId || !currentUserId) return;
 
-      if (!silent) setLoading(true);
       if (!silent) setLoading(true);
       setError(null);
 
@@ -131,14 +127,23 @@ export function PackingBoard() {
           .eq('trip_id', tripId);
 
         if (membersData) {
-          setMembers(
-            membersData.map((m: TripMemberWithProfile) => ({
-              id: m.user_id,
-              full_name: m.profiles?.[0]?.full_name || null,
-              username: m.profiles?.[0]?.username || null,
-              avatar_theme: m.profiles?.[0]?.avatar_theme || null,
-            }))
-          );
+          const membersList = membersData.map((m: TripMemberWithProfile) => ({
+            id: m.user_id,
+            full_name: m.profiles?.[0]?.full_name || null,
+            username: m.profiles?.[0]?.username || null,
+            avatar_theme: m.profiles?.[0]?.avatar_theme || null,
+          }));
+          setMembers(membersList);
+
+          // Sync current user's profile with store
+          const currentUserProfile = membersList.find((m) => m.id === currentUserId);
+          if (currentUserProfile) {
+            setCurrentUserProfile({
+              full_name: currentUserProfile.full_name,
+              username: currentUserProfile.username,
+              avatar_theme: currentUserProfile.avatar_theme,
+            });
+          }
         }
 
         // Fetch items with claims
@@ -159,393 +164,367 @@ export function PackingBoard() {
               : 'Failed to load trip data';
         setError(errorMessage);
       } finally {
-        setLoading(false);
+        if (!silent) setLoading(false);
       }
-    }, [tripId, currentUserId, supabase, setLoading, setError, setItems, setIsAdmin, router]);
+    },
+    [
+      tripId,
+      currentUserId,
+      supabase,
+      setLoading,
+      setError,
+      setItems,
+      setIsAdmin,
+      setCurrentUserProfile,
+      router,
+    ]
+  );
 
-    // Set up trip ID on mount
-    React.useEffect(() => {
-      setTripId(tripId);
-    }, [tripId, setTripId]);
+  // Set up trip ID on mount
+  React.useEffect(() => {
+    setTripId(tripId);
+  }, [tripId, setTripId]);
 
-    // Get current user
-    React.useEffect(() => {
-      const getCurrentUser = async () => {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user) {
-          setCurrentUserId(user.id);
+  // Get current user
+  React.useEffect(() => {
+    const getCurrentUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        setCurrentUserId(user.id);
+
+        // Fetch profile immediately to avoid UE glitch
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, username, avatar_theme')
+          .eq('id', user.id)
+          .single();
+
+        if (profile) {
+          setCurrentUserProfile(profile);
         }
-      };
-      getCurrentUser();
-    }, [supabase, setCurrentUserId]);
-
-    // Load trip data when tripId and currentUserId are set
-    React.useEffect(() => {
-      if (tripId && currentUserId) {
-        loadTripData();
       }
-    }, [tripId, currentUserId, loadTripData]);
-
-    // Set up realtime subscriptions
-    React.useEffect(() => {
-      if (!tripId || !currentUserId) return;
-
-      const itemsChannel = subscribeToTripItems(supabase, tripId, loadTripData);
-      const claimsChannel = subscribeToItemClaims(supabase, tripId, loadTripData);
-
-      return () => {
-        supabase.removeChannel(itemsChannel);
-        supabase.removeChannel(claimsChannel);
-      };
-    }, [tripId, currentUserId, supabase, loadTripData]);
-
-    // Handle claim button click
-    const handleClaimClick = async (itemId: string) => {
-      const item = items.find((i: ItemWithClaims) => i.id === itemId);
-      if (!item) return;
-
-      if (item.claim_type === 'single') {
-        const remaining = Math.max(item.required_count - item.total_claimed, 0);
-        if (remaining > 0) {
-          await handleClaimConfirm(remaining, itemId);
-        }
-        return;
-      }
-
-      setClaimingItemId(itemId);
-      setClaimDialogOpen(true);
     };
+    getCurrentUser();
+  }, [supabase, setCurrentUserId, setCurrentUserProfile]);
 
-    // Handle claim confirmation
-    const handleClaimConfirm = async (quantity: number, itemIdOverride?: string) => {
-      const idToClaim = itemIdOverride || claimingItemId;
-      if (!idToClaim) return;
+  // Load trip data when tripId and currentUserId are set
+  React.useEffect(() => {
+    if (tripId && currentUserId) {
+      loadTripData();
+    }
+  }, [tripId, currentUserId, loadTripData]);
 
-      await claimItem(idToClaim, quantity);
-      setClaimingItemId(null);
-      setClaimDialogOpen(false);
+  // Set up realtime subscriptions
+  React.useEffect(() => {
+    if (!tripId || !currentUserId) return;
+
+    const itemsChannel = subscribeToTripItems(supabase, tripId, loadTripData);
+    const claimsChannel = subscribeToItemClaims(supabase, tripId, loadTripData);
+
+    return () => {
+      supabase.removeChannel(itemsChannel);
+      supabase.removeChannel(claimsChannel);
+    };
+  }, [tripId, currentUserId, supabase, loadTripData]);
+
+  // Handle claim button click
+  const handleClaimClick = async (itemId: string) => {
+    const item = items.find((i: ItemWithClaims) => i.id === itemId);
+    if (!item) return;
+
+    if (item.claim_type === 'single') {
+      const remaining = Math.max(item.required_count - item.total_claimed, 0);
+      if (remaining > 0) {
+        await handleClaimConfirm(remaining, itemId);
+      }
+      return;
+    }
+
+    setClaimingItemId(itemId);
+    setClaimDialogOpen(true);
+  };
+
+  // Handle claim confirmation
+  const handleClaimConfirm = async (quantity: number, itemIdOverride?: string) => {
+    const idToClaim = itemIdOverride || claimingItemId;
+    if (!idToClaim) return;
+
+    await claimItem(idToClaim, quantity);
+    setClaimingItemId(null);
+    setClaimDialogOpen(false);
+    // Force immediate silent reload as a fallback for realtime
+    await loadTripData(true);
+  };
+
+  // Handle mark packed
+  const handleMarkPacked = async (claimId: string) => {
+    try {
+      await markAsPacked(claimId);
+      await loadTripData(true);
+    } catch (err) {
+      console.error('Failed to mark as packed:', err);
+    }
+  };
+
+  // Handle unclaim
+  const handleUnclaim = async (claimId: string, quantity: number) => {
+    const item = items.find((i: ItemWithClaims) =>
+      i.claims.some((c: ItemClaim) => c.id === claimId)
+    );
+
+    if (item?.claim_type === 'single') {
+      await handleUnclaimConfirm(quantity, claimId);
+      return;
+    }
+
+    setUnclaimingClaimId(claimId);
+    setUnclaimingClaimQuantity(quantity);
+    setUnclaimDialogOpen(true);
+  };
+
+  // Handle unclaim confirmation
+  const handleUnclaimConfirm = async (quantity: number, claimIdOverride?: string) => {
+    const idToUnclaim = claimIdOverride || unclaimingClaimId;
+    if (!idToUnclaim) return;
+
+    try {
+      await unclaimItem(idToUnclaim, quantity);
+      setUnclaimingClaimId(null);
+      setUnclaimingClaimQuantity(0);
+      setUnclaimDialogOpen(false);
       // Force immediate silent reload as a fallback for realtime
       await loadTripData(true);
-    };
+    } catch (err) {
+      console.error('Failed to unclaim item:', err);
+    }
+  };
 
-    // Handle mark packed
-    const handleMarkPacked = async (claimId: string) => {
-      try {
-        await markAsPacked(claimId);
-        await loadTripData(true);
-      } catch (err) {
-        console.error('Failed to mark as packed:', err);
-      }
-      try {
-        await markAsPacked(claimId);
-        await loadTripData(true);
-      } catch (err) {
-        console.error('Failed to mark as packed:', err);
-      }
-    };
+  // Handle edit item
+  const handleEditItem = (itemId: string) => {
+    setEditingItemId(itemId);
+    setEditDialogOpen(true);
+  };
 
-    // Handle unclaim
-    const handleUnclaim = async (claimId: string, quantity: number) => {
-      const item = items.find((i: ItemWithClaims) =>
-        i.claims.some((c: ItemClaim) => c.id === claimId)
+  // Handle edit save
+  const handleEditSave = async (
+    name: string,
+    requiredCount: number,
+    claimType: 'single' | 'multiple'
+  ) => {
+    if (!editingItemId) return;
+
+    try {
+      const { error } = await updateItem(supabase, editingItemId, {
+        name,
+        required_count: requiredCount,
+        claim_type: claimType,
+      });
+
+      if (error) {
+        setError(error.message);
+        throw error;
+      } else {
+        setEditingItemId(null);
+        await loadTripData(true);
+      }
+    } catch (err) {
+      console.error('Failed to edit item:', err);
+      throw err;
+    }
+  };
+
+  // Handle delete item
+  const handleDeleteItem = (itemId: string) => {
+    setDeletingItemId(itemId);
+    setDeleteDialogOpen(true);
+  };
+
+  // Handle delete confirmation
+  const handleDeleteConfirm = async () => {
+    if (!deletingItemId) return;
+
+    try {
+      const { error } = await deleteItem(supabase, deletingItemId);
+      if (error) {
+        setError(error.message);
+      } else {
+        setDeletingItemId(null);
+        await loadTripData(true);
+      }
+    } catch (err) {
+      console.error('Failed to delete item:', err);
+    }
+  };
+
+  // Handle move item (drag and drop)
+  const handleMoveItem = async (itemId: string, fromColumn: string, toColumn: string) => {
+    try {
+      await moveItem(itemId, fromColumn as KanbanColumn, toColumn as KanbanColumn);
+      await loadTripData(true);
+    } catch (err) {
+      console.error('Failed to move item:', err);
+    }
+  };
+
+  // Calculate stats for parent component
+  const totalItems = items.length;
+  const totalRequiredCount = items.reduce((sum, item) => sum + item.required_count, 0);
+  const totalClaimedCount = items.reduce((sum, item) => sum + item.total_claimed, 0);
+  const totalPackedCount = items.reduce((sum, item) => sum + item.total_packed, 0);
+  const unassignedItemsCount = items.filter(
+    (item) => item.total_claimed < item.required_count
+  ).length;
+
+  const percentClaimed =
+    totalRequiredCount > 0 ? Math.round((totalClaimedCount / totalRequiredCount) * 100) : 0;
+  const percentPacked =
+    totalRequiredCount > 0 ? Math.round((totalPackedCount / totalRequiredCount) * 100) : 0;
+
+  // Expose stats via a ref or callback for parent (TripDashboardClient)
+  React.useEffect(() => {
+    if (trip) {
+      window.dispatchEvent(
+        new CustomEvent('tripStatsUpdate', {
+          detail: {
+            trip,
+            totalItems,
+            percentClaimed,
+            percentPacked,
+            unassignedItems: unassignedItemsCount,
+          },
+        })
       );
+    }
+  }, [trip, totalItems, percentClaimed, percentPacked, unassignedItemsCount]);
 
-      if (item?.claim_type === 'single') {
-        await handleUnclaimConfirm(quantity, claimId);
-        return;
-      }
+  // Loading state
+  if (isLoading || !trip) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[#FAFAF8]">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-[#2D3A30] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-stone-500">Loading packing board...</p>
+        </div>
+      </div>
+    );
+  }
 
-      setUnclaimingClaimId(claimId);
-      setUnclaimingClaimQuantity(quantity);
-      setUnclaimDialogOpen(true);
-    };
+  // Error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[#FAFAF8]">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-3xl text-red-600">⚠️</span>
+          </div>
+          <h2 className="font-serif text-xl text-[#2D3A30] mb-2">Failed to Load Board</h2>
+          <p className="text-stone-500 mb-4">{error}</p>
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="bg-[#2D3A30] hover:bg-[#1f2821] text-white rounded-full px-6 py-2 transition-colors"
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-    // Handle unclaim confirmation
-    const handleUnclaimConfirm = async (quantity: number, claimIdOverride?: string) => {
-      const idToUnclaim = claimIdOverride || unclaimingClaimId;
-      if (!idToUnclaim) return;
+  // Get item for claim dialog
+  const claimingItem = claimingItemId ? items.find((i) => i.id === claimingItemId) : null;
+  const remainingNeeded = claimingItem
+    ? Math.max(claimingItem.required_count - claimingItem.total_claimed, 1)
+    : 1;
 
-      try {
-        await unclaimItem(idToUnclaim, quantity);
-        setUnclaimingClaimId(null);
-        setUnclaimingClaimQuantity(0);
-        setUnclaimDialogOpen(false);
-        // Force immediate silent reload as a fallback for realtime
-        await loadTripData(true);
-      } catch (err) {
-        console.error('Failed to unclaim item:', err);
-      }
-    };
+  // Get item for edit dialog
+  const editingItem = editingItemId ? items.find((i) => i.id === editingItemId) : null;
 
-    // Handle edit item
-    const handleEditItem = (itemId: string) => {
-      setEditingItemId(itemId);
-      setEditDialogOpen(true);
-    };
+  // Get item for delete dialog
+  const deletingItem = deletingItemId ? items.find((i) => i.id === deletingItemId) : null;
 
-    // Handle edit save
-    const handleEditSave = async (
-      name: string,
-      requiredCount: number,
-      claimType: 'single' | 'multiple'
-    ) => {
-      if (!editingItemId) return;
+  // Render board based on view mode
+  const renderBoard = () => {
+    if (viewMode === 'list') {
+      return (
+        <ListView
+          items={items}
+          columns={columns}
+          currentUserId={currentUserId}
+          isAdmin={isAdmin}
+          boardViewMode={boardViewMode}
+          onClaim={handleClaimClick}
+          onUnclaim={handleUnclaim}
+          onMarkPacked={handleMarkPacked}
+          onEditItem={handleEditItem}
+          onDeleteItem={handleDeleteItem}
+        />
+      );
+    }
 
-      try {
-        const { error } = await updateItem(supabase, editingItemId, {
-          name,
-          required_count: requiredCount,
-          claim_type: claimType,
-        });
+    return (
+      <KanbanBoard
+        items={items}
+        columns={columns}
+        currentUserId={currentUserId}
+        isAdmin={isAdmin}
+        onClaim={handleClaimClick}
+        onMarkPacked={handleMarkPacked}
+        onUnclaim={handleUnclaim}
+        onEditItem={handleEditItem}
+        onDeleteItem={handleDeleteItem}
+        onMoveItem={handleMoveItem}
+        onReorderItem={reorderItem}
+        onPersistReorder={persistReorder}
+      />
+    );
+  };
 
-        if (error) {
-          setError(error.message);
-          throw error; // Propagate to dialog component
-        } else {
-          setEditingItemId(null);
-          // Force immediate silent reload as a fallback for realtime
-          await loadTripData(true);
+  return (
+    <div className="flex-1 min-h-0 h-full overflow-hidden">
+      {renderBoard()}
+
+      {/* Claim Dialog */}
+      <ClaimQuantityDialog
+        open={claimDialogOpen}
+        onOpenChange={setClaimDialogOpen}
+        itemName={claimingItem?.name || ''}
+        remainingNeeded={remainingNeeded}
+        onConfirm={handleClaimConfirm}
+      />
+
+      {/* Edit Dialog */}
+      <EditItemDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        itemName={editingItem?.name || ''}
+        requiredCount={editingItem?.required_count || 1}
+        claimType={editingItem?.claim_type || 'single'}
+        onSave={handleEditSave}
+      />
+
+      {/* Delete Dialog */}
+      <DeleteConfirmationDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        itemName={deletingItem?.name || ''}
+        requiredCount={deletingItem?.required_count || 1}
+        onConfirm={handleDeleteConfirm}
+      />
+
+      {/* Unclaim Dialog */}
+      <UnclaimDialog
+        open={unclaimDialogOpen}
+        onOpenChange={setUnclaimDialogOpen}
+        itemName={
+          items.find((i: ItemWithClaims) =>
+            i.claims.some((c: ItemClaim) => c.id === unclaimingClaimId)
+          )?.name || ''
         }
-      } catch (err) {
-        console.error('Failed to edit item:', err);
-        throw err;
-        try {
-          const { error } = await updateItem(supabase, editingItemId, {
-            name,
-            required_count: requiredCount,
-            claim_type: claimType,
-          });
-
-          if (error) {
-            setError(error.message);
-            throw error; // Propagate to dialog component
-          } else {
-            setEditingItemId(null);
-            // Force immediate silent reload as a fallback for realtime
-            await loadTripData(true);
-          }
-        } catch (err) {
-          console.error('Failed to edit item:', err);
-          throw err;
-        }
-      };
-
-      // Handle delete item
-      const handleDeleteItem = (itemId: string) => {
-        setDeletingItemId(itemId);
-        setDeleteDialogOpen(true);
-      };
-
-      // Handle delete confirmation
-      const handleDeleteConfirm = async () => {
-        if (!deletingItemId) return;
-
-        try {
-          const { error } = await deleteItem(supabase, deletingItemId);
-          if (error) {
-            setError(error.message);
-          } else {
-            setDeletingItemId(null);
-            // Force immediate silent reload
-            await loadTripData(true);
-          }
-        } catch (err) {
-          console.error('Failed to delete item:', err);
-          try {
-            const { error } = await deleteItem(supabase, deletingItemId);
-            if (error) {
-              setError(error.message);
-            } else {
-              setDeletingItemId(null);
-              // Force immediate silent reload
-              await loadTripData(true);
-            }
-          } catch (err) {
-            console.error('Failed to delete item:', err);
-          }
-        };
-
-        // Handle move item (drag and drop)
-        const handleMoveItem = async (itemId: string, fromColumn: string, toColumn: string) => {
-          try {
-            await moveItem(itemId, fromColumn as KanbanColumn, toColumn as KanbanColumn);
-            // Force immediate silent reload as a fallback for realtime
-            await loadTripData(true);
-          } catch (err) {
-            console.error('Failed to move item:', err);
-          }
-          const handleMoveItem = async (itemId: string, fromColumn: string, toColumn: string) => {
-            try {
-              await moveItem(itemId, fromColumn as KanbanColumn, toColumn as KanbanColumn);
-              // Force immediate silent reload as a fallback for realtime
-              await loadTripData(true);
-            } catch (err) {
-              console.error('Failed to move item:', err);
-            }
-          };
-
-          // Calculate stats for parent component
-          const totalItems = items.length;
-          const totalRequiredCount = items.reduce((sum: number, item: ItemWithClaims): number => sum + item.required_count, 0);
-          const totalClaimedCount = items.reduce((sum: number, item: ItemWithClaims): number => sum + item.total_claimed, 0);
-          const totalPackedCount = items.reduce((sum: number, item: ItemWithClaims): number => sum + item.total_packed, 0);
-          const unassignedItems = items.filter((item: ItemWithClaims) => item.total_claimed < item.required_count).length;
-          const totalRequiredCount = items.reduce((sum: number, item: ItemWithClaims): number => sum + item.required_count, 0);
-          const totalClaimedCount = items.reduce((sum: number, item: ItemWithClaims): number => sum + item.total_claimed, 0);
-          const totalPackedCount = items.reduce((sum: number, item: ItemWithClaims): number => sum + item.total_packed, 0);
-          const unassignedItems = items.filter((item: ItemWithClaims) => item.total_claimed < item.required_count).length;
-
-          const percentClaimed =
-            totalRequiredCount > 0 ? Math.round((totalClaimedCount / totalRequiredCount) * 100) : 0;
-          const percentPacked =
-            totalRequiredCount > 0 ? Math.round((totalPackedCount / totalRequiredCount) * 100) : 0;
-
-          // Expose stats via a ref or callback for parent (TripDashboardClient)
-          // For now, we'll use a custom event to communicate with parent
-          React.useEffect(() => {
-            if (trip) {
-              window.dispatchEvent(
-                new CustomEvent('tripStatsUpdate', {
-                  detail: {
-                    trip,
-                    totalItems,
-                    percentClaimed,
-                    percentPacked,
-                    unassignedItems,
-                  },
-                })
-              );
-            }
-          }, [trip, totalItems, percentClaimed, percentPacked, unassignedItems]);
-
-          // Loading state
-          if (isLoading || !trip) {
-            return (
-              <div className="flex items-center justify-center h-screen bg-[#FAFAF8]">
-                <div className="text-center">
-                  <div className="w-12 h-12 border-4 border-[#2D3A30] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                  <p className="text-stone-500">Loading packing board...</p>
-                </div>
-              </div>
-            );
-          }
-
-          // Error state
-          if (error) {
-            return (
-              <div className="flex items-center justify-center h-screen bg-[#FAFAF8]">
-                <div className="text-center max-w-md">
-                  <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-3xl">⚠️</span>
-                  </div>
-                  <h2 className="font-serif text-xl text-[#2D3A30] mb-2">Failed to Load Board</h2>
-                  <p className="text-stone-500 mb-4">{error}</p>
-                  <button
-                    onClick={() => router.push('/dashboard')}
-                    className="bg-[#2D3A30] hover:bg-[#1f2821] text-white rounded-full px-6 py-2 transition-colors"
-                  >
-                    Back to Dashboard
-                  </button>
-                </div>
-              </div>
-            );
-          }
-
-          // Get item for claim dialog
-          const claimingItem = claimingItemId ? items.find((i) => i.id === claimingItemId) : null;
-          const remainingNeeded = claimingItem
-            ? Math.max(claimingItem.required_count - claimingItem.total_claimed, 1)
-            : 1;
-
-          // Get item for edit dialog
-          const editingItem = editingItemId ? items.find((i) => i.id === editingItemId) : null;
-
-          // Get item for delete dialog
-          const deletingItem = deletingItemId ? items.find((i) => i.id === deletingItemId) : null;
-
-          // Render board based on view mode
-          const renderBoard = () => {
-            if (viewMode === 'list') {
-              return (
-                <ListView
-                  items={items}
-                  columns={columns}
-                  currentUserId={currentUserId}
-                  isAdmin={isAdmin}
-                  boardViewMode={boardViewMode}
-                  onClaim={handleClaimClick}
-                  onUnclaim={handleUnclaim}
-                  onMarkPacked={handleMarkPacked}
-                  onEditItem={handleEditItem}
-                  onEditItem={handleEditItem}
-                  onDeleteItem={handleDeleteItem}
-                />
-              );
-            }
-
-            return (
-              <KanbanBoard
-                items={items}
-                columns={columns}
-                currentUserId={currentUserId}
-                isAdmin={isAdmin}
-                onClaim={handleClaimClick}
-                onMarkPacked={handleMarkPacked}
-                onUnclaim={handleUnclaim}
-                onEditItem={handleEditItem}
-                onDeleteItem={handleDeleteItem}
-                onMoveItem={handleMoveItem}
-                onReorderItem={reorderItem}
-                onPersistReorder={persistReorder}
-                onReorderItem={reorderItem}
-                onPersistReorder={persistReorder}
-              />
-            );
-          };
-
-          return (
-            <div className="flex-1 min-h-0 h-full overflow-hidden">
-              {renderBoard()}
-
-              {/* Claim Dialog */}
-              <ClaimQuantityDialog
-                open={claimDialogOpen}
-                onOpenChange={setClaimDialogOpen}
-                itemName={claimingItem?.name || ''}
-                remainingNeeded={remainingNeeded}
-                onConfirm={handleClaimConfirm}
-              />
-
-              {/* Edit Dialog */}
-              <EditItemDialog
-                open={editDialogOpen}
-                onOpenChange={setEditDialogOpen}
-                itemName={editingItem?.name || ''}
-                requiredCount={editingItem?.required_count || 1}
-                claimType={editingItem?.claim_type || 'single'}
-                onSave={handleEditSave}
-              />
-
-              {/* Delete Dialog */}
-              <DeleteConfirmationDialog
-                open={deleteDialogOpen}
-                onOpenChange={setDeleteDialogOpen}
-                itemName={deletingItem?.name || ''}
-                requiredCount={deletingItem?.required_count || 1}
-                onConfirm={handleDeleteConfirm}
-              />
-
-              {/* Unclaim Dialog */}
-              <UnclaimDialog
-                open={unclaimDialogOpen}
-                onOpenChange={setUnclaimDialogOpen}
-                itemName={items.find((i: ItemWithClaims) => i.claims.some((c: ItemClaim) => c.id === unclaimingClaimId))?.name || ''}
-                itemName={items.find((i: ItemWithClaims) => i.claims.some((c: ItemClaim) => c.id === unclaimingClaimId))?.name || ''}
-                claimedQuantity={unclaimingClaimQuantity}
-                onConfirm={handleUnclaimConfirm}
-              />
-            </div>
-          );
-        }
+        claimedQuantity={unclaimingClaimQuantity}
+        onConfirm={handleUnclaimConfirm}
+      />
+    </div>
+  );
+}

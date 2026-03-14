@@ -9,6 +9,7 @@ describe('getInitials', () => {
   it('returns "?" for empty or whitespace strings', () => {
     expect(getInitials('')).toBe('?');
     expect(getInitials('   ')).toBe('?');
+    expect(getInitials(' \t \n')).toBe('?');
   });
 
   it('returns the first character for single names', () => {

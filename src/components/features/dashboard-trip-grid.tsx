@@ -39,20 +39,21 @@ export function DashboardTripGrid({ initialTrips }: DashboardTripGridProps) {
   const supabase = React.useMemo(() => createClient(), []);
 
   const fetchReadiness = React.useCallback(async () => {
-    const { data, error } = await supabase
-      .from('trip_readiness')
-      .select('trip_id, percentage');
-    
+    const { data, error } = await supabase.from('trip_readiness').select('trip_id, percentage');
+
     if (error) {
       console.error('Error fetching readiness:', error);
       return;
     }
 
-    const mapping = (data || []).reduce((acc, curr) => ({
-      ...acc,
-      [curr.trip_id]: curr.percentage
-    }), {});
-    
+    const mapping = (data || []).reduce(
+      (acc, curr) => ({
+        ...acc,
+        [curr.trip_id]: curr.percentage,
+      }),
+      {}
+    );
+
     setReadinessData(mapping);
   }, [supabase]);
 
@@ -62,13 +63,9 @@ export function DashboardTripGrid({ initialTrips }: DashboardTripGridProps) {
     // Subscribe to item_claims changes to trigger recalculation
     const channel = supabase
       .channel('dashboard-readiness')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'item_claims' },
-        () => {
-          fetchReadiness();
-        }
-      )
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'item_claims' }, () => {
+        fetchReadiness();
+      })
       .subscribe();
 
     return () => {
@@ -87,9 +84,9 @@ export function DashboardTripGrid({ initialTrips }: DashboardTripGridProps) {
         <motion.div key={trip.id} variants={itemVariants} className="flex flex-col gap-2">
           <TripCard trip={trip} />
           <div className="px-1">
-            <ReadinessVisualizer 
-              percentage={readinessData[trip.id] ?? null} 
-              showLabel={false} 
+            <ReadinessVisualizer
+              percentage={readinessData[trip.id] ?? null}
+              showLabel={false}
               className="h-1.5"
             />
           </div>

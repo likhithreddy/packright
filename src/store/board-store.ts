@@ -74,9 +74,8 @@ function calculateColumns(
     totalPacked += item.total_packed;
   }
 
-  const readinessPercentage = totalRequired === 0
-    ? null
-    : Math.min(100, Math.round((totalPacked / totalRequired) * 100));
+  const readinessPercentage =
+    totalRequired === 0 ? null : Math.min(100, Math.round((totalPacked / totalRequired) * 100));
 
   return { columns, readinessPercentage };
 }
@@ -117,13 +116,18 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
   viewMode: 'kanban', // Default to kanban view (requested by user)
   boardViewMode: 'my-view',
   isAdmin: false,
+  currentUserProfile: null,
 
   // Actions
   setTripId: (tripId: string) => set({ tripId }),
 
   setItems: (items: ItemWithClaims[]) =>
     set((state: BoardState) => {
-      const { columns, readinessPercentage } = calculateColumns(items, state.currentUserId, state.boardViewMode);
+      const { columns, readinessPercentage } = calculateColumns(
+        items,
+        state.currentUserId,
+        state.boardViewMode
+      );
       return {
         items,
         columns,
@@ -135,7 +139,11 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
 
   setBoardViewMode: (mode: BoardViewMode) =>
     set((state: BoardState) => {
-      const { columns, readinessPercentage } = calculateColumns(state.items, state.currentUserId, mode);
+      const { columns, readinessPercentage } = calculateColumns(
+        state.items,
+        state.currentUserId,
+        mode
+      );
       return {
         boardViewMode: mode,
         columns,
@@ -144,6 +152,14 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
     }),
 
   setIsAdmin: (isAdmin: boolean) => set({ isAdmin }),
+
+  setCurrentUserProfile: (
+    profile: {
+      full_name: string | null;
+      username: string | null;
+      avatar_theme: string | null;
+    } | null
+  ) => set({ currentUserProfile: profile }),
 
   moveItem: async (itemId: string, fromColumn: KanbanColumn, toColumn: KanbanColumn) => {
     const { columns, items, currentUserId } = get();
@@ -277,7 +293,6 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
     }
 
     // Save previous state for rollback
-    const prevItems = [...items];
 
     // Optimistically update
     const newItems = items.map((item) => {
@@ -285,11 +300,13 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
         const newClaim: ItemClaim = {
           id: `temp-${Date.now()}`,
           item_id: itemId,
+          trip_id: tripId!,
           user_id: currentUserId,
           quantity,
           is_packed: false,
+          sort_order: item.claims.length,
           created_at: new Date().toISOString(),
-          profiles: null,
+          profiles: get().currentUserProfile ? [get().currentUserProfile!] : null,
         };
         const updatedClaims = [...item.claims, newClaim];
         const total_claimed = updatedClaims.reduce((sum, c) => sum + c.quantity, 0);
@@ -322,8 +339,6 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
   markAsPacked: async (claimId: string) => {
     const { currentUserId, items, boardViewMode } = get();
     if (!currentUserId) return;
-
-    const prevItems = [...items];
 
     // Optimistically update
     const newItems = items.map((item) => {
@@ -364,8 +379,6 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
   unclaimItem: async (claimId: string, quantity: number) => {
     const { currentUserId, items, boardViewMode } = get();
     if (!currentUserId) return;
-
-    const prevItems = [...items];
 
     // Optimistically update
     const newItems = items.map((item) => {
@@ -440,8 +453,6 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
     const { currentUserId, items, boardViewMode } = get();
     if (!currentUserId) return;
 
-    const prevItems = [...items];
-
     // Optimistically update
     const newItems = items.map((item) => {
       const claimIndex = item.claims.findIndex((c) => c.id === claimId);
@@ -473,9 +484,10 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
       if (error) throw error;
       // Board will be updated via realtime subscription
     } catch (error) {
-      const message = error instanceof Error
-        ? error.message
-        : (error as PostgrestError)?.message || 'Failed to mark as not packed';
+      const message =
+        error instanceof Error
+          ? error.message
+          : (error as PostgrestError)?.message || 'Failed to mark as not packed';
       set({ error: message });
       throw error;
     }
@@ -487,7 +499,11 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
 
   setCurrentUserId: (userId: string) =>
     set((state: BoardState) => {
-      const { columns, readinessPercentage } = calculateColumns(state.items, userId, state.boardViewMode);
+      const { columns, readinessPercentage } = calculateColumns(
+        state.items,
+        userId,
+        state.boardViewMode
+      );
       return {
         currentUserId: userId,
         columns,

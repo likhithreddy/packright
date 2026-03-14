@@ -208,10 +208,10 @@ export function TripDashboardClient({
             </div>
 
             {/* Readiness bar */}
-            <ReadinessVisualizer 
-              percentage={stats.percentPacked} 
-              showLabel={false} 
-              className="mt-1" 
+            <ReadinessVisualizer
+              percentage={stats.percentPacked}
+              showLabel={false}
+              className="mt-1"
             />
           </div>
         </div>

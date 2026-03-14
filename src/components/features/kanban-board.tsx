@@ -58,14 +58,17 @@ export function KanbanBoard({
   );
 
   // Find which column an item belongs to (used for sortable helper)
-  const parseCompositeId = (compositeId: string): { column: KanbanColumn; itemId: string } | null => {
+  const parseCompositeId = (
+    compositeId: string
+  ): { column: KanbanColumn; itemId: string } | null => {
     if (!compositeId.includes(':')) return null;
     const [column, itemId] = compositeId.split(':');
     return { column: column as KanbanColumn, itemId };
   };
 
   // Find column of an item by searching all columns (legacy fallback or for overId items)
-  const findColumnOfItem = (itemId: string): KanbanColumn | null => {
+  const findColumnOfItem = (itemId: string | null): KanbanColumn | null => {
+    if (!itemId) return null;
     // If it's a composite ID, parse it directly
     if (itemId.includes(':')) {
       return itemId.split(':')[0] as KanbanColumn;
@@ -120,9 +123,7 @@ export function KanbanBoard({
     const { itemId: activeId, column: sourceColumn } = activeInfo;
 
     // If overId is a column ID, use it directly. Otherwise, find the column of the item.
-    const targetColumn = (overId in columns) 
-      ? overId as KanbanColumn 
-      : findColumnOfItem(overId);
+    const targetColumn = overId in columns ? (overId as KanbanColumn) : findColumnOfItem(overId);
 
     if (!sourceColumn || !targetColumn) return;
 
@@ -137,7 +138,7 @@ export function KanbanBoard({
       if (!(overId in columns)) {
         const columnItems = columns[sourceColumn];
         const oldIndex = columnItems.indexOf(activeId);
-        
+
         // Parse overItemId if it's composite
         const overInfo = parseCompositeId(overId);
         const targetItemId = overInfo ? overInfo.itemId : overId;
@@ -163,7 +164,9 @@ export function KanbanBoard({
 
   // Get the active item for the drag overlay
   const activeItemInfo = activeId ? parseCompositeId(activeId) : null;
-  const activeItem = activeItemInfo ? items.find((item) => item.id === activeItemInfo.itemId) : null;
+  const activeItem = activeItemInfo
+    ? items.find((item) => item.id === activeItemInfo.itemId)
+    : null;
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
