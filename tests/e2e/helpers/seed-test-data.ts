@@ -676,3 +676,191 @@ export async function getCurrentUserId(username?: string): Promise<string> {
   }
   return userId;
 }
+
+/**
+ * Seed items with different states for drag-drop tests
+ * Creates items in needed, claimed, and packed states for testing drag-and-drop
+ */
+export async function seedKanbanBoardData(options: {
+  tripId: string;
+  items: Array<{
+    name: string;
+    category: string;
+    required_count: number;
+    status: 'needed' | 'claimed' | 'packed';
+    claimed_by?: string;
+    claimed_quantity?: number;
+  }>;
+}) {
+  const { tripId, items } = options;
+
+  console.log(`[seedTestData] Creating ${items.length} items for trip ${tripId}`);
+
+  for (const item of items) {
+    const itemId = randomUUID();
+    const itemData: Record<string, unknown> = {
+      id: itemId,
+      trip_id: tripId,
+      name: item.name,
+      category: item.category,
+      required_count: item.required_count,
+      claim_type: 'multiple',
+    };
+
+    // Set status-based fields
+    if (item.status === 'claimed' && item.claimed_by) {
+      itemData.claimed_by = item.claimed_by;
+      itemData.claimed_quantity = item.claimed_quantity || item.quantity;
+    } else if (item.status === 'packed' && item.claimed_by) {
+      itemData.claimed_by = item.claimed_by;
+      itemData.claimed_quantity = item.claimed_quantity || item.quantity;
+      itemData.packed_by = item.claimed_by;
+      itemData.packed_quantity = item.claimed_quantity || item.quantity;
+    }
+
+    const { error } = await supabase.from('items').insert(itemData);
+    if (error) {
+      console.error(`[seedTestData] Failed to insert item ${item.name}:`, JSON.stringify(error));
+    }
+  }
+
+  // Wait for database commit
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  console.log(`[seedTestData] Successfully created ${items.length} items for trip ${tripId}`);
+}
+
+/**
+ * Seed items with permissions for edit/delete tests
+ * Creates items where different users have different permissions
+ */
+export async function seedItemPermissionsData(options: {
+  tripId: string;
+  creatorUserId: string;
+  claimerUserId: string;
+}) {
+  const { tripId, creatorUserId, claimerUserId } = options;
+
+  console.log(
+    `[seedTestData] Creating permission test items for trip ${tripId}: creator=${creatorUserId}, claimer=${claimerUserId}`
+  );
+
+  // Item 1: Unassigned item (only creator/admin can edit)
+  const unassignedItemId = randomUUID();
+  await supabase.from('items').insert({
+    id: unassignedItemId,
+    trip_id: tripId,
+    name: 'Unassigned Item',
+    category: 'Essentials',
+    required_count: 5,
+    claim_type: 'multiple',
+  });
+
+  // Item 2: Claimed by claimer user (claimer can edit/pack/unclaim)
+  const claimedItemId = randomUUID();
+  await supabase.from('items').insert({
+    id: claimedItemId,
+    trip_id: tripId,
+    name: 'Claimed Item',
+    category: 'Essentials',
+    required_count: 5,
+    claim_type: 'multiple',
+    claimed_by: claimerUserId,
+    claimed_quantity: 3,
+  });
+
+  // Item 3: Packed by claimer user
+  const packedItemId = randomUUID();
+  await supabase.from('items').insert({
+    id: packedItemId,
+    trip_id: tripId,
+    name: 'Packed Item',
+    category: 'Essentials',
+    required_count: 5,
+    claim_type: 'multiple',
+    claimed_by: claimerUserId,
+    claimed_quantity: 5,
+    packed_by: claimerUserId,
+    packed_quantity: 5,
+  });
+
+  // Wait for database commit
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  console.log(`[seedTestData] Created permission test items: unassigned, claimed, packed`);
+
+  return { unassignedItemId, claimedItemId, packedItemId };
+}
+
+/**
+ * Seed large number of items for performance tests
+ * Creates many items to test board performance with large datasets
+ */
+export async function seedLargeBoardData(options: { tripId: string; itemCount: number }) {
+  const { tripId, itemCount } = options;
+
+  console.log(`[seedTestData] Creating ${itemCount} items for trip ${tripId}`);
+
+  const categories = [
+    'Essentials',
+    'Clothing',
+    'Food',
+    'Health',
+    'Electronics',
+    'Documents',
+    'Fitness',
+    'Travel',
+    'Toiletries',
+    'Gear',
+    'Misc',
+  ];
+  const itemNames = [
+    'Tent',
+    'Sleeping Bag',
+    'Backpack',
+    'Water Bottle',
+    'Flashlight',
+    'First Aid Kit',
+    'Sunscreen',
+    'Hat',
+    'Sunglasses',
+    'Camera',
+    'Chargers',
+    'Toiletries',
+    'Towel',
+    'Swimsuit',
+    'Hiking Boots',
+    'Jacket',
+    'Pants',
+    'Shirt',
+    'Socks',
+    'Underwear',
+  ];
+
+  const itemsToInsert = [];
+  for (let i = 0; i < itemCount; i++) {
+    const name = `${itemNames[i % itemNames.length]} ${Math.floor(i / itemNames.length) + 1}`;
+    const category = categories[i % categories.length];
+    const required_count = (i % 5) + 1; // 1-5 items
+
+    itemsToInsert.push({
+      id: randomUUID(),
+      trip_id: tripId,
+      name,
+      category,
+      required_count,
+      claim_type: 'multiple',
+    });
+  }
+
+  // Batch insert for performance
+  const { error } = await supabase.from('items').insert(itemsToInsert);
+  if (error) {
+    console.error(`[seedTestData] Failed to batch insert items:`, JSON.stringify(error));
+  }
+
+  // Wait for database commit
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  console.log(`[seedTestData] Successfully created ${itemCount} items for trip ${tripId}`);
+}

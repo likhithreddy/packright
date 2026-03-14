@@ -182,6 +182,7 @@ export function KanbanCard({
 
   return (
     <div
+      data-testid={`card-${item.id}`}
       ref={setNodeRef}
       style={style}
       {...attributes}

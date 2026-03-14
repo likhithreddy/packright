@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { BoardStore, BoardViewMode } from '@/types/board.types';
-import type { ItemWithClaims, KanbanColumn } from '@/types/database.types';
+import type { ItemClaim, ItemWithClaims, KanbanColumn } from '@/types/database.types';
 
 // Helper function to calculate which column an item belongs to based on its claims
 function calculateColumns(
@@ -161,35 +161,142 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
   },
 
   claimItem: async (itemId: string, quantity: number) => {
-    const { currentUserId, tripId } = get();
+    const { currentUserId, tripId, items, boardViewMode } = get();
     if (!currentUserId || !tripId) {
       set({ error: 'User not authenticated or no trip selected' });
       return;
     }
 
+    // Save previous state for rollback
+    const prevItems = [...items];
+
+    // Optimistically update
+    const newItems = items.map((item) => {
+      if (item.id === itemId) {
+        const newClaim: ItemClaim = {
+          id: `temp-${Date.now()}`,
+          item_id: itemId,
+          user_id: currentUserId,
+          quantity,
+          is_packed: false,
+          created_at: new Date().toISOString(),
+          profiles: null,
+        };
+        const updatedClaims = [...item.claims, newClaim];
+        const total_claimed = updatedClaims.reduce((sum, c) => sum + c.quantity, 0);
+        return {
+          ...item,
+          claims: updatedClaims,
+          total_claimed,
+        };
+      }
+      return item;
+    });
+
+    set({
+      items: newItems,
+      columns: calculateColumns(newItems, currentUserId, boardViewMode),
+    });
+
     try {
       const { claimItem: claimItemFn, createClient: createClientFn } = await getSupabaseFunctions();
       const supabase = createClientFn();
       await claimItemFn(supabase, itemId, currentUserId, quantity);
-      // Board will be updated via realtime subscription
+      // Board will be updated via realtime subscription for the final truth
     } catch (error) {
-      set({ error: error instanceof Error ? error.message : 'Failed to claim item' });
+      // Rollback on error
+      set({
+        items: prevItems,
+        columns: calculateColumns(prevItems, currentUserId, boardViewMode),
+        error: error instanceof Error ? error.message : 'Failed to claim item',
+      });
     }
   },
 
   markAsPacked: async (claimId: string) => {
+    const { currentUserId, items, boardViewMode } = get();
+    if (!currentUserId) return;
+
+    const prevItems = [...items];
+
+    // Optimistically update
+    const newItems = items.map((item) => {
+      const claimIndex = item.claims.findIndex((c) => c.id === claimId);
+      if (claimIndex !== -1) {
+        const updatedClaims = [...item.claims];
+        updatedClaims[claimIndex] = { ...updatedClaims[claimIndex], is_packed: true };
+        const total_packed = updatedClaims
+          .filter((c) => c.is_packed)
+          .reduce((sum, c) => sum + c.quantity, 0);
+        return {
+          ...item,
+          claims: updatedClaims,
+          total_packed,
+        };
+      }
+      return item;
+    });
+
+    set({
+      items: newItems,
+      columns: calculateColumns(newItems, currentUserId, boardViewMode),
+    });
+
     try {
       const { updateClaim: updateClaimFn, createClient: createClientFn } =
         await getSupabaseFunctions();
       const supabase = createClientFn();
       await updateClaimFn(supabase, claimId, { is_packed: true });
-      // Board will be updated via realtime subscription
     } catch (error) {
-      set({ error: error instanceof Error ? error.message : 'Failed to mark as packed' });
+      set({
+        items: prevItems,
+        columns: calculateColumns(prevItems, currentUserId, boardViewMode),
+        error: error instanceof Error ? error.message : 'Failed to mark as packed',
+      });
     }
   },
 
   unclaimItem: async (claimId: string, quantity: number) => {
+    const { currentUserId, items, boardViewMode } = get();
+    if (!currentUserId) return;
+
+    const prevItems = [...items];
+
+    // Optimistically update
+    const newItems = items.map((item) => {
+      const claimIndex = item.claims.findIndex((c) => c.id === claimId);
+      if (claimIndex !== -1) {
+        const claim = item.claims[claimIndex];
+        let updatedClaims = [...item.claims];
+
+        if (quantity >= claim.quantity) {
+          // Remove claim
+          updatedClaims = updatedClaims.filter((c) => c.id !== claimId);
+        } else {
+          // Update quantity
+          updatedClaims[claimIndex] = { ...claim, quantity: claim.quantity - quantity };
+        }
+
+        const total_claimed = updatedClaims.reduce((sum, c) => sum + c.quantity, 0);
+        const total_packed = updatedClaims
+          .filter((c) => c.is_packed)
+          .reduce((sum, c) => sum + c.quantity, 0);
+
+        return {
+          ...item,
+          claims: updatedClaims,
+          total_claimed,
+          total_packed,
+        };
+      }
+      return item;
+    });
+
+    set({
+      items: newItems,
+      columns: calculateColumns(newItems, currentUserId, boardViewMode),
+    });
+
     try {
       const {
         updateClaimQuantity: updateClaimQuantityFn,
@@ -198,40 +305,68 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
       } = await getSupabaseFunctions();
       const supabase = createClientFn();
 
-      // Get the current claim to check quantity
       const { data: claim } = await supabase
         .from('item_claims')
         .select('*')
         .eq('id', claimId)
         .single();
 
-      if (!claim) {
-        throw new Error('Claim not found');
-      }
+      if (!claim) throw new Error('Claim not found');
 
-      // If unclaiming all quantity, remove the claim
-      // Otherwise, update the claim with new quantity
       if (quantity >= claim.quantity) {
         await removeClaimFn(supabase, claimId);
       } else {
-        const newQuantity = claim.quantity - quantity;
-        await updateClaimQuantityFn(supabase, claimId, newQuantity);
+        await updateClaimQuantityFn(supabase, claimId, claim.quantity - quantity);
       }
-      // Board will be updated via realtime subscription
     } catch (error) {
-      set({ error: error instanceof Error ? error.message : 'Failed to unclaim item' });
+      set({
+        items: prevItems,
+        columns: calculateColumns(prevItems, currentUserId, boardViewMode),
+        error: error instanceof Error ? error.message : 'Failed to unclaim item',
+      });
     }
   },
 
   markAsNotPacked: async (claimId: string) => {
+    const { currentUserId, items, boardViewMode } = get();
+    if (!currentUserId) return;
+
+    const prevItems = [...items];
+
+    // Optimistically update
+    const newItems = items.map((item) => {
+      const claimIndex = item.claims.findIndex((c) => c.id === claimId);
+      if (claimIndex !== -1) {
+        const updatedClaims = [...item.claims];
+        updatedClaims[claimIndex] = { ...updatedClaims[claimIndex], is_packed: false };
+        const total_packed = updatedClaims
+          .filter((c) => c.is_packed)
+          .reduce((sum, c) => sum + c.quantity, 0);
+        return {
+          ...item,
+          claims: updatedClaims,
+          total_packed,
+        };
+      }
+      return item;
+    });
+
+    set({
+      items: newItems,
+      columns: calculateColumns(newItems, currentUserId, boardViewMode),
+    });
+
     try {
       const { updateClaim: updateClaimFn, createClient: createClientFn } =
         await getSupabaseFunctions();
       const supabase = createClientFn();
       await updateClaimFn(supabase, claimId, { is_packed: false });
-      // Board will be updated via realtime subscription
     } catch (error) {
-      set({ error: error instanceof Error ? error.message : 'Failed to mark as not packed' });
+      set({
+        items: prevItems,
+        columns: calculateColumns(prevItems, currentUserId, boardViewMode),
+        error: error instanceof Error ? error.message : 'Failed to mark as not packed',
+      });
     }
   },
 

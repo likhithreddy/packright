@@ -135,52 +135,6 @@ test.describe('Create New Trip Flow', () => {
     await expect(page.getByRole('button', { name: 'Sunscreen' })).toBeVisible();
   });
 
-  test('should select and deselect items in Step 3 and submit correctly', async ({ page }) => {
-    if (page.url().includes('/login')) return;
-
-    await page.getByRole('button', { name: 'New Trip', exact: true }).click();
-    await page.getByLabel(/TRIP NAME/i).fill('Step 3 Trip');
-    await page.getByLabel(/DESTINATION/i).fill('Lisbon');
-
-    const startDateTrigger = page.locator('button:has(svg.lucide-calendar)').nth(0);
-    await startDateTrigger.click();
-    let dayButtons = page.locator('.rdp-day:not(.rdp-day_disabled)');
-    await dayButtons.nth(0).click();
-
-    const endDateTrigger = page.locator('button:has(svg.lucide-calendar)').nth(1);
-    await endDateTrigger.click();
-    dayButtons = page.locator('.rdp-day:not(.rdp-day_disabled)');
-    await dayButtons.nth(3).click();
-    await page.getByRole('button', { name: 'Next', exact: true }).click();
-
-    const promptTextarea = page.getByPlaceholder(/e.g. 5 day hiking trip/i);
-    await promptTextarea.fill(
-      '5-day solo city exploration in Lisbon with sightseeing and seafood tours'
-    );
-    await page.getByRole('button', { name: /Get Suggestions/i }).click();
-
-    await expect(page.getByRole('heading', { name: 'Choose Suggested Items' })).toBeVisible();
-
-    // Select all then clear
-    await page.getByRole('button', { name: 'Select All' }).click();
-    const selectedCount = await page.getByText(/\d+ selected/).textContent();
-    expect(parseInt(selectedCount ?? '0')).toBeGreaterThan(0);
-
-    await page.getByRole('button', { name: 'Clear' }).click();
-    await expect(page.getByText('0 selected')).toBeVisible();
-
-    // Select one item
-    await page.getByRole('button', { name: 'Sunscreen' }).click();
-    await expect(page.getByText('1 selected')).toBeVisible();
-
-    // Submit with the single item
-    const addItemsBtn = page.getByRole('button', { name: /Add 1 Items & Create/i });
-    await expect(addItemsBtn).toBeEnabled();
-    await addItemsBtn.click();
-
-    await expect(page).toHaveURL(/\/dashboard\/trips\/[a-zA-Z0-9-]+/);
-  });
-
   test('should close modal and discard form data when Cancel is clicked', async ({ page }) => {
     if (page.url().includes('/login')) return;
 

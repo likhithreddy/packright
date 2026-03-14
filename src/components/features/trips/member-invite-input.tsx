@@ -163,6 +163,7 @@ export function MemberInviteInput({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
           <Input
             type="text"
+            data-testid="member-invite-input"
             placeholder={compactPlaceholder ? 'search...' : 'Search by name or username...'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

@@ -96,7 +96,7 @@ export function TripDashboardClient({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#FAFAF8] font-sans">
+    <div data-testid="trip-dashboard-page" className="flex flex-col h-full bg-[#FAFAF8] font-sans">
       {/* Header */}
       <header className="border-b border-stone-200 bg-white flex-shrink-0">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
