@@ -106,10 +106,8 @@ export function KanbanColumn({
 
   return (
     <div
-      ref={setNodeRef}
-      className={`${styles.bg} ${styles.border} border rounded-2xl flex flex-col h-full min-h-[300px] sm:min-h-[400px] transition-colors ${
-        isOver && !isDragDisabled ? 'brightness-95' : ''
-      }`}
+      data-testid={`column-${id}`}
+      className={`${styles.bg} ${styles.border} border rounded-2xl flex flex-col h-full min-h-[300px] sm:min-h-[400px]`}
     >
       {/* Column header */}
       <div

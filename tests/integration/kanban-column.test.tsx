@@ -32,51 +32,61 @@ describe('KanbanColumn Integration', () => {
 
   const mockOnClaim = jest.fn();
   const mockOnMarkPacked = jest.fn();
+  const mockOnUnclaim = jest.fn();
+  const mockOnEditItem = jest.fn();
+  const mockOnDeleteItem = jest.fn();
 
   const renderWithDnd = (column: KanbanColumnType, items: ItemWithClaims[]) => {
     return render(
       <DndContext>
         <KanbanColumn
           id={column}
-          title={column === 'needed' ? 'Needed' : column === 'claimed' ? 'Claimed' : 'Packed'}
+          title={
+            column === 'unassigned' ? 'Unassigned' : column === 'claimed' ? 'Claimed' : 'Packed'
+          }
           items={items}
           currentUserId="user-1"
+          isAdmin={false}
+          isDragDisabled={false}
           onClaim={mockOnClaim}
           onMarkPacked={mockOnMarkPacked}
+          onUnclaim={mockOnUnclaim}
+          onEditItem={mockOnEditItem}
+          onDeleteItem={mockOnDeleteItem}
         />
       </DndContext>
     );
   };
 
-  describe('Needed Column', () => {
+  describe('Unassigned Column', () => {
     it('renders column header and item count', () => {
       const items = [createMockItem({ id: 'item-1' }), createMockItem({ id: 'item-2' })];
 
-      renderWithDnd('needed', items);
+      renderWithDnd('unassigned', items);
 
-      expect(screen.getByText('Needed')).toBeInTheDocument();
+      expect(screen.getByText('Unassigned')).toBeInTheDocument();
       expect(screen.getByText('2')).toBeInTheDocument();
     });
 
     it('renders items in the column', () => {
       const items = [createMockItem({ id: 'item-1', name: 'Tent' })];
 
-      renderWithDnd('needed', items);
+      renderWithDnd('unassigned', items);
 
       expect(screen.getByTestId('card-item-1')).toBeInTheDocument();
       expect(screen.getByText('Tent')).toBeInTheDocument();
     });
 
     it('shows empty state when no items', () => {
-      renderWithDnd('needed', []);
+      renderWithDnd('unassigned', []);
 
       expect(screen.getByText('No items yet')).toBeInTheDocument();
     });
 
-    it('uses amber color scheme for needed column', () => {
-      const { container } = renderWithDnd('needed', [createMockItem()]);
+    it('uses warm beige color scheme for unassigned column', () => {
+      const { container } = renderWithDnd('unassigned', [createMockItem()]);
 
-      const column = container.querySelector('.bg-amber-50');
+      const column = container.querySelector('.bg-\\[\\#f0ebe4\\]');
       expect(column).toBeInTheDocument();
     });
   });
@@ -90,10 +100,10 @@ describe('KanbanColumn Integration', () => {
       expect(screen.getByText('Claimed')).toBeInTheDocument();
     });
 
-    it('uses blue color scheme for claimed column', () => {
+    it('uses light neutral gray color scheme for claimed column', () => {
       const { container } = renderWithDnd('claimed', [createMockItem()]);
 
-      const column = container.querySelector('.bg-blue-50');
+      const column = container.querySelector('.bg-\\[\\#e8e8e8\\]');
       expect(column).toBeInTheDocument();
     });
   });
@@ -107,10 +117,10 @@ describe('KanbanColumn Integration', () => {
       expect(screen.getByText('Packed')).toBeInTheDocument();
     });
 
-    it('uses green color scheme for packed column', () => {
+    it('uses light green-gray color scheme for packed column', () => {
       const { container } = renderWithDnd('packed', [createMockItem()]);
 
-      const column = container.querySelector('.bg-green-50');
+      const column = container.querySelector('.bg-\\[\\#e8f0e8\\]');
       expect(column).toBeInTheDocument();
     });
   });
@@ -119,7 +129,7 @@ describe('KanbanColumn Integration', () => {
     it('passes onClaim callback to child cards', async () => {
       const items = [createMockItem({ id: 'item-1', name: 'Tent' })];
 
-      renderWithDnd('needed', items);
+      renderWithDnd('unassigned', items);
 
       const claimButton = screen.getByText('Claim');
       await userEvent.click(claimButton);
@@ -147,7 +157,7 @@ describe('KanbanColumn Integration', () => {
         createMockItem({ id: 'item-3' }),
       ];
 
-      renderWithDnd('needed', items);
+      renderWithDnd('unassigned', items);
 
       // Verify all cards are rendered
       expect(screen.getByTestId('card-item-1')).toBeInTheDocument();

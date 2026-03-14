@@ -162,7 +162,10 @@ export function KanbanBoard({
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-2 sm:p-4 lg:p-6 h-full min-h-0">
+      <div
+        data-testid="kanban-board"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-2 sm:p-4 lg:p-6 h-full min-h-0"
+      >
         <KanbanColumnComponent
           id="unassigned"
           title="Unassigned"

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { BoardHeader } from '@/components/features/board-header';
-import { ItemWithClaims } from '@/types/database.types';
+import { BoardHeader } from '../../src/components/features/board-header';
+import { ItemWithClaims } from '../../src/types/database.types';
 
 // Mock the useRouter
 jest.mock('next/navigation', () => ({
