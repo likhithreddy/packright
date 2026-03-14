@@ -196,20 +196,30 @@ export function PackingBoard() {
   }, [tripId, currentUserId, supabase, loadTripData]);
 
   // Handle claim button click
-  const handleClaimClick = (itemId: string) => {
+  const handleClaimClick = async (itemId: string) => {
     const item = items.find((i: ItemWithClaims) => i.id === itemId);
     if (!item) return;
+
+    if (item.claim_type === 'single') {
+      const remaining = Math.max(item.required_count - item.total_claimed, 0);
+      if (remaining > 0) {
+        await handleClaimConfirm(remaining, itemId);
+      }
+      return;
+    }
 
     setClaimingItemId(itemId);
     setClaimDialogOpen(true);
   };
 
   // Handle claim confirmation
-  const handleClaimConfirm = async (quantity: number) => {
-    if (!claimingItemId) return;
-
-    await claimItem(claimingItemId, quantity);
+  const handleClaimConfirm = async (quantity: number, itemIdOverride?: string) => {
+    const idToClaim = itemIdOverride || claimingItemId;
+    if (!idToClaim) return;
+  
+    await claimItem(idToClaim, quantity);
     setClaimingItemId(null);
+    setClaimDialogOpen(false);
     // Force immediate silent reload as a fallback for realtime
     await loadTripData(true);
   };
@@ -225,20 +235,31 @@ export function PackingBoard() {
   };
 
   // Handle unclaim
-  const handleUnclaim = (claimId: string, quantity: number) => {
+  const handleUnclaim = async (claimId: string, quantity: number) => {
+    const item = items.find((i: ItemWithClaims) =>
+      i.claims.some((c: ItemClaim) => c.id === claimId)
+    );
+
+    if (item?.claim_type === 'single') {
+      await handleUnclaimConfirm(quantity, claimId);
+      return;
+    }
+
     setUnclaimingClaimId(claimId);
     setUnclaimingClaimQuantity(quantity);
     setUnclaimDialogOpen(true);
   };
 
   // Handle unclaim confirmation
-  const handleUnclaimConfirm = async (quantity: number) => {
-    if (!unclaimingClaimId) return;
-
+  const handleUnclaimConfirm = async (quantity: number, claimIdOverride?: string) => {
+    const idToUnclaim = claimIdOverride || unclaimingClaimId;
+    if (!idToUnclaim) return;
+  
     try {
-      await unclaimItem(unclaimingClaimId, quantity);
+      await unclaimItem(idToUnclaim, quantity);
       setUnclaimingClaimId(null);
       setUnclaimingClaimQuantity(0);
+      setUnclaimDialogOpen(false);
       // Force immediate silent reload as a fallback for realtime
       await loadTripData(true);
     } catch (err) {

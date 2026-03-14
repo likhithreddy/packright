@@ -284,7 +284,6 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to claim item';
       set({ error: message });
-      throw error;
     }
   },
 
@@ -299,7 +298,6 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to mark as packed';
       set({ error: message });
-      throw error;
     }
   },
 
@@ -338,7 +336,6 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to unclaim item';
       set({ error: message });
-      throw error;
     }
   },
 

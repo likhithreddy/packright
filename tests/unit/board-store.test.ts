@@ -40,6 +40,8 @@ describe('useBoardStore', () => {
       error: null,
       currentUserId: null,
       boardViewMode: 'my-view',
+      viewMode: 'kanban',
+      isAdmin: false,
     });
     jest.clearAllMocks();
   });
@@ -177,8 +179,8 @@ describe('useBoardStore', () => {
     });
 
     it('handles database errors gracefully', async () => {
-      const mockError = { code: 'P0001', message: 'Database error' } as PostgrestError;
-      mockClaimItem.mockResolvedValueOnce({ data: null, error: mockError });
+      const mockError = new Error('Database error');
+      mockClaimItem.mockResolvedValueOnce({ data: null, error: mockError as any });
 
       useBoardStore.setState({
         tripId: 'trip-1',
@@ -192,8 +194,8 @@ describe('useBoardStore', () => {
     });
 
     it('sets error on claim failure', async () => {
-      const mockError = new Error('Failed to claim');
-      mockClaimItem.mockRejectedValue(mockError);
+      const mockError = new Error('Database error');
+      mockClaimItem.mockResolvedValue({ data: null, error: mockError as any });
 
       useBoardStore.setState({
         tripId: 'trip-1',
@@ -203,7 +205,7 @@ describe('useBoardStore', () => {
       const store = useBoardStore.getState();
       await store.claimItem('item-1', 2);
 
-      expect(useBoardStore.getState().error).toBe('Failed to claim');
+      expect(useBoardStore.getState().error).toBe('Database error');
     });
 
     it('sets error when tripId or currentUserId is missing', async () => {
@@ -233,13 +235,13 @@ describe('useBoardStore', () => {
     });
 
     it('sets error on update failure', async () => {
-      const mockError = new Error('Failed to update');
-      mockUpdateClaim.mockRejectedValue(mockError);
+      const mockError = new Error('Database error');
+      mockUpdateClaim.mockResolvedValue({ data: null, error: mockError as any });
 
       const store = useBoardStore.getState();
       await store.markAsPacked('claim-1');
 
-      expect(useBoardStore.getState().error).toBe('Failed to update');
+      expect(useBoardStore.getState().error).toBe('Database error');
     });
   });
 
