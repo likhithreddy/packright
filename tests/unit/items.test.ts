@@ -10,6 +10,7 @@ describe('items lib functions', () => {
   const mockUpdate = jest.fn();
   const mockDelete = jest.fn();
   const mockSingle = jest.fn();
+  const mockMaybeSingle = jest.fn();
   const mockOrder = jest.fn();
   const mockSelectForUpdate = jest.fn();
   const mockEqForUpdate = jest.fn();
@@ -30,19 +31,24 @@ describe('items lib functions', () => {
     // First call: .from('items').select().eq().order() - items query
     // Second call: .from('item_claims').select().in() - claims query
 
-    // mockEq always returns object with order
+    // mockEq returns object that supports chaining and maybeSingle
     mockEq.mockReturnValue({
+      eq: mockEq,
+      maybeSingle: mockMaybeSingle,
+      single: mockSingle,
       order: mockOrder,
     });
 
     // mockIn returns promise with data (for claims query)
     mockIn.mockResolvedValue({ data: [], error: null });
 
-    // mockSelect returns object with eq, in, order
+    // mockSelect returns object with eq, in, order, maybeSingle
     mockSelect.mockReturnValue({
       eq: mockEq,
       in: mockIn,
       order: mockOrder,
+      maybeSingle: mockMaybeSingle,
+      single: mockSingle,
     });
 
     // Setup from() chain
@@ -217,12 +223,16 @@ describe('items lib functions', () => {
 
   describe('claimItem', () => {
     beforeEach(() => {
-      // Setup insert().select().single() chain
+      // Finalize the chain for claimItem
+      mockMaybeSingle.mockResolvedValue({ data: null, error: null });
       mockInsert.mockReturnValue({
         select: mockSelect.mockReturnThis(),
       });
       mockSelect.mockReturnValue({
+        eq: mockEq.mockReturnThis(),
+        maybeSingle: mockMaybeSingle,
         single: mockSingle,
+        select: mockSelect.mockReturnThis(),
       });
     });
 

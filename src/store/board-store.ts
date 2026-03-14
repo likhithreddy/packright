@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import type { BoardStore, BoardViewMode } from '@/types/board.types';
-import type { ItemClaim, ItemWithClaims, KanbanColumn } from '@/types/database.types';
+import { BoardStore, BoardState, BoardViewMode, ViewMode } from '@/types/board.types';
+import { ItemWithClaims, KanbanColumn, ItemClaim } from '@/types/database.types';
+import { PostgrestError } from '@supabase/supabase-js';
 
 // Helper function to calculate which column an item belongs to based on its claims
 function calculateColumns(
@@ -303,21 +304,21 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
 
     set({
       items: newItems,
-      columns: calculateColumns(newItems, currentUserId, boardViewMode),
+      ...calculateColumns(newItems, currentUserId, boardViewMode),
     });
 
     try {
       const { claimItem: claimItemFn, createClient: createClientFn } = await getSupabaseFunctions();
       const supabase = createClientFn();
-      await claimItemFn(supabase, itemId, currentUserId, quantity);
-      // Board will be updated via realtime subscription for the final truth
+      const { error } = await claimItemFn(supabase, itemId, tripId, currentUserId, quantity);
+      if (error) throw error;
+      // Board will be updated via realtime subscription
     } catch (error) {
-      // Rollback on error
-      set({
-        items: prevItems,
-        columns: calculateColumns(prevItems, currentUserId, boardViewMode),
-        error: error instanceof Error ? error.message : 'Failed to claim item',
-      });
+       const message = error instanceof Error 
+         ? error.message 
+         : (error as PostgrestError)?.message || 'An unexpected error occurred';
+       set({ error: message });
+       throw error;
     }
   },
 
@@ -347,20 +348,22 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
 
     set({
       items: newItems,
-      columns: calculateColumns(newItems, currentUserId, boardViewMode),
+      ...calculateColumns(newItems, currentUserId, boardViewMode),
     });
 
     try {
       const { updateClaim: updateClaimFn, createClient: createClientFn } =
         await getSupabaseFunctions();
       const supabase = createClientFn();
-      await updateClaimFn(supabase, claimId, { is_packed: true });
+      const { error } = await updateClaimFn(supabase, claimId, { is_packed: true });
+      if (error) throw error;
+      // Board will be updated via realtime subscription
     } catch (error) {
-      set({
-        items: prevItems,
-        columns: calculateColumns(prevItems, currentUserId, boardViewMode),
-        error: error instanceof Error ? error.message : 'Failed to mark as packed',
-      });
+       const message = error instanceof Error 
+         ? error.message 
+         : (error as PostgrestError)?.message || 'Failed to mark as packed';
+       set({ error: message });
+       throw error;
     }
   },
 
@@ -402,7 +405,7 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
 
     set({
       items: newItems,
-      columns: calculateColumns(newItems, currentUserId, boardViewMode),
+      ...calculateColumns(newItems, currentUserId, boardViewMode),
     });
 
     try {
@@ -413,26 +416,32 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
       } = await getSupabaseFunctions();
       const supabase = createClientFn();
 
-      const { data: claim } = await supabase
+      // Get the current claim to check quantity
+      const { data: claim, error: fetchError } = await supabase
         .from('item_claims')
         .select('*')
         .eq('id', claimId)
         .single();
 
-      if (!claim) throw new Error('Claim not found');
+      if (fetchError) throw fetchError;
+      if (!claim) {
+        throw new Error('Claim not found');
+      }
 
       if (quantity >= claim.quantity) {
         const { error } = await removeClaimFn(supabase, claimId);
         if (error) throw error;
       } else {
-        await updateClaimQuantityFn(supabase, claimId, claim.quantity - quantity);
+        const newQuantity = claim.quantity - quantity;
+        const { error } = await updateClaimQuantityFn(supabase, claimId, newQuantity);
+        if (error) throw error;
       }
     } catch (error) {
-      set({
-        items: prevItems,
-        columns: calculateColumns(prevItems, currentUserId, boardViewMode),
-        error: error instanceof Error ? error.message : 'Failed to unclaim item',
-      });
+       const message = error instanceof Error 
+         ? error.message 
+         : (error as PostgrestError)?.message || 'Failed to unclaim item';
+       set({ error: message });
+       throw error;
     }
   },
 
@@ -462,20 +471,22 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
 
     set({
       items: newItems,
-      columns: calculateColumns(newItems, currentUserId, boardViewMode),
+      ...calculateColumns(newItems, currentUserId, boardViewMode),
     });
 
     try {
       const { updateClaim: updateClaimFn, createClient: createClientFn } =
         await getSupabaseFunctions();
       const supabase = createClientFn();
-      await updateClaimFn(supabase, claimId, { is_packed: false });
+      const { error } = await updateClaimFn(supabase, claimId, { is_packed: false });
+      if (error) throw error;
+      // Board will be updated via realtime subscription
     } catch (error) {
-      set({
-        items: prevItems,
-        columns: calculateColumns(prevItems, currentUserId, boardViewMode),
-        error: error instanceof Error ? error.message : 'Failed to mark as not packed',
-      });
+       const message = error instanceof Error 
+         ? error.message 
+         : (error as PostgrestError)?.message || 'Failed to mark as not packed';
+       set({ error: message });
+       throw error;
     }
   },
 

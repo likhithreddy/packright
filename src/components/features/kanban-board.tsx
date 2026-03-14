@@ -81,8 +81,13 @@ export function KanbanBoard({
 
   // Get items for a specific column
   const getItemsForColumn = (column: KanbanColumn): ItemWithClaims[] => {
-    const itemIds = columns[column];
-    return items.filter((item) => itemIds.includes(item.id));
+    const itemIdsInColumn = columns[column];
+    if (!itemIdsInColumn) {
+      return []; // Safety check
+    }
+    return itemIdsInColumn
+      .map((itemId) => items.find((item) => item.id === itemId))
+      .filter((item): item is ItemWithClaims => item !== undefined);
   };
 
   // In "my-view", Unassigned column is not draggable (items are not draggable there)
