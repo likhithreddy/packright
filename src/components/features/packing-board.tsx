@@ -202,7 +202,7 @@ export function PackingBoard() {
     }, [tripId, currentUserId, supabase, loadTripData]);
 
     // Handle claim button click
-    const handleClaimClick = (itemId: string) => {
+    const handleClaimClick = async (itemId: string) => {
       const item = items.find((i: ItemWithClaims) => i.id === itemId);
       if (!item) return;
 
@@ -225,6 +225,7 @@ export function PackingBoard() {
 
       await claimItem(idToClaim, quantity);
       setClaimingItemId(null);
+      setClaimDialogOpen(false);
       // Force immediate silent reload as a fallback for realtime
       await loadTripData(true);
     };
@@ -262,13 +263,15 @@ export function PackingBoard() {
     };
 
     // Handle unclaim confirmation
-    const handleUnclaimConfirm = async (quantity: number) => {
-      if (!unclaimingClaimId) return;
+    const handleUnclaimConfirm = async (quantity: number, claimIdOverride?: string) => {
+      const idToUnclaim = claimIdOverride || unclaimingClaimId;
+      if (!idToUnclaim) return;
 
       try {
-        await unclaimItem(unclaimingClaimId, quantity);
+        await unclaimItem(idToUnclaim, quantity);
         setUnclaimingClaimId(null);
         setUnclaimingClaimQuantity(0);
+        setUnclaimDialogOpen(false);
         // Force immediate silent reload as a fallback for realtime
         await loadTripData(true);
       } catch (err) {

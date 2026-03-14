@@ -314,11 +314,8 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
       if (error) throw error;
       // Board will be updated via realtime subscription
     } catch (error) {
-       const message = error instanceof Error 
-         ? error.message 
-         : (error as PostgrestError)?.message || 'An unexpected error occurred';
-       set({ error: message });
-       throw error;
+      const message = error instanceof Error ? error.message : 'Failed to claim item';
+      set({ error: message });
     }
   },
 
@@ -359,11 +356,8 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
       if (error) throw error;
       // Board will be updated via realtime subscription
     } catch (error) {
-       const message = error instanceof Error 
-         ? error.message 
-         : (error as PostgrestError)?.message || 'Failed to mark as packed';
-       set({ error: message });
-       throw error;
+      const message = error instanceof Error ? error.message : 'Failed to mark as packed';
+      set({ error: message });
     }
   },
 
@@ -437,11 +431,8 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
         if (error) throw error;
       }
     } catch (error) {
-       const message = error instanceof Error 
-         ? error.message 
-         : (error as PostgrestError)?.message || 'Failed to unclaim item';
-       set({ error: message });
-       throw error;
+      const message = error instanceof Error ? error.message : 'Failed to unclaim item';
+      set({ error: message });
     }
   },
 
@@ -482,11 +473,11 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
       if (error) throw error;
       // Board will be updated via realtime subscription
     } catch (error) {
-       const message = error instanceof Error 
-         ? error.message 
-         : (error as PostgrestError)?.message || 'Failed to mark as not packed';
-       set({ error: message });
-       throw error;
+      const message = error instanceof Error
+        ? error.message
+        : (error as PostgrestError)?.message || 'Failed to mark as not packed';
+      set({ error: message });
+      throw error;
     }
   },
 
