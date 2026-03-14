@@ -83,7 +83,7 @@ test.describe('Board Header Features', () => {
     }
   });
 
-  test.afterEach(async ({ page }) => {
+  test.afterEach(async ({ page: _page }) => {
     // Clean up test data after each test
     const allAuthUserIds = [...additionalAuthUserIds];
     if (seedResult?.createdAuthUserId) {

@@ -15,8 +15,6 @@ import { test, expect } from '@playwright/test';
 import {
   seedMemberManagementTestData,
   cleanupMemberManagementTestData,
-  seedManyMembersTestData,
-  seedSingleMemberTestData,
   createSearchTestUsers,
   deterministicUUID,
   type SeedTestDataResult,
@@ -95,7 +93,7 @@ test.describe('Member Management Flows', () => {
     }
   });
 
-  test.afterEach(async ({ page }) => {
+  test.afterEach(async ({ page: _page }) => {
     // Clean up test data after each test, including created auth users
     const allAuthUserIds = [...additionalAuthUserIds];
     if (seedResult?.createdAuthUserId) {

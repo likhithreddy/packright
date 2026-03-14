@@ -31,6 +31,7 @@ jest.mock('../../src/components/features/trips/members-modal', () => ({
     open ? <div data-testid="members-modal">Members Modal</div> : null,
 }));
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Mock ResizeObserver and IntersectionObserver
 global.ResizeObserver = class ResizeObserver {
   observe() {}
@@ -90,6 +91,7 @@ describe('TripDashboardClient Integration', () => {
     currentUserIsAdmin: true,
     trip: mockTrip,
   };
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   beforeEach(() => {
     jest.clearAllMocks();

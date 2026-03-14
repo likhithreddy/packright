@@ -13,7 +13,6 @@ import {
   seedMemberManagementTestData,
   cleanupMemberManagementTestData,
   seedKanbanBoardData,
-  seedItemPermissionsData,
   deterministicUUID,
   type SeedTestDataResult,
 } from './helpers/seed-test-data';
@@ -67,7 +66,7 @@ test.describe('Edit/Delete Item Flows', () => {
     }
   });
 
-  test.afterEach(async ({ page }) => {
+  test.afterEach(async ({ page: _page }) => {
     // Clean up test data after each test
     if (currentTripId) {
       await cleanupMemberManagementTestData(currentTripId, seedResult?.createdAuthUserId);

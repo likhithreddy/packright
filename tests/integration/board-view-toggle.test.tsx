@@ -10,7 +10,7 @@ jest.mock('../../src/store/board-store', () => ({
 
 // Mock Button component
 jest.mock('../../src/components/ui/button', () => ({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Button: ({ children, onClick, className, ...props }: any) => (
     <button onClick={onClick} className={className} {...props}>
       {children}
