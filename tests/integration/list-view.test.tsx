@@ -2,9 +2,9 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ListView } from '../../src/components/features/list-view';
 import { ItemWithClaims, KanbanColumn } from '../../src/types/database.types';
-import { BoardViewMode } from '../../src/types/board.types';
 
 // Mock category icons
+/* eslint-disable @typescript-eslint/no-explicit-any */
 jest.mock('../../src/lib/utils/category-icons', () => ({
   getCategoryIcon: () =>
     function PackageIcon() {
@@ -34,13 +34,13 @@ jest.mock('../../src/lib/utils', () => ({
 
 // Mock Button component
 jest.mock('../../src/components/ui/button', () => ({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Button: ({ children, onClick, className, ...props }: any) => (
     <button onClick={onClick} className={className} {...props}>
       {children}
     </button>
   ),
 }));
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 describe('ListView Integration', () => {
   const mockOnClaim = jest.fn();
@@ -61,7 +61,9 @@ describe('ListView Integration', () => {
     name: string,
     category: string,
     quantity: number,
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     claims: any[] = []
+    /* eslint-enable @typescript-eslint/no-explicit-any */
   ): ItemWithClaims => ({
     id,
     trip_id: 'trip-1',

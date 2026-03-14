@@ -1,5 +1,4 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { ClaimQuantityDialog } from '../../src/components/features/claim-quantity-dialog';
 import React from 'react';
 

@@ -1,10 +1,12 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { KanbanBoard } from '../../src/components/features/kanban-board';
 import { ItemWithClaims, KanbanColumn } from '../../src/types/database.types';
 import { useBoardStore } from '../../src/store/board-store';
 
 // Mock @dnd-kit/core
+/* eslint-disable @typescript-eslint/no-explicit-any */
 jest.mock('@dnd-kit/core', () => ({
   DndContext: ({ children, onDragStart, onDragEnd }: any) => {
     React.useEffect(() => {
@@ -81,9 +83,7 @@ jest.mock('../../src/components/features/kanban-column', () => ({
 jest.mock('../../src/components/features/kanban-card', () => ({
   KanbanCard: ({ item }: any) => <div data-testid={`card-${item.id}`}>{item.name}</div>,
 }));
-
-// Import React after mocks
-import React from 'react';
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 describe('KanbanBoard Integration', () => {
   const mockOnClaim = jest.fn();
@@ -108,7 +108,9 @@ describe('KanbanBoard Integration', () => {
     name: string,
     category: string,
     quantity: number,
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     claims: any[] = []
+    /* eslint-enable @typescript-eslint/no-explicit-any */
   ): ItemWithClaims => ({
     id,
     trip_id: 'trip-1',

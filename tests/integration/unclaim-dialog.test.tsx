@@ -6,7 +6,7 @@ import { UnclaimDialog } from '../../src/components/features/unclaim-dialog';
 // Mock Dialog components
 jest.mock('../../src/components/ui/dialog', () => ({
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  Dialog: ({ open, children, onOpenChange }: any) =>
+  Dialog: ({ open, children, onOpenChange: _onOpenChange }: any) =>
     open ? <div data-testid="dialog">{children}</div> : null,
   DialogContent: ({ children }: any) => <div>{children}</div>,
   DialogDescription: ({ children }: any) => <p>{children}</p>,

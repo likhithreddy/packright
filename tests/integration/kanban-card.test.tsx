@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { KanbanCard } from '../../src/components/features/kanban-card';
 import { ItemWithClaims, KanbanColumn } from '../../src/types/database.types';
@@ -45,6 +45,7 @@ jest.mock('../../src/components/ui/button', () => ({
 }));
 
 // Mock utils
+/* eslint-disable @typescript-eslint/no-explicit-any */
 jest.mock('../../src/lib/utils', () => ({
   getUserDisplayName: (profile: any, userId: string) =>
     profile?.full_name || profile?.username || userId,
@@ -62,6 +63,7 @@ jest.mock('../../src/lib/utils/category-icons', () => ({
     };
   },
 }));
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 describe('KanbanCard Integration', () => {
   const createMockItem = (overrides?: Partial<ItemWithClaims>): ItemWithClaims => ({

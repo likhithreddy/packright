@@ -1,12 +1,11 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
 import { EditItemDialog } from '../../src/components/features/edit-item-dialog';
 
 // Mock Dialog components
 jest.mock('../../src/components/ui/dialog', () => ({
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  Dialog: ({ open, children, onOpenChange }: any) =>
+  Dialog: ({ open, children, onOpenChange: _onOpenChange }: any) =>
     open ? <div data-testid="dialog">{children}</div> : null,
   DialogContent: ({ children }: any) => <div>{children}</div>,
   DialogDescription: ({ children }: any) => <p>{children}</p>,
@@ -18,7 +17,6 @@ jest.mock('../../src/components/ui/dialog', () => ({
 
 // Mock Form components
 jest.mock('../../src/components/ui/form', () => {
-  const React = require('react');
   return {
     /* eslint-disable @typescript-eslint/no-explicit-any */
     useForm: ({ defaultValues }: any) => {
@@ -76,13 +74,14 @@ jest.mock('../../src/components/ui/button', () => ({
 }));
 
 jest.mock('../../src/components/ui/input', () => ({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   Input: ({ onChange, ...props }: any) => (
     <input
       onChange={onChange && ((e: any) => onChange(parseInt(e.target.value) || 0))}
       {...props}
     />
   ),
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 }));
 
 jest.mock('../../src/components/ui/label', () => ({
@@ -95,7 +94,7 @@ jest.mock('../../src/components/ui/label', () => ({
 }));
 
 jest.mock('../../src/components/ui/radio-group', () => ({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   RadioGroup: ({ children, onValueChange, value, defaultValue, className }: any) => {
     // Use value if provided, otherwise fall back to defaultValue
     const currentValue = value ?? defaultValue;
@@ -118,6 +117,7 @@ jest.mock('../../src/components/ui/radio-group', () => ({
     />
   ),
 }));
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 jest.mock('lucide-react', () => ({
   Loader2: ({ className }: { className: string }) => (

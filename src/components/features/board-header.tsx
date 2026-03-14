@@ -29,13 +29,13 @@ const avatarColors = [
 ];
 
 export function BoardHeader({
-  tripId,
+  tripId: _tripId,
   tripTitle,
   dateStart,
   dateEnd,
   items,
   members,
-  currentUserId,
+  currentUserId: _currentUserId,
 }: BoardHeaderProps) {
   // Calculate stats
   const totalItems = items.length;
