@@ -338,7 +338,10 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
 
   markAsPacked: async (claimId: string) => {
     const { currentUserId, items, boardViewMode } = get();
-    if (!currentUserId) return;
+    if (!currentUserId) {
+      set({ error: 'User not authenticated or no trip selected' });
+      return;
+    }
 
     // Optimistically update
     const newItems = items.map((item) => {
