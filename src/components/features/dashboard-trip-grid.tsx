@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { TripCard } from './trip-card';
 import { Trip } from '@/types/database.types';
 import { createClient } from '@/lib/supabase/client';
-import { ReadinessVisualizer } from './readiness-visualizer';
 
 interface DashboardTripGridProps {
   initialTrips: Trip[];
@@ -36,60 +35,82 @@ const itemVariants = {
 
 export function DashboardTripGrid({ initialTrips }: DashboardTripGridProps) {
   const [readinessData, setReadinessData] = React.useState<Record<string, number | null>>({});
+  const [memberCounts, setMemberCounts] = React.useState<Record<string, number>>({});
   const supabase = React.useMemo(() => createClient(), []);
 
-  const fetchReadiness = React.useCallback(async () => {
-    const { data, error } = await supabase.from('trip_readiness').select('trip_id, percentage');
+  const fetchData = React.useCallback(async () => {
+    // Fetch readiness
+    const { data: readiness, error: readinessError } = await supabase
+      .from('trip_readiness')
+      .select('trip_id, percentage');
 
-    if (error) {
-      console.error('Error fetching readiness:', error);
-      return;
+    if (readinessError) {
+      console.error('Error fetching readiness:', readinessError);
+    } else {
+      const mapping = (readiness || []).reduce(
+        (acc, curr) => ({
+          ...acc,
+          [curr.trip_id]: curr.percentage,
+        }),
+        {}
+      );
+      setReadinessData(mapping);
     }
 
-    const mapping = (data || []).reduce(
-      (acc, curr) => ({
-        ...acc,
-        [curr.trip_id]: curr.percentage,
-      }),
-      {}
-    );
+    // Fetch member counts
+    const { data: counts, error: countsError } = await supabase
+      .from('trip_members')
+      .select('trip_id');
 
-    setReadinessData(mapping);
+    if (countsError) {
+      console.error('Error fetching member counts:', countsError);
+    } else {
+      const mapping = (counts || []).reduce((acc: Record<string, number>, curr) => {
+        acc[curr.trip_id] = (acc[curr.trip_id] || 0) + 1;
+        return acc;
+      }, {});
+      setMemberCounts(mapping);
+    }
   }, [supabase]);
 
   React.useEffect(() => {
-    fetchReadiness();
+    fetchData();
 
-    // Subscribe to item_claims changes to trigger recalculation
-    const channel = supabase
+    // Subscribe to item_claims changes to trigger recalculation of readiness
+    const claimsChannel = supabase
       .channel('dashboard-readiness')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'item_claims' }, () => {
-        fetchReadiness();
+        fetchData();
+      })
+      .subscribe();
+
+    // Subscribe to trip_members changes to update counts
+    const membersChannel = supabase
+      .channel('dashboard-members')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'trip_members' }, () => {
+        fetchData();
       })
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(claimsChannel);
+      supabase.removeChannel(membersChannel);
     };
-  }, [supabase, fetchReadiness]);
+  }, [supabase, fetchData]);
 
   return (
     <motion.div
       variants={container}
-      initial="hidden"
-      animate="show"
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-max"
+      initial="show"
+      className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 auto-rows-max"
     >
       {initialTrips.map((trip) => (
         <motion.div key={trip.id} variants={itemVariants} className="flex flex-col gap-2">
-          <TripCard trip={trip} />
-          <div className="px-1">
-            <ReadinessVisualizer
-              percentage={readinessData[trip.id] ?? null}
-              showLabel={false}
-              className="h-1.5"
-            />
-          </div>
+          <TripCard
+            trip={trip}
+            percentage={readinessData[trip.id] ?? null}
+            memberCount={memberCounts[trip.id] ?? 1}
+          />
         </motion.div>
       ))}
     </motion.div>

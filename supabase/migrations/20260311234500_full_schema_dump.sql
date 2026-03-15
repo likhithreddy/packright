@@ -297,3 +297,17 @@ GRANT ALL ON ALL TABLES IN SCHEMA public TO authenticated, anon, service_role;
 GRANT ALL ON ALL FUNCTIONS IN SCHEMA public TO authenticated, anon, service_role;
 GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO authenticated, anon, service_role;
 GRANT EXECUTE ON FUNCTION public.search_users_by_username(TEXT) TO authenticated;
+
+-- REALTIME CONFIGURATION
+ALTER TABLE public.items REPLICA IDENTITY FULL;
+ALTER TABLE public.item_claims REPLICA IDENTITY FULL;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'supabase_realtime') THEN
+    CREATE PUBLICATION supabase_realtime;
+  END IF;
+END $$;
+
+ALTER PUBLICATION supabase_realtime ADD TABLE public.items;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.item_claims;

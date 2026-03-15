@@ -217,18 +217,33 @@ export function PackingBoard() {
     }
   }, [tripId, currentUserId, loadTripData]);
 
+  // Use a ref for debouncing loadTripData calls from subscriptions
+  const debounceTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const debouncedLoadData = React.useCallback(() => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    debounceTimerRef.current = setTimeout(() => {
+      loadTripData(true);
+    }, 500); // 500ms debounce
+  }, [loadTripData]);
+
   // Set up realtime subscriptions
   React.useEffect(() => {
     if (!tripId || !currentUserId) return;
 
-    const itemsChannel = subscribeToTripItems(supabase, tripId, loadTripData);
-    const claimsChannel = subscribeToItemClaims(supabase, tripId, loadTripData);
+    const itemsChannel = subscribeToTripItems(supabase, tripId, debouncedLoadData);
+    const claimsChannel = subscribeToItemClaims(supabase, tripId, debouncedLoadData);
 
     return () => {
       supabase.removeChannel(itemsChannel);
       supabase.removeChannel(claimsChannel);
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
     };
-  }, [tripId, currentUserId, supabase, loadTripData]);
+  }, [tripId, currentUserId, supabase, debouncedLoadData]);
 
   // Handle claim button click
   const handleClaimClick = async (itemId: string) => {
