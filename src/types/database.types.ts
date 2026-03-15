@@ -24,15 +24,18 @@ export interface Item {
   required_count: number;
   category: string;
   claim_type: 'single' | 'multiple';
+  sort_order: number;
   created_at: string;
 }
 
 export interface ItemClaim {
   id: string;
   item_id: string;
+  trip_id: string;
   user_id: string;
   quantity: number;
   is_packed: boolean;
+  sort_order: number;
   created_at: string;
   // Profile information joined from profiles table (array to match Supabase nested select format)
   profiles?: Array<{

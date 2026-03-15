@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { ItemWithClaims, type KanbanColumn as KanbanColumnType } from '@/types/database.types';
 import { BoardViewMode } from '@/types/board.types';
@@ -54,7 +55,7 @@ export function KanbanColumn({
   onDeleteItem,
 }: KanbanColumnProps) {
   const styles = columnStyles[id];
-  const itemIds = items.map((item) => item.id);
+  const itemIds = items.map((item) => `${id}:${item.id}`);
 
   // Render cards with or without SortableContext based on drag state
   const renderCards = () => {
@@ -99,10 +100,16 @@ export function KanbanColumn({
     );
   };
 
+  const { setNodeRef, isOver } = useDroppable({
+    id,
+  });
+
   return (
     <div
-      data-testid={`column-${id}`}
-      className={`${styles.bg} ${styles.border} border rounded-2xl flex flex-col h-full min-h-[300px] sm:min-h-[400px]`}
+      ref={setNodeRef}
+      className={`${styles.bg} ${styles.border} border rounded-2xl flex flex-col h-full min-h-[300px] sm:min-h-[400px] transition-colors ${
+        isOver && !isDragDisabled ? 'brightness-95' : ''
+      }`}
     >
       {/* Column header */}
       <div

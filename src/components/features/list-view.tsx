@@ -17,6 +17,7 @@ interface ListViewProps {
   onClaim: (itemId: string) => void;
   onUnclaim: (claimId: string, quantity: number) => void;
   onMarkPacked: (claimId: string) => void;
+  onEditItem: (itemId: string) => void;
   onDeleteItem: (itemId: string) => void;
 }
 
@@ -31,7 +32,7 @@ interface AccordionSectionProps {
   onClaim: (itemId: string) => void;
   onUnclaim: (claimId: string, quantity: number) => void;
   onMarkPacked: (claimId: string) => void;
-  _onEditItem?: (itemId: string) => void;
+  onEditItem: (itemId: string) => void;
   onDeleteItem: (itemId: string) => void;
 }
 
@@ -46,6 +47,7 @@ function AccordionSection({
   onClaim,
   onUnclaim,
   onMarkPacked,
+  onEditItem,
   onDeleteItem,
 }: AccordionSectionProps) {
   const [isExpanded, setIsExpanded] = React.useState(true);
@@ -65,14 +67,24 @@ function AccordionSection({
       return (
         <div className="flex items-center gap-2">
           {isAdmin && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onDeleteItem(item.id)}
-              className="rounded-full text-xs h-7 px-3 text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
-            >
-              Delete
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onEditItem(item.id)}
+                className="rounded-full text-xs h-7 px-3"
+              >
+                Edit
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onDeleteItem(item.id)}
+                className="rounded-full text-xs h-7 px-3 text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+              >
+                Delete
+              </Button>
+            </div>
           )}
           <Button
             size="sm"
@@ -168,7 +180,8 @@ function AccordionSection({
               if (boardViewMode === 'my-view') {
                 // My View: Personalized counts
                 if (column === 'unassigned') {
-                  return item.required_count;
+                  // Show remaining portion that ANYONE can claim
+                  return Math.max(0, item.required_count - item.total_claimed);
                 }
                 if (column === 'claimed' || column === 'packed') {
                   const userClaim = currentUserId
@@ -179,7 +192,8 @@ function AccordionSection({
               } else {
                 // All Items View: Aggregate counts
                 if (column === 'unassigned') {
-                  return item.required_count;
+                  // Show remaining portion that ANYONE can claim
+                  return Math.max(0, item.required_count - item.total_claimed);
                 }
                 if (column === 'claimed') {
                   return item.total_claimed;
@@ -283,6 +297,7 @@ export function ListView({
   onClaim,
   onUnclaim,
   onMarkPacked,
+  onEditItem,
   onDeleteItem,
 }: ListViewProps) {
   const getItemsForColumn = (column: KanbanColumn): ItemWithClaims[] => {
@@ -307,6 +322,7 @@ export function ListView({
         onClaim={onClaim}
         onUnclaim={onUnclaim}
         onMarkPacked={onMarkPacked}
+        onEditItem={onEditItem}
         onDeleteItem={onDeleteItem}
       />
 
@@ -321,6 +337,7 @@ export function ListView({
         onClaim={onClaim}
         onUnclaim={onUnclaim}
         onMarkPacked={onMarkPacked}
+        onEditItem={onEditItem}
         onDeleteItem={onDeleteItem}
       />
 
@@ -335,6 +352,7 @@ export function ListView({
         onClaim={onClaim}
         onUnclaim={onUnclaim}
         onMarkPacked={onMarkPacked}
+        onEditItem={onEditItem}
         onDeleteItem={onDeleteItem}
       />
     </div>

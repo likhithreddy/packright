@@ -15,7 +15,7 @@ export async function getTripItems(
       .from('items')
       .select('*')
       .eq('trip_id', tripId)
-      .order('created_at', { ascending: true });
+      .order('sort_order', { ascending: true });
 
     if (itemsError) {
       return { data: null, error: itemsError };
@@ -111,13 +111,39 @@ export async function getTripItems(
 export async function claimItem(
   supabase: SupabaseClient,
   itemId: string,
+  tripId: string,
   userId: string,
   quantity: number
 ): Promise<{ data: ItemClaim | null; error: PostgrestError | null }> {
+  // Check if the user already has a claim for this item
+  const { data: existingClaim, error: fetchError } = await supabase
+    .from('item_claims')
+    .select('id, quantity')
+    .eq('item_id', itemId)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (fetchError) {
+    return { data: null, error: fetchError };
+  }
+
+  if (existingClaim) {
+    // Update existing claim by adding to the quantity
+    const { data, error } = await supabase
+      .from('item_claims')
+      .update({ quantity: existingClaim.quantity + quantity })
+      .eq('id', existingClaim.id)
+      .select()
+      .single();
+    return { data: data as ItemClaim, error };
+  }
+
+  // Otherwise, insert a new claim
   const { data, error } = await supabase
     .from('item_claims')
     .insert({
       item_id: itemId,
+      trip_id: tripId,
       user_id: userId,
       quantity,
       is_packed: false,
@@ -218,11 +244,41 @@ export function subscribeToItemClaims(
         event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
         schema: 'public',
         table: 'item_claims',
-        filter: `item_id=in.(select id from items where trip_id='${tripId}')`,
+        filter: `trip_id=eq.${tripId}`,
       },
       callback
     )
     .subscribe();
+}
+
+/**
+ * Updates the sort order for multiple items in a batch.
+ */
+export async function updateItemsSortOrder(
+  supabase: SupabaseClient,
+  items: { id: string; sort_order: number }[]
+): Promise<{ error: PostgrestError | Error | null }> {
+  try {
+    const { error } = await supabase.from('items').upsert(items);
+    return { error };
+  } catch (err) {
+    return { error: err as Error };
+  }
+}
+
+/**
+ * Updates the sort order for multiple claims in a batch.
+ */
+export async function updateClaimsSortOrder(
+  supabase: SupabaseClient,
+  claims: { id: string; sort_order: number }[]
+): Promise<{ error: PostgrestError | Error | null }> {
+  try {
+    const { error } = await supabase.from('item_claims').upsert(claims);
+    return { error };
+  } catch (err) {
+    return { error: err as Error };
+  }
 }
 
 /**

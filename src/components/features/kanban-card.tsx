@@ -5,9 +5,10 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Check, Trash2, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount } from '@/components/ui/avatar';
 import { ItemWithClaims, KanbanColumn } from '@/types/database.types';
 import { BoardViewMode } from '@/types/board.types';
-import { getUserInitials, getUserDisplayName } from '@/lib/utils';
+import { getUserInitials } from '@/lib/utils';
 import { getCategoryIcon } from '@/lib/utils/category-icons';
 
 interface KanbanCardProps {
@@ -38,7 +39,7 @@ export function KanbanCard({
   onDeleteItem,
 }: KanbanCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: item.id,
+    id: `${column}:${item.id}`,
     disabled: isDragDisabled,
   });
 
@@ -48,15 +49,6 @@ export function KanbanCard({
     opacity: isDragging ? 0.5 : 1,
   };
 
-  // Avatar colors
-  const avatarColors = [
-    'bg-[#a8d5a8]',
-    'bg-[#a8c5d8]',
-    'bg-[#d5a8a8]',
-    'bg-[#d5c5a8]',
-    'bg-[#c5a8d5]',
-  ];
-
   // Find user's claim for this item
   const userClaim = currentUserId ? item.claims.find((c) => c.user_id === currentUserId) : null;
 
@@ -65,18 +57,21 @@ export function KanbanCard({
     if (boardViewMode === 'my-view') {
       // My View: Personalized counts
       if (column === 'unassigned') {
-        return item.required_count;
+        // Show remaining portion that ANYONE can claim
+        return Math.max(0, item.required_count - item.total_claimed);
       }
       if (column === 'claimed' || column === 'packed') {
+        // Show exactly what the current user has claimed/packed
         return userClaim?.quantity || 0;
       }
     } else {
       // All Items View: Aggregate counts
       if (column === 'unassigned') {
-        return item.required_count;
+        return Math.max(0, item.required_count - item.total_claimed);
       }
       if (column === 'claimed') {
-        return item.total_claimed;
+        // Show total claimed but not yet packed
+        return Math.max(0, item.total_claimed - item.total_packed);
       }
       if (column === 'packed') {
         return item.total_packed;
@@ -203,27 +198,26 @@ export function KanbanCard({
 
         {/* User avatars (conditional) - right side */}
         {item.claims.length > 0 && !(boardViewMode === 'my-view' && column === 'claimed') && (
-          <div className="flex -space-x-1">
-            {item.claims.slice(0, 3).map((claim, index) => {
+          <AvatarGroup>
+            {item.claims.slice(0, 3).map((claim) => {
               const profile = claim.profiles?.[0] || null;
-              const memberName = getUserDisplayName(profile, claim.user_id);
               const memberInitials = getUserInitials(profile, claim.user_id);
+              const avatarTheme = profile?.avatar_theme;
+
               return (
-                <div
-                  key={claim.id}
-                  className={`${avatarColors[index % avatarColors.length]} h-5 w-5 sm:h-6 sm:w-6 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-medium border border-white`}
-                  title={memberName}
-                >
-                  {memberInitials}
-                </div>
+                <Avatar key={claim.id} size="sm" className="ring-2 ring-white">
+                  <AvatarFallback avatarTheme={avatarTheme} className="text-[10px]">
+                    {memberInitials}
+                  </AvatarFallback>
+                </Avatar>
               );
             })}
             {item.claims.length > 3 && (
-              <div className="bg-stone-200 h-5 w-5 sm:h-6 sm:w-6 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-medium border border-white">
+              <AvatarGroupCount className="h-6 w-6 text-[10px] ring-2 ring-white">
                 +{item.claims.length - 3}
-              </div>
+              </AvatarGroupCount>
             )}
-          </div>
+          </AvatarGroup>
         )}
       </div>
 

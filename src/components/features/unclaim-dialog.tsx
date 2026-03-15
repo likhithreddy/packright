@@ -104,6 +104,7 @@ export function UnclaimDialog({
                       placeholder="Enter quantity"
                       className="text-center text-lg h-12"
                       {...field}
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       min={1}
                       max={claimedQuantity}
                     />

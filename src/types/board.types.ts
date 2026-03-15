@@ -13,6 +13,12 @@ export interface BoardState {
   viewMode: ViewMode;
   boardViewMode: BoardViewMode;
   isAdmin: boolean;
+  readinessPercentage: number | null;
+  currentUserProfile: {
+    full_name: string | null;
+    username: string | null;
+    avatar_theme: string | null;
+  } | null;
 }
 
 export interface BoardActions {
@@ -20,6 +26,7 @@ export interface BoardActions {
   setItems: (items: ItemWithClaims[]) => void;
   moveItem: (itemId: string, fromColumn: KanbanColumn, toColumn: KanbanColumn) => void;
   reorderItem: (itemId: string, column: KanbanColumn, newIndex: number) => void;
+  persistReorder: (column: KanbanColumn) => Promise<void>;
   claimItem: (itemId: string, quantity: number) => Promise<void>;
   markAsPacked: (claimId: string) => Promise<void>;
   markAsNotPacked: (claimId: string) => Promise<void>;
@@ -27,6 +34,13 @@ export interface BoardActions {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   setCurrentUserId: (userId: string) => void;
+  setCurrentUserProfile: (
+    profile: {
+      full_name: string | null;
+      username: string | null;
+      avatar_theme: string | null;
+    } | null
+  ) => void;
   setViewMode: (mode: ViewMode) => void;
   setBoardViewMode: (mode: BoardViewMode) => void;
   setIsAdmin: (isAdmin: boolean) => void;

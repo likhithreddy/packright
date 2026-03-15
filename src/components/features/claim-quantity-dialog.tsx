@@ -48,6 +48,11 @@ export function ClaimQuantityDialog({
     },
   });
 
+  // Update form values when remainingNeeded changes (for different items)
+  React.useEffect(() => {
+    form.reset({ quantity: remainingNeeded });
+  }, [remainingNeeded, form]);
+
   const handleSubmit = (values: ClaimQuantityFormValues) => {
     onConfirm(values.quantity);
     onOpenChange(false);
@@ -86,6 +91,7 @@ export function ClaimQuantityDialog({
                       placeholder="Enter quantity"
                       className="text-center text-lg h-12"
                       {...field}
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       min={1}
                       max={remainingNeeded}
                     />

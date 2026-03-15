@@ -1,4 +1,4 @@
-import { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient, PostgrestError } from '@supabase/supabase-js';
 import { getTripItems, claimItem, updateClaim, removeClaim } from '@/lib/supabase/items';
 
 describe('items lib functions', () => {
@@ -10,6 +10,7 @@ describe('items lib functions', () => {
   const mockUpdate = jest.fn();
   const mockDelete = jest.fn();
   const mockSingle = jest.fn();
+  const mockMaybeSingle = jest.fn();
   const mockOrder = jest.fn();
   const mockSelectForUpdate = jest.fn();
   const mockEqForUpdate = jest.fn();
@@ -30,19 +31,24 @@ describe('items lib functions', () => {
     // First call: .from('items').select().eq().order() - items query
     // Second call: .from('item_claims').select().in() - claims query
 
-    // mockEq always returns object with order
+    // mockEq returns object that supports chaining and maybeSingle
     mockEq.mockReturnValue({
+      eq: mockEq,
+      maybeSingle: mockMaybeSingle,
+      single: mockSingle,
       order: mockOrder,
     });
 
     // mockIn returns promise with data (for claims query)
     mockIn.mockResolvedValue({ data: [], error: null });
 
-    // mockSelect returns object with eq, in, order
+    // mockSelect returns object with eq, in, order, maybeSingle
     mockSelect.mockReturnValue({
       eq: mockEq,
       in: mockIn,
       order: mockOrder,
+      maybeSingle: mockMaybeSingle,
+      single: mockSingle,
     });
 
     // Setup from() chain
@@ -113,6 +119,7 @@ describe('items lib functions', () => {
       const result = await getTripItems(mockSupabase, 'trip-1');
 
       expect(result.error).toBeNull();
+      expect(mockOrder).toHaveBeenCalledWith('sort_order', { ascending: true });
       expect(result.data).toHaveLength(1);
       expect(result.data?.[0]).toMatchObject({
         id: 'item-1',
@@ -194,7 +201,7 @@ describe('items lib functions', () => {
     });
 
     it('handles database errors gracefully', async () => {
-      const mockError = { code: 'P0001', message: 'Database error' };
+      const mockError = { code: 'P0001', message: 'Database error' } as PostgrestError;
       mockOrder.mockResolvedValueOnce({ data: null, error: mockError });
 
       const result = await getTripItems(mockSupabase, 'trip-1');
@@ -216,12 +223,16 @@ describe('items lib functions', () => {
 
   describe('claimItem', () => {
     beforeEach(() => {
-      // Setup insert().select().single() chain
+      // Finalize the chain for claimItem
+      mockMaybeSingle.mockResolvedValue({ data: null, error: null });
       mockInsert.mockReturnValue({
         select: mockSelect.mockReturnThis(),
       });
       mockSelect.mockReturnValue({
+        eq: mockEq.mockReturnThis(),
+        maybeSingle: mockMaybeSingle,
         single: mockSingle,
+        select: mockSelect.mockReturnThis(),
       });
     });
 
@@ -229,6 +240,7 @@ describe('items lib functions', () => {
       const mockClaim = {
         id: 'claim-1',
         item_id: 'item-1',
+        trip_id: 'trip-1',
         user_id: 'user-1',
         quantity: 2,
         is_packed: false,
@@ -237,12 +249,13 @@ describe('items lib functions', () => {
 
       mockSingle.mockResolvedValue({ data: mockClaim, error: null });
 
-      const result = await claimItem(mockSupabase, 'item-1', 'user-1', 2);
+      const result = await claimItem(mockSupabase, 'item-1', 'trip-1', 'user-1', 2);
 
       expect(result.error).toBeNull();
       expect(result.data).toEqual(mockClaim);
       expect(mockInsert).toHaveBeenCalledWith({
         item_id: 'item-1',
+        trip_id: 'trip-1',
         user_id: 'user-1',
         quantity: 2,
         is_packed: false,
@@ -250,10 +263,10 @@ describe('items lib functions', () => {
     });
 
     it('handles claim creation errors', async () => {
-      const mockError = { code: 'P0001', message: 'Claim already exists' };
+      const mockError = { code: 'P0001', message: 'Claim already exists' } as PostgrestError;
       mockSingle.mockResolvedValue({ data: null, error: mockError });
 
-      const result = await claimItem(mockSupabase, 'item-1', 'user-1', 2);
+      const result = await claimItem(mockSupabase, 'item-1', 'trip-1', 'user-1', 2);
 
       expect(result.data).toBeNull();
       expect(result.error).toEqual(mockError);

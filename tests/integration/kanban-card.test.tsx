@@ -44,17 +44,6 @@ jest.mock('../../src/components/ui/button', () => ({
   ),
 }));
 
-// Mock utils
-/* eslint-disable @typescript-eslint/no-explicit-any */
-jest.mock('../../src/lib/utils', () => ({
-  getUserDisplayName: (profile: any, userId: string) =>
-    profile?.full_name || profile?.username || userId,
-  getUserInitials: (profile: any, userId: string) => {
-    const name = profile?.full_name || profile?.username || userId;
-    return name.substring(0, 2).toUpperCase();
-  },
-}));
-
 // Mock category icons
 jest.mock('../../src/lib/utils/category-icons', () => ({
   getCategoryIcon: () => {
@@ -63,7 +52,6 @@ jest.mock('../../src/lib/utils/category-icons', () => ({
     };
   },
 }));
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 describe('KanbanCard Integration', () => {
   const createMockItem = (overrides?: Partial<ItemWithClaims>): ItemWithClaims => ({
@@ -396,7 +384,7 @@ describe('KanbanCard Integration', () => {
         boardViewMode: 'all-items-view',
       });
 
-      expect(container.querySelector('.-space-x-1')).toBeInTheDocument();
+      expect(container.querySelector('.-space-x-2')).toBeInTheDocument();
     });
   });
 

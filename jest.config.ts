@@ -10,6 +10,8 @@ const createJestConfig = nextJest({
 const config: Config = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testEnvironment: 'jest-environment-jsdom',
+  maxWorkers: 1, // Reduce parallel workers for memory-intensive tests
+  testTimeout: 10000, // Increase timeout for complex tests
   coverageThreshold: {
     global: {
       branches: 80,
@@ -19,6 +21,20 @@ const config: Config = {
     },
   },
   testPathIgnorePatterns: ['<rootDir>/tests/e2e/'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
+  reporters: [
+    'default',
+    [
+      'jest-html-reporters',
+      {
+        publicPath: './test-report',
+        filename: 'index.html',
+        expand: true,
+      },
+    ],
+  ],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

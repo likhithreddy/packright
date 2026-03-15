@@ -26,6 +26,8 @@ interface KanbanBoardProps {
   onEditItem: (itemId: string) => void;
   onDeleteItem: (itemId: string) => void;
   onMoveItem: (itemId: string, fromColumn: KanbanColumn, toColumn: KanbanColumn) => void;
+  onReorderItem: (itemId: string, column: KanbanColumn, newIndex: number) => void;
+  onPersistReorder: (column: KanbanColumn) => Promise<void>;
 }
 
 export function KanbanBoard({
@@ -39,6 +41,8 @@ export function KanbanBoard({
   onEditItem,
   onDeleteItem,
   onMoveItem,
+  onReorderItem,
+  onPersistReorder,
 }: KanbanBoardProps) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
   const [activeColumn, setActiveColumn] = React.useState<KanbanColumn | null>(null);
@@ -53,8 +57,23 @@ export function KanbanBoard({
     })
   );
 
-  // Find which column an item belongs to
-  const findColumnOfItem = (itemId: string): KanbanColumn | null => {
+  // Find which column an item belongs to (used for sortable helper)
+  const parseCompositeId = (
+    compositeId: string
+  ): { column: KanbanColumn; itemId: string } | null => {
+    if (!compositeId.includes(':')) return null;
+    const [column, itemId] = compositeId.split(':');
+    return { column: column as KanbanColumn, itemId };
+  };
+
+  // Find column of an item by searching all columns (legacy fallback or for overId items)
+  const findColumnOfItem = (itemId: string | null): KanbanColumn | null => {
+    if (!itemId) return null;
+    // If it's a composite ID, parse it directly
+    if (itemId.includes(':')) {
+      return itemId.split(':')[0] as KanbanColumn;
+    }
+    // Otherwise search
     for (const [column, itemIds] of Object.entries(columns)) {
       if (itemIds.includes(itemId)) {
         return column as KanbanColumn;
@@ -65,8 +84,13 @@ export function KanbanBoard({
 
   // Get items for a specific column
   const getItemsForColumn = (column: KanbanColumn): ItemWithClaims[] => {
-    const itemIds = columns[column];
-    return items.filter((item) => itemIds.includes(item.id));
+    const itemIdsInColumn = columns[column];
+    if (!itemIdsInColumn) {
+      return []; // Safety check
+    }
+    return itemIdsInColumn
+      .map((itemId) => items.find((item) => item.id === itemId))
+      .filter((item): item is ItemWithClaims => item !== undefined);
   };
 
   // In "my-view", Unassigned column is not draggable (items are not draggable there)
@@ -77,8 +101,9 @@ export function KanbanBoard({
   // Handle drag start
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
-    setActiveId(active.id as string);
-    setActiveColumn(findColumnOfItem(active.id as string));
+    const activeId = active.id as string;
+    setActiveId(activeId);
+    setActiveColumn(findColumnOfItem(activeId));
   };
 
   // Handle drag end
@@ -89,11 +114,16 @@ export function KanbanBoard({
 
     if (!over) return;
 
-    const activeId = active.id as string;
+    const activeCompositeId = active.id as string;
     const overId = over.id as string;
 
-    const sourceColumn = findColumnOfItem(activeId);
-    const targetColumn = findColumnOfItem(overId);
+    const activeInfo = parseCompositeId(activeCompositeId);
+    if (!activeInfo) return;
+
+    const { itemId: activeId, column: sourceColumn } = activeInfo;
+
+    // If overId is a column ID, use it directly. Otherwise, find the column of the item.
+    const targetColumn = overId in columns ? (overId as KanbanColumn) : findColumnOfItem(overId);
 
     if (!sourceColumn || !targetColumn) return;
 
@@ -104,16 +134,39 @@ export function KanbanBoard({
 
     // Moving within the same column (reordering)
     if (sourceColumn === targetColumn) {
-      // ISSUE-#46: Implement vertical reordering if needed
+      // Only reorder if we dropped over an item, not the column itself
+      if (!(overId in columns)) {
+        const columnItems = columns[sourceColumn];
+        const oldIndex = columnItems.indexOf(activeId);
+
+        // Parse overItemId if it's composite
+        const overInfo = parseCompositeId(overId);
+        const targetItemId = overInfo ? overInfo.itemId : overId;
+        const newIndex = columnItems.indexOf(targetItemId);
+
+        if (oldIndex !== newIndex && newIndex !== -1) {
+          onReorderItem(activeId, sourceColumn, newIndex);
+          onPersistReorder(sourceColumn);
+        }
+      }
       return;
     }
 
     // Moving between columns
+    if (sourceColumn === 'unassigned' && targetColumn === 'claimed') {
+      // Intercept: trigger claim dialog instead of direct move
+      onClaim(activeId);
+      return;
+    }
+
     onMoveItem(activeId, sourceColumn, targetColumn);
   };
 
   // Get the active item for the drag overlay
-  const activeItem = activeId ? items.find((item) => item.id === activeId) : null;
+  const activeItemInfo = activeId ? parseCompositeId(activeId) : null;
+  const activeItem = activeItemInfo
+    ? items.find((item) => item.id === activeItemInfo.itemId)
+    : null;
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
