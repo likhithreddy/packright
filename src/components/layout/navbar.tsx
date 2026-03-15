@@ -15,7 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { UserCircle, Settings, LogOut } from 'lucide-react';
+import { UserCircle, Settings, BookOpen, LogOut } from 'lucide-react';
 
 interface NavbarProps {
   profile: Profile;
@@ -99,6 +99,12 @@ export default function Navbar({ profile }: NavbarProps) {
             <Link href="/dashboard/settings" className="cursor-pointer">
               <Settings className="mr-2 h-4 w-4" />
               <span>Account Settings</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/docs" className="cursor-pointer" target="_blank" rel="noopener noreferrer">
+              <BookOpen className="mr-2 h-4 w-4" />
+              <span>API Documentation</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />

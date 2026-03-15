@@ -1,0 +1,231 @@
+openapi: 3.0.3
+info:
+  title: PackRight API
+  version: 1.0.0
+  description: API for collaborative trip packing application
+  contact:
+    name: PackRight
+    url: https://github.com/likhithreddy/packright
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+  - url: https://{your-domain}.vercel.app
+    description: Production server
+
+tags:
+  - name: AI Generation
+    description: AI-powered packing list generation
+
+paths:
+  /api/generate-list:
+    post:
+      summary: Generate AI-powered packing list
+      description: |
+        Generates a structured packing list based on trip metadata using GroqAPI's
+        llama-3.1-70b-versatile model. The response is validated and can be
+        directly persisted to the database.
+      operationId: generatePackingList
+      tags:
+        - AI Generation
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateListRequest'
+            examples:
+              hikingTrip:
+                summary: Hiking trip in Yosemite
+                value:
+                  description: '7 days hiking in Yosemite in October. Expect cold nights and rain.'
+                  tripId: '550e8400-e29b-41d4-a716-446655440000'
+              beachVacation:
+                summary: Beach vacation in Hawaii
+                value:
+                  description: '5 days at the beach in Hawaii. Swimming, snorkeling, and hiking.'
+                  tripId: '550e8400-e29b-41d4-a716-446655440001'
+      responses:
+        '200':
+          description: Successfully generated packing list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateListResponse'
+              examples:
+                hikingTrip:
+                  summary: Hiking trip packing list
+                  value:
+                    items:
+                      - name: 'Hiking Boots'
+                        category: 'Footwear'
+                        quantity: 1
+                      - name: 'Rain Jacket'
+                        category: 'Clothing'
+                        quantity: 1
+                      - name: 'First Aid Kit'
+                        category: 'First Aid'
+                        quantity: 1
+        '400':
+          description: Bad Request - Invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                missingDescription:
+                  summary: Missing description
+                  value:
+                    error: 'Missing required field: description'
+                invalidTripId:
+                  summary: Invalid trip ID format
+                  value:
+                    error: 'Invalid trip ID format. Expected UUID.'
+                descriptionTooShort:
+                  summary: Description too short
+                  value:
+                    error: 'Description must be at least 10 characters long.'
+        '401':
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Authentication required. Please log in.'
+        '429':
+          description: Too Many Requests - Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Rate limit exceeded. Please try again later.'
+                retryAfter: 60
+        '500':
+          description: Internal Server Error - AI service failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Failed to generate packing list. Please try again.'
+      x-rateLimit:
+        requests: 10
+        period: 1 minute
+      x-codeSamples:
+        - lang: JavaScript
+          label: Fetch API
+          source: |
+            const response = await fetch('/api/generate-list', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                description: '7 days hiking in Yosemite',
+                tripId: '550e8400-e29b-41d4-a716-446655440000'
+              })
+            })
+            const data = await response.json()
+        - lang: TypeScript
+          label: TypeScript with Supabase
+          source: |
+            import { createClient } from '@supabase/supabase-js'
+
+            const supabase = createClient(url, key)
+            const { data, error } = await supabase.functions.invoke('generate-list', {
+              body: {
+                description: '7 days hiking in Yosemite',
+                tripId: '550e8400-e29b-41d4-a716-446655440000'
+              }
+            })
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase Auth JWT token from session
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: Machine-readable error code
+          example: 'VALIDATION_ERROR'
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+
+    GenerateListRequest:
+      type: object
+      required:
+        - description
+        - tripId
+      properties:
+        description:
+          type: string
+          description: Natural language description of the trip
+          example: '7 days hiking in Yosemite in October. Expect cold nights and rain.'
+          minLength: 10
+          maxLength: 1000
+        tripId:
+          type: string
+          format: uuid
+          description: Unique identifier for the trip
+          example: '550e8400-e29b-41d4-a716-446655440000'
+      additionalProperties: false
+
+    PackingItem:
+      type: object
+      required:
+        - name
+        - category
+        - quantity
+      properties:
+        name:
+          type: string
+          description: Name of the item
+          example: 'Hiking Boots'
+        category:
+          type: string
+          description: Category the item belongs to
+          example: 'Footwear'
+          enum:
+            - Clothing
+            - Footwear
+            - Toiletries
+            - Gear
+            - Documents
+            - Electronics
+            - First Aid
+            - Food
+            - Other
+        quantity:
+          type: integer
+          description: Required quantity of this item
+          minimum: 1
+          example: 1
+
+    GenerateListResponse:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          description: Array of packing items with categories and quantities
+          items:
+            $ref: '#/components/schemas/PackingItem'
