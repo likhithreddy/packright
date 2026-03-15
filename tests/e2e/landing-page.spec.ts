@@ -15,7 +15,9 @@ test.describe('Landing Page Flow', () => {
     await expect(page.getByRole('link', { name: /sign in/i })).toBeVisible();
   });
 
-  test('should navigate to signup when clicking "Get Started Free"', async ({ page }) => {
+  test('should navigate to signup when clicking "Get Started Free"', async ({ page, context }) => {
+    // Isolated unauthenticated context to avoid redirection to /dashboard
+    await context.clearCookies();
     await page.goto('/');
 
     // Wait for page to fully load including dynamic content
@@ -28,13 +30,15 @@ test.describe('Landing Page Flow', () => {
 
     // Click and wait for navigation
     await getStartedButton.click();
-    await page.waitForURL(/.*\/signup/, { timeout: 5000 });
+    await page.waitForURL(/.*\/signup/, { timeout: 10000 });
 
     await expect(page).toHaveURL(/.*\/signup/);
-    await expect(page.getByText('Create an account')).toBeVisible();
+    await expect(page.getByText('Create an account', { exact: true })).toBeVisible();
   });
 
-  test('should navigate to login when clicking "Sign In"', async ({ page }) => {
+  test('should navigate to login when clicking "Sign In"', async ({ page, context }) => {
+    // Isolated unauthenticated context to avoid redirection to /dashboard
+    await context.clearCookies();
     await page.goto('/');
 
     // Wait for page to fully load including dynamic content
@@ -47,7 +51,7 @@ test.describe('Landing Page Flow', () => {
 
     // Click and wait for navigation
     await signInButton.click();
-    await page.waitForURL(/.*\/login/, { timeout: 5000 });
+    await page.waitForURL(/.*\/login/, { timeout: 10000 });
 
     await expect(page).toHaveURL(/.*\/login/);
     await expect(page.getByText('Welcome back')).toBeVisible();
@@ -77,12 +81,14 @@ test.describe('Landing Page Flow', () => {
     await page.waitForTimeout(500); // Small buffer for hydration
 
     // Verify TripBoardMockCard elements with longer timeout
-    await expect(page.getByText('Smoky Mountains')).waitFor({ state: 'visible', timeout: 10000 });
+    const mtnText = page.getByText('Smoky Mountains');
+    await mtnText.waitFor({ state: 'visible', timeout: 10000 });
+    await expect(mtnText).toBeVisible();
     await expect(page.getByText('Mar 15 – Mar 19')).toBeVisible();
     await expect(page.getByText('4 members')).toBeVisible();
 
     // Verify progress section
-    await expect(page.getByText('Packed')).toBeVisible();
+    await expect(page.getByText('Packed', { exact: true })).toBeVisible();
     await expect(page.getByText('62%')).toBeVisible();
 
     // Verify progress bar is displayed

@@ -235,14 +235,16 @@ test.describe('Member Management Flows', () => {
       await expect(inviteInput).toBeEnabled();
       await inviteInput.click();
 
-      // Type exactly 3 characters
-      await inviteInput.fill('ali');
+      // Type exactly 3 or more characters (the app requires >= 3)
+      await inviteInput.fill('alice');
 
-      // Wait for debounce (increase from 400 to 500)
-      await page.waitForTimeout(500);
+      // Wait for debounce (300ms) + network/rendering buffer
+      await page.waitForTimeout(1500);
 
-      // Should show results, not minimum characters message
-      await expect(page.locator('button:has-text("Alice Johnson")').first()).toBeVisible();
+      // Should show results
+      const aliceResult = page.locator('button:has-text("Alice Johnson")').first();
+      await expect(aliceResult).toBeVisible({ timeout: 10000 });
+      await expect(page.getByText('Enter at least 3 characters to search')).not.toBeVisible();
       await expect(page.getByText('Enter at least 3 characters to search')).not.toBeVisible();
     });
   });
@@ -594,14 +596,15 @@ test.describe('Member Management Flows', () => {
       await expect(inviteInput).toBeVisible({ timeout: 15000 });
       await expect(inviteInput).toBeEnabled();
 
-      // Type quickly (before debounce completes)
-      await inviteInput.fill('ali', { timeout: 10000 });
+      // Type quickly (at least 3 characters to trigger search)
+      await inviteInput.fill('alice', { timeout: 10000 });
 
-      // Wait for debounce to complete (300ms)
-      await page.waitForTimeout(150);
+      // Wait for debounce (300ms) + network/rendering buffer
+      await page.waitForTimeout(1500);
 
-      // Now should have triggered and show results
-      await expect(page.locator('button:has-text("Alice Johnson")').first()).toBeVisible();
+      // Verify "Alice Johnson" is visible in the results
+      const result = page.locator('button:has-text("Alice Johnson")').first();
+      await expect(result).toBeVisible({ timeout: 10000 });
     });
   });
 

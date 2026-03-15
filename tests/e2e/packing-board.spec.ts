@@ -40,11 +40,14 @@ test.describe('Packing Board E2E Flow', () => {
     }
 
     // Check for stats
-    const stats = page.locator('text=ITEMS');
-    const hasStats = (await stats.count()) > 0;
+    const statsContainer = page
+      .locator('div')
+      .filter({ hasText: /^0 ITEMS$/ })
+      .first();
+    const hasStats = (await statsContainer.count()) > 0;
 
     if (hasStats) {
-      await expect(stats).toBeVisible();
+      await expect(statsContainer).toBeVisible();
     }
   });
 
