@@ -12,16 +12,6 @@
   resolved "https://registry.yarnpkg.com/@alloc/quick-lru/-/quick-lru-5.2.0.tgz#7bf68b20c0a350f936915fcae06f58e32007ce30"
   integrity sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==
 
-"@antfu/ni@^25.0.0":
-  version "25.0.0"
-  resolved "https://registry.yarnpkg.com/@antfu/ni/-/ni-25.0.0.tgz#2bf6834237e848a994b07fc311acad8d5da179a6"
-  integrity sha512-9q/yCljni37pkMr4sPrI3G4jqdIk074+iukc5aFJl7kmDCCsiJrbZ6zKxnES1Gwg+i9RcDZwvktl23puGslmvA==
-  dependencies:
-    ansis "^4.0.0"
-    fzf "^0.5.2"
-    package-manager-detector "^1.3.0"
-    tinyexec "^1.0.1"
-
 "@asamuzakjp/css-color@^3.2.0":
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@asamuzakjp/css-color/-/css-color-3.2.0.tgz#cc42f5b85c593f79f1fa4f25d2b9b321e61d1794"
@@ -2710,11 +2700,6 @@ ansi-styles@^6.1.0:
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-6.2.3.tgz#c044d5dcc521a076413472597a1acb1f103c4041"
   integrity sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==
 
-ansis@^4.0.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/ansis/-/ansis-4.2.0.tgz#2e6e61c46b11726ac67f78785385618b9e658780"
-  integrity sha512-HqZ5rWlFjGiV0tDm3UxxgNRqsOTniqoKZu0pIAfh7TZQMGuZK+hH0drySty0si0QXj1ieop4+SkSfPZBPPkHig==
-
 anymatch@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-3.1.3.tgz#790c58b19ba1720a84205b57c618d5ad8524973e"
@@ -4561,11 +4546,6 @@ fuzzysort@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/fuzzysort/-/fuzzysort-3.1.0.tgz#4d7832d8fa48ad381753eaa7a7aae9927bdc10a8"
   integrity sha512-sR9BNCjBg6LNgwvxlBd0sBABvQitkLzoVY9MYYROQVX/FvfJ4Mai9LsGhDgd8qYdds0bY77VzYd5iuB+v5rwQQ==
-
-fzf@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/fzf/-/fzf-0.5.2.tgz#a0561b12082c3401b4240cfb7d76085d7aeb68ff"
-  integrity sha512-Tt4kuxLXFKHy8KT40zwsUPUkg1CrsgY25FxA2U/j/0WgEDCk3ddc/zLTCCcbSHX9FcKtLuVaDGtGE/STWC+j3Q==
 
 generator-function@^2.0.0:
   version "2.0.1"
@@ -6570,11 +6550,6 @@ package-json-from-dist@^1.0.0:
   resolved "https://registry.yarnpkg.com/package-json-from-dist/-/package-json-from-dist-1.0.1.tgz#4f1471a010827a86f94cfd9b0727e36d267de505"
   integrity sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==
 
-package-manager-detector@^1.3.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/package-manager-detector/-/package-manager-detector-1.6.0.tgz#70d0cf0aa02c877eeaf66c4d984ede0be9130734"
-  integrity sha512-61A5ThoTiDG/C8s8UMZwSorAGwMJ0ERVGj2OjoW5pAalsNOg15+iQiPzrLJ4jhZ1HJzmC2PIHT2oEiH3R5fzNA==
-
 parent-module@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/parent-module/-/parent-module-1.0.1.tgz#691d2709e78c79fae3a156622452d00762caaaa2"
@@ -7275,12 +7250,11 @@ setprototypeof@~1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
-shadcn@^4.0.0:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/shadcn/-/shadcn-4.0.2.tgz#ebfb2059b19bf383491442675ed2ee66cd0938e9"
-  integrity sha512-U6BxywcVt5Vy+iLdjoyWTPcuz2RQNad09tjJsW8hyKtxlx7VAvzHIvoNxvXN+gxWt/HX8kt/cVNk8AXcmPUaNQ==
+shadcn@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/shadcn/-/shadcn-4.0.8.tgz#174cf55eb8e058fbc02da682dfcf636e58114dc6"
+  integrity sha512-DVAyeo95TQ/OvaHugLm5V0Dqz3al+dnoP3mZdWWxKJ33IYG1jN5B3sGZyNaYsfzm7JsWokfksSzDl83LnmMing==
   dependencies:
-    "@antfu/ni" "^25.0.0"
     "@babel/core" "^7.28.0"
     "@babel/parser" "^7.28.0"
     "@babel/plugin-transform-typescript" "^7.28.0"
@@ -7854,11 +7828,6 @@ tiny-invariant@^1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.3.3.tgz#46680b7a873a0d5d10005995eb90a70d74d60127"
   integrity sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==
-
-tinyexec@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/tinyexec/-/tinyexec-1.0.2.tgz#bdd2737fe2ba40bd6f918ae26642f264b99ca251"
-  integrity sha512-W/KYk+NFhkmsYpuHq5JykngiOCnxeVL8v8dFnqxSD8qEEdRfXk1SDM6JzNqcERbcGYj9tMrDQBYV9cjgnunFIg==
 
 tinyglobby@^0.2.13, tinyglobby@^0.2.15:
   version "0.2.15"
