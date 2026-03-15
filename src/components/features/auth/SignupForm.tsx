@@ -156,10 +156,10 @@ export function SignupForm() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 sm:space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-5">
             {/* Username */}
             <FormField
               control={form.control}
@@ -173,7 +173,7 @@ export function SignupForm() {
                     <Input
                       placeholder="alex_t"
                       {...field}
-                      className="h-12 bg-background border-border"
+                      className="h-9 text-[13px] sm:text-base sm:h-12 bg-background border-border"
                     />
                   </FormControl>
                   <FormMessage />
@@ -195,7 +195,7 @@ export function SignupForm() {
                       type="email"
                       placeholder="name@example.com"
                       {...field}
-                      className="h-12 bg-background border-border"
+                      className="h-9 text-[13px] sm:text-base sm:h-12 bg-background border-border"
                     />
                   </FormControl>
                   <FormMessage />
@@ -204,7 +204,7 @@ export function SignupForm() {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-5">
             {/* Password */}
             <FormField
               control={form.control}
@@ -220,7 +220,7 @@ export function SignupForm() {
                         type={showPassword ? 'text' : 'password'}
                         placeholder="••••••••••••"
                         {...field}
-                        className="h-12 bg-background border-border pr-10"
+                        className="h-9 text-[13px] sm:text-base sm:h-12 bg-background border-border pr-10"
                       />
                     </FormControl>
                     <button
@@ -251,7 +251,7 @@ export function SignupForm() {
                         type={showConfirmPassword ? 'text' : 'password'}
                         placeholder="••••••••••••"
                         {...field}
-                        className="h-12 bg-background border-border pr-10"
+                        className="h-9 text-[13px] sm:text-base sm:h-12 bg-background border-border pr-10"
                       />
                     </FormControl>
                     <button
@@ -273,7 +273,7 @@ export function SignupForm() {
           </div>
 
           {/* Visual Password Requirements */}
-          <div className="flex flex-col space-y-1.5 mt-2 p-3 bg-secondary/30 rounded-lg border border-border/50">
+          <div className="flex flex-col space-y-1 mt-1 p-2 bg-secondary/30 rounded-lg border border-border/50">
             {passwordReqs.map((rule, idx) => (
               <div
                 key={idx}
@@ -293,7 +293,7 @@ export function SignupForm() {
 
           <Button
             type="submit"
-            className="w-full h-12 text-base font-semibold mt-4 shadow-md hidden sm:flex"
+            className="w-full h-9 sm:h-12 text-[13px] sm:text-base font-semibold mt-2 sm:mt-4 shadow-md hidden sm:flex"
             disabled={isLoading}
           >
             {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
@@ -301,7 +301,7 @@ export function SignupForm() {
           </Button>
           <Button
             type="submit"
-            className="w-full h-12 text-base font-semibold mt-4 shadow-md sm:hidden"
+            className="w-full h-9 sm:h-12 text-[13px] sm:text-base font-semibold mt-2 sm:mt-4 shadow-md sm:hidden"
             disabled={isLoading}
           >
             {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
@@ -321,7 +321,7 @@ export function SignupForm() {
 
       <Button
         variant="outline"
-        className="w-full h-12 font-medium bg-background border-border/80 hover:bg-secondary/50"
+        className="w-full h-9 sm:h-12 text-[13px] sm:text-base font-medium bg-background border-border/80 hover:bg-secondary/50"
         onClick={handleGoogleSignup}
         disabled={isLoading}
       >

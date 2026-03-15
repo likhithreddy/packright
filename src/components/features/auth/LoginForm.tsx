@@ -90,9 +90,9 @@ export function LoginForm() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-5">
           {/* Email */}
           <FormField
             control={form.control}
@@ -106,8 +106,8 @@ export function LoginForm() {
                   <Input
                     type="email"
                     placeholder="name@example.com"
+                    className="h-9 text-[13px] sm:text-base sm:h-12 bg-background border-border"
                     {...field}
-                    className="h-12 bg-background border-border"
                   />
                 </FormControl>
                 <FormMessage />
@@ -136,9 +136,9 @@ export function LoginForm() {
                   <FormControl>
                     <Input
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="••••••••••••"
+                      placeholder="••••••••"
+                      className="h-9 text-[13px] sm:text-base sm:h-12 bg-background border-border pr-10"
                       {...field}
-                      className="h-12 bg-background border-border pr-10"
                     />
                   </FormControl>
                   <button
@@ -156,8 +156,8 @@ export function LoginForm() {
 
           <Button
             type="submit"
-            className="w-full h-12 text-base font-semibold mt-4 shadow-md"
             disabled={isLoading}
+            className="w-full h-9 sm:h-12 text-[13px] sm:text-base font-semibold mt-2 sm:mt-4 shadow-md"
           >
             {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
             Sign In
@@ -176,9 +176,9 @@ export function LoginForm() {
 
       <Button
         variant="outline"
-        className="w-full h-12 font-medium bg-background border-border/80 hover:bg-secondary/50"
         onClick={handleGoogleLogin}
         disabled={isLoading}
+        className="w-full h-9 sm:h-12 text-[13px] sm:text-base font-medium bg-background border-border/80 hover:bg-secondary/50"
       >
         <svg
           className="w-5 h-5 mr-3"

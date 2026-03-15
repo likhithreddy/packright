@@ -10,7 +10,7 @@ export function ViewToggle() {
   const { viewMode, setViewMode } = useBoardStore();
 
   return (
-    <div className="hidden md:flex items-center bg-stone-100 rounded-full p-1">
+    <div className="flex items-center bg-stone-100 rounded-full p-1">
       <Button
         variant="ghost"
         size="sm"
@@ -22,8 +22,8 @@ export function ViewToggle() {
             : 'text-stone-500 hover:text-stone-700 hover:bg-white/50'
         )}
       >
-        <LayoutGrid className="h-3.5 w-3.5 mr-1.5" />
-        <span>Kanban</span>
+        <LayoutGrid className="h-3.5 w-3.5 sm:mr-1.5" />
+        <span className="hidden sm:inline">Kanban</span>
       </Button>
       <Button
         variant="ghost"
@@ -36,8 +36,8 @@ export function ViewToggle() {
             : 'text-stone-500 hover:text-stone-700 hover:bg-white/50'
         )}
       >
-        <List className="h-3.5 w-3.5 mr-1.5" />
-        <span>List</span>
+        <List className="h-3.5 w-3.5 sm:mr-1.5" />
+        <span className="hidden sm:inline">List</span>
       </Button>
     </div>
   );

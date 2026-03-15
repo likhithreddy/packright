@@ -107,7 +107,7 @@ export function KanbanColumn({
   return (
     <div
       ref={setNodeRef}
-      className={`${styles.bg} ${styles.border} border rounded-2xl flex flex-col h-full min-h-[300px] sm:min-h-[400px] transition-colors ${
+      className={`${styles.bg} ${styles.border} border rounded-2xl flex flex-col h-full min-w-[85vw] md:min-w-0 min-h-[300px] sm:min-h-[400px] transition-colors shrink-0 md:shrink snap-center md:snap-align-none ${
         isOver && !isDragDisabled ? 'brightness-95' : ''
       }`}
     >

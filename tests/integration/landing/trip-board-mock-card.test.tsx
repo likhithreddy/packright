@@ -42,12 +42,12 @@ describe('TripBoardMockCard Integration', () => {
   });
 
   describe('visual design', () => {
-    it('has proper card aspect ratio', () => {
+    it('has proper rounding', () => {
       const { container } = render(<TripBoardMockCard />);
 
       const card = container.firstChild as HTMLElement;
-      expect(card).toHaveClass('aspect-[4/3]');
-      expect(card).toHaveClass('rounded-[2rem]');
+      expect(card).toHaveClass('rounded-2xl');
+      expect(card).toHaveClass('sm:rounded-[2rem]');
     });
 
     it('has shadow styling', () => {
@@ -75,11 +75,12 @@ describe('TripBoardMockCard Integration', () => {
       expect(banner).toBeInTheDocument();
     });
 
-    it('has proper height (1/2)', () => {
+    it('has responsive height', () => {
       const { container } = render(<TripBoardMockCard />);
 
-      const banner = container.querySelector('.h-1\\/2');
+      const banner = container.querySelector('.h-1\\/3');
       expect(banner).toBeInTheDocument();
+      expect(banner).toHaveClass('sm:h-1/2');
     });
 
     it('has radial gradient overlay', () => {
@@ -103,18 +104,20 @@ describe('TripBoardMockCard Integration', () => {
 
       const tripName = screen.getByText('Smoky Mountains');
       expect(tripName).toHaveClass('font-serif');
-      expect(tripName).toHaveClass('text-2xl');
+      expect(tripName).toHaveClass('text-lg');
+      expect(tripName).toHaveClass('sm:text-2xl');
       expect(tripName).toHaveClass('font-bold');
     });
 
     it('has proper date/member info layout', () => {
       const { container } = render(<TripBoardMockCard />);
 
-      // Find the parent container with gap-4 (not the nested gap-1.5 containers)
-      const infoContainer = container.querySelector('.gap-4');
+      // Find the parent container with gap-2
+      const infoContainer = container.querySelector('.gap-2');
       expect(infoContainer).toHaveClass('flex');
       expect(infoContainer).toHaveClass('items-center');
-      expect(infoContainer).toHaveClass('gap-4');
+      expect(infoContainer).toHaveClass('gap-2');
+      expect(infoContainer).toHaveClass('sm:gap-4');
     });
 
     it('renders Calendar icon for date', () => {
@@ -145,8 +148,9 @@ describe('TripBoardMockCard Integration', () => {
     it('renders the progress container', () => {
       render(<TripBoardMockCard />);
 
-      const progressBar = screen.getByText('62%').parentElement?.nextElementSibling;
-      expect(progressBar).toHaveClass('h-2');
+      const progressBar = screen.getByText('Packed').parentElement?.nextElementSibling;
+      expect(progressBar).toHaveClass('h-1.5');
+      expect(progressBar).toHaveClass('sm:h-2');
       expect(progressBar).toHaveClass('w-full');
       expect(progressBar).toHaveClass('bg-secondary/50');
       expect(progressBar).toHaveClass('rounded-full');
@@ -166,7 +170,8 @@ describe('TripBoardMockCard Integration', () => {
       render(<TripBoardMockCard />);
 
       const packedLabel = screen.getByText('Packed');
-      expect(packedLabel).toHaveClass('text-xs');
+      expect(packedLabel).toHaveClass('text-[10px]');
+      expect(packedLabel).toHaveClass('sm:text-xs');
       expect(packedLabel).toHaveClass('font-bold');
       expect(packedLabel).toHaveClass('tracking-wider');
       expect(packedLabel).toHaveClass('uppercase');
@@ -176,7 +181,8 @@ describe('TripBoardMockCard Integration', () => {
       render(<TripBoardMockCard />);
 
       const percentage = screen.getByText('62%');
-      expect(percentage).toHaveClass('text-sm');
+      expect(percentage).toHaveClass('text-xs');
+      expect(percentage).toHaveClass('sm:text-sm');
       expect(percentage).toHaveClass('font-semibold');
     });
   });
@@ -193,14 +199,15 @@ describe('TripBoardMockCard Integration', () => {
     it('has proper bottom section padding', () => {
       const { container } = render(<TripBoardMockCard />);
 
-      const bottomSection = container.querySelector('.bg-card');
-      expect(bottomSection).toHaveClass('p-6');
+      const bottomSection = container.querySelectorAll('.bg-card')[1] as HTMLElement;
+      expect(bottomSection).toHaveClass('p-3');
+      expect(bottomSection).toHaveClass('sm:p-6');
     });
 
     it('has justify-between for content and progress', () => {
       const { container } = render(<TripBoardMockCard />);
 
-      const bottomSection = container.querySelector('.bg-card') as HTMLElement;
+      const bottomSection = container.querySelectorAll('.bg-card')[1] as HTMLElement;
       expect(bottomSection).toHaveClass('flex');
       expect(bottomSection).toHaveClass('flex-col');
       expect(bottomSection).toHaveClass('justify-between');
@@ -237,18 +244,12 @@ describe('TripBoardMockCard Integration', () => {
   });
 
   describe('responsive design', () => {
-    it('maintains aspect ratio at all sizes', () => {
+    it('has flex sizing', () => {
       const { container } = render(<TripBoardMockCard />);
 
       const card = container.firstChild as HTMLElement;
-      expect(card).toHaveClass('aspect-[4/3]');
-    });
-
-    it('has max-width constraint', () => {
-      const { container } = render(<TripBoardMockCard />);
-
-      const card = container.firstChild as HTMLElement;
-      expect(card).toHaveClass('max-w-md');
+      expect(card).toHaveClass('w-full');
+      expect(card).toHaveClass('h-full');
     });
   });
 });

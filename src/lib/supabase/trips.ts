@@ -107,8 +107,8 @@ export async function createTrip(
         return {
           trip_id: trip.id,
           name: item.name,
-          required_count: item.quantity,
-          category: item.category,
+          required_count: item.quantity || 1,
+          category: item.category || 'Essentials',
           status: 'needed',
         };
       });

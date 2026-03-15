@@ -107,7 +107,7 @@ describe('AuthLayout', () => {
     );
 
     const layout = container.firstChild as HTMLElement;
-    expect(layout).toHaveClass('h-screen');
+    expect(layout).toHaveClass('h-[100dvh]');
     expect(layout).toHaveClass('w-screen');
   });
 

@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 
 export function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="h-screen w-screen overflow-hidden flex bg-background">
+    <div className="h-[100dvh] w-screen overflow-hidden flex bg-background">
       {/* Left Column: Branding / Information (Hidden on mobile) */}
       <div className="hidden lg:flex flex-col w-1/2 bg-primary/5 border-r border-border/50 relative overflow-hidden">
         {/* Decorative ambient background */}
@@ -36,9 +36,9 @@ export function AuthLayout({ children }: { children: ReactNode }) {
       </div>
 
       {/* Right Column: Auth Forms (Full width on mobile) */}
-      <div className="w-full h-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative overflow-hidden">
+      <div className="w-full h-full lg:w-1/2 flex items-center justify-center p-3 sm:p-6 lg:p-12 relative overflow-hidden">
         {/* Mobile Back Button */}
-        <div className="absolute top-6 left-6 lg:hidden z-20">
+        <div className="absolute top-3 left-3 sm:top-6 sm:left-6 lg:hidden z-20">
           <Link
             href="/"
             className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors bg-background/80 backdrop-blur-sm px-2 py-1 rounded-md"

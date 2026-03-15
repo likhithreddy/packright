@@ -8,13 +8,15 @@ interface FeatureCardProps {
 
 export function FeatureCard({ icon: Icon, title, description }: FeatureCardProps) {
   return (
-    <div className="flex flex-col gap-2 rounded-xl sm:rounded-2xl bg-card p-4 sm:p-5 lg:p-6 shadow-sm border border-border/50 hover:border-border/80 transition-colors">
-      <div className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary">
-        <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+    <div className="flex items-center gap-3 sm:gap-4 rounded-full bg-white/95 backdrop-blur-md p-1.5 sm:p-2 pr-4 sm:pr-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-stone-200/50 hover:border-stone-300 transition-all hover:-translate-y-1">
+      <div className="h-6 w-6 sm:h-10 sm:w-10 flex items-center justify-center rounded-full bg-[#1A231C] text-[#FBFBF9] shrink-0">
+        <Icon className="h-3 w-3 sm:h-5 sm:w-5" />
       </div>
-      <div>
-        <h3 className="text-secondary-foreground font-semibold text-base sm:text-lg">{title}</h3>
-        <p className="text-muted-foreground text-xs sm:text-sm mt-1 leading-relaxed">
+      <div className="flex flex-col justify-center">
+        <h3 className="text-[#1A231C] font-bold text-[10px] sm:text-sm tracking-wide leading-tight">
+          {title}
+        </h3>
+        <p className="hidden sm:block text-stone-500 text-[10px] font-bold uppercase tracking-widest mt-0.5 leading-tight">
           {description}
         </p>
       </div>

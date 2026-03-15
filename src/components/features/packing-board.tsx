@@ -10,6 +10,7 @@ import { EditItemDialog } from './edit-item-dialog';
 import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
 import { UnclaimDialog } from './unclaim-dialog';
 import { useBoardStore } from '@/store/board-store';
+import { AlertTriangle } from 'lucide-react';
 import {
   getTripItems,
   subscribeToItemClaims,
@@ -417,7 +418,7 @@ export function PackingBoard() {
       <div className="flex items-center justify-center h-screen bg-[#FAFAF8]">
         <div className="text-center max-w-md">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl text-red-600">⚠️</span>
+            <AlertTriangle className="size-8 text-red-600" />
           </div>
           <h2 className="font-serif text-xl text-[#2D3A30] mb-2">Failed to Load Board</h2>
           <p className="text-stone-500 mb-4">{error}</p>

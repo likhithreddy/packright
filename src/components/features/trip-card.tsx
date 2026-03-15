@@ -17,7 +17,7 @@ export function TripCard({ trip }: TripCardProps) {
   return (
     <Link
       href={`/dashboard/trips/${trip.id}`}
-      className="block h-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-xl"
+      className="block h-full outline-none focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl"
     >
       <Card className="h-full flex flex-col transition-all duration-200 hover:shadow-md hover:border-primary/20 group cursor-pointer relative overflow-hidden">
         {/* Subtle top border accent for active trips */}

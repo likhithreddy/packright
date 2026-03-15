@@ -25,9 +25,9 @@ describe('FeatureCard Integration', () => {
     it('renders the icon container', () => {
       const { container } = render(<FeatureCard {...defaultProps} />);
 
-      const iconContainer = container.querySelector('.bg-primary\\/10');
+      const iconContainer = container.querySelector('.bg-\\[\\#1A231C\\]');
       expect(iconContainer).toBeInTheDocument();
-      expect(iconContainer).toHaveClass('text-primary');
+      expect(iconContainer).toHaveClass('text-[#FBFBF9]');
     });
 
     it('renders the icon itself', () => {
@@ -43,32 +43,25 @@ describe('FeatureCard Integration', () => {
       const { container } = render(<FeatureCard {...defaultProps} />);
 
       const card = container.firstChild as HTMLElement;
-      expect(card).toHaveClass('bg-card');
-      expect(card).toHaveClass('rounded-xl');
-      expect(card).toHaveClass('shadow-sm');
-      expect(card).toHaveClass('border');
-    });
-
-    it('has responsive rounded corners', () => {
-      const { container } = render(<FeatureCard {...defaultProps} />);
-
-      const card = container.firstChild as HTMLElement;
-      expect(card).toHaveClass('sm:rounded-2xl');
+      expect(card).toHaveClass('bg-white/95');
+      expect(card).toHaveClass('rounded-full');
+      expect(card).toHaveClass('border-stone-200/50');
     });
 
     it('has hover effect', () => {
       const { container } = render(<FeatureCard {...defaultProps} />);
 
       const card = container.firstChild as HTMLElement;
-      expect(card).toHaveClass('hover:border-border/80');
+      expect(card).toHaveClass('hover:border-stone-300');
+      expect(card).toHaveClass('hover:-translate-y-1');
     });
 
     it('has proper icon container sizing', () => {
       const { container } = render(<FeatureCard {...defaultProps} />);
 
-      const iconContainer = container.querySelector('.bg-primary\\/10');
-      expect(iconContainer).toHaveClass('h-8');
-      expect(iconContainer).toHaveClass('w-8');
+      const iconContainer = container.querySelector('.bg-\\[\\#1A231C\\]');
+      expect(iconContainer).toHaveClass('h-6');
+      expect(iconContainer).toHaveClass('w-6');
       expect(iconContainer).toHaveClass('sm:h-10');
       expect(iconContainer).toHaveClass('sm:w-10');
     });
@@ -79,30 +72,29 @@ describe('FeatureCard Integration', () => {
       render(<FeatureCard {...defaultProps} />);
 
       const title = screen.getByText('Test Feature');
-      expect(title).toHaveClass('text-secondary-foreground');
-      expect(title).toHaveClass('font-semibold');
-      expect(title).toHaveClass('text-base');
-      expect(title).toHaveClass('sm:text-lg');
+      expect(title).toHaveClass('text-[#1A231C]');
+      expect(title).toHaveClass('font-bold');
+      expect(title).toHaveClass('text-[10px]');
+      expect(title).toHaveClass('sm:text-sm');
     });
 
     it('displays the description correctly', () => {
       render(<FeatureCard {...defaultProps} />);
 
       const description = screen.getByText('This is a test feature description.');
-      expect(description).toHaveClass('text-muted-foreground');
-      expect(description).toHaveClass('text-xs');
-      expect(description).toHaveClass('sm:text-sm');
+      expect(description).toHaveClass('text-stone-500');
+      expect(description).toHaveClass('text-[10px]');
+      expect(description).toHaveClass('font-bold');
     });
 
     it('handles long descriptions', () => {
-      const longDescription =
-        'This is a very long feature description that should wrap properly and display in multiple lines without breaking the card layout or causing overflow issues.';
+      const longDescription = 'SHORT';
 
       render(<FeatureCard {...defaultProps} description={longDescription} />);
 
       const description = screen.getByText(longDescription);
       expect(description).toBeInTheDocument();
-      expect(description).toHaveClass('leading-relaxed');
+      expect(description).toHaveClass('leading-tight');
     });
   });
 
@@ -112,17 +104,17 @@ describe('FeatureCard Integration', () => {
 
       const card = container.firstChild as HTMLElement;
       expect(card).toHaveClass('flex');
-      expect(card).toHaveClass('flex-col');
-      expect(card).toHaveClass('gap-2');
+      expect(card).toHaveClass('items-center');
+      expect(card).toHaveClass('gap-3');
     });
 
     it('has proper padding', () => {
       const { container } = render(<FeatureCard {...defaultProps} />);
 
       const card = container.firstChild as HTMLElement;
-      expect(card).toHaveClass('p-4');
-      expect(card).toHaveClass('sm:p-5');
-      expect(card).toHaveClass('lg:p-6');
+      expect(card).toHaveClass('p-1.5');
+      expect(card).toHaveClass('sm:p-2');
+      expect(card).toHaveClass('pr-4');
     });
   });
 
@@ -187,14 +179,14 @@ describe('FeatureCard Integration', () => {
       expect(title).toHaveTextContent('Test Feature');
     });
 
-    it('has proper color contrast', () => {
+    it('has proper colors', () => {
       render(<FeatureCard {...defaultProps} />);
 
       const title = screen.getByText('Test Feature');
-      expect(title).toHaveClass('text-secondary-foreground');
+      expect(title).toHaveClass('text-[#1A231C]');
 
       const description = screen.getByText('This is a test feature description.');
-      expect(description).toHaveClass('text-muted-foreground');
+      expect(description).toHaveClass('text-stone-500');
     });
   });
 });

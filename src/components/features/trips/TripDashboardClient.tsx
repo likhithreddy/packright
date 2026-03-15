@@ -132,13 +132,13 @@ export function TripDashboardClient({
 
             {/* Members section + Invite (admin-only) */}
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-              {/* Invite input - admin only, visible on md+ screens */}
+              {/* Invite input - admin only, visible on sm+ screens */}
               {currentUserIsAdmin && (
-                <div className="hidden md:flex items-center gap-2">
-                  <label className="text-sm font-medium text-stone-700 whitespace-nowrap">
+                <div className="hidden sm:flex items-center gap-2">
+                  <label className="hidden lg:inline text-sm font-medium text-stone-700 whitespace-nowrap">
                     Invite members:
                   </label>
-                  <div className="w-full max-w-[200px] sm:max-w-[250px] lg:max-w-[300px]">
+                  <div className="w-full max-w-[150px] sm:max-w-[200px] lg:max-w-[250px]">
                     <MemberInviteInput
                       tripId={tripId}
                       currentUserId={currentUserId}
@@ -149,8 +149,8 @@ export function TripDashboardClient({
                   </div>
                 </div>
               )}
-              {/* Avatar group - hide on very small screens */}
-              <div className="hidden sm:flex -space-x-2">
+              {/* Avatar group - visible on all screens */}
+              <div className="flex -space-x-1.5 sm:-space-x-2">
                 {visibleMembers.length > 0 && (
                   <AvatarGroup>
                     {visibleMembers.map((member) => (
@@ -170,7 +170,9 @@ export function TripDashboardClient({
                   </AvatarGroup>
                 )}
                 {remainingCount > 0 && (
-                  <span className="text-xs sm:text-sm text-stone-500">+{remainingCount}</span>
+                  <span data-testid="remaining-count" className="text-xs sm:text-sm text-stone-500">
+                    +{remainingCount}
+                  </span>
                 )}
               </div>
 
@@ -189,19 +191,19 @@ export function TripDashboardClient({
 
           {/* Stats + Toggles + Readiness Bar - Visible to all */}
           <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-stone-100">
-            <div className="flex items-center justify-between gap-3 sm:gap-4 mb-2">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-2">
               {/* Stats (left) */}
-              <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm flex-wrap text-stone-500">
+              <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm flex-wrap text-stone-500 w-full sm:w-auto">
                 <span className="font-semibold text-sm sm:text-base uppercase tracking-wide text-[#2D3A30]">
                   {stats.totalItems} ITEMS
                 </span>
                 <span>{stats.percentClaimed}% claimed</span>
                 <span>{stats.percentPacked}% packed</span>
-                <span>{stats.unassignedItems} unassigned</span>
+                <span className="hidden xs:inline">{stats.unassignedItems} unassigned</span>
               </div>
 
               {/* Toggles (right) */}
-              <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="flex items-center gap-2 flex-shrink-0 w-full sm:w-auto justify-between sm:justify-end">
                 <BoardViewToggle />
                 <ViewToggle />
               </div>
