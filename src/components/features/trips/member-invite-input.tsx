@@ -185,6 +185,7 @@ export function MemberInviteInput({
           {isSearching ? (
             <motion.div
               key="loading"
+              data-testid="search-loading"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -195,6 +196,7 @@ export function MemberInviteInput({
           ) : debouncedQuery.length < 3 ? (
             <motion.div
               key="too-short"
+              data-testid="search-too-short"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -205,6 +207,7 @@ export function MemberInviteInput({
           ) : results.length === 0 ? (
             <motion.div
               key="no-results"
+              data-testid="search-no-results"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -215,6 +218,7 @@ export function MemberInviteInput({
           ) : (
             <motion.div
               key="results"
+              data-testid="search-results"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -230,6 +234,7 @@ export function MemberInviteInput({
                   <button
                     type="button"
                     key={user.id}
+                    data-testid={`search-result-${user.username}`}
                     onClick={() => canSelect && handleInviteUser(user)}
                     disabled={!canSelect || isInviting}
                     className={`

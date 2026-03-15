@@ -274,8 +274,20 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
       <DialogContent className="sm:max-w-fit md:min-w-[500px] max-w-[95vw] p-0 overflow-hidden border-stone-200 bg-[#FAFAF8] rounded-2xl shadow-xl flex flex-col max-h-[90vh] transition-all duration-300">
         <div className="px-6 pt-6 pb-2 shrink-0">
           {!isRedirecting && (
-            <DialogHeader className="flex flex-row justify-between items-start">
-              <div>
+            <DialogHeader className="flex flex-row items-start gap-2 sm:gap-4">
+              {step > 1 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Back"
+                  onClick={() => setStep(step === 3 ? 2 : 1)}
+                  className="shrink-0 -ml-2 h-8 w-8 text-stone-500 hover:text-stone-900 mt-0.5"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+              )}
+              <div className="flex-1 text-left">
                 <DialogTitle className="font-serif text-2xl text-[#2D3A30]">
                   {step === 3 ? 'Choose Suggested Items' : 'Plan a New Trip'}
                 </DialogTitle>
@@ -449,22 +461,14 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
                       />
                     </div>
 
-                    <div className="pt-6 flex justify-between items-center border-t border-stone-100 mt-6 gap-3">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        onClick={() => setStep(1)}
-                        className="text-stone-500 hover:text-stone-800 focus-visible:ring-0 px-2 -ml-2"
-                      >
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
-                      </Button>
-                      <div className="flex items-center gap-3">
+                    <div className="pt-6 flex justify-end items-center border-t border-stone-100 mt-6 gap-3">
+                      <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
                         <Button
                           type="button"
                           variant="outline"
                           onClick={skipAndCreate}
                           disabled={isPending}
-                          className="bg-white border-stone-200 text-stone-700 font-bold hover:bg-stone-50 focus-visible:ring-0 px-6 rounded-lg shadow-sm"
+                          className="bg-white flex-1 sm:flex-none border-stone-200 text-stone-700 font-bold hover:bg-stone-50 focus-visible:ring-0 px-3 sm:px-6 rounded-lg shadow-sm"
                         >
                           Skip & Create
                         </Button>
@@ -472,7 +476,7 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
                           type="button"
                           onClick={getSuggestions}
                           disabled={promptValue.length < 20 || isPending || isFetchingSuggestions}
-                          className="bg-[#3D2925] hover:bg-[#2b1d1a] disabled:bg-stone-300 disabled:text-stone-500 text-white font-bold focus-visible:ring-0 transition-colors px-6 rounded-lg shadow-sm min-w-[140px]"
+                          className="bg-[#3D2925] flex-1 sm:flex-none hover:bg-[#2b1d1a] disabled:bg-stone-300 disabled:text-stone-500 text-white font-bold focus-visible:ring-0 transition-colors px-3 sm:px-6 rounded-lg shadow-sm min-w-[120px] sm:min-w-[140px]"
                         >
                           {isFetchingSuggestions ? (
                             <div className="flex items-center gap-2">
@@ -554,15 +558,7 @@ export function NewTripModal({ children }: { children?: React.ReactNode }) {
                       </span>
                     </div>
 
-                    <div className="flex justify-between items-center gap-3 mt-auto">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => setStep(2)}
-                        className="border-stone-800 text-stone-800 font-bold hover:bg-stone-50 focus-visible:ring-0 rounded-lg px-6"
-                      >
-                        <ArrowLeft className="w-4 h-4 mr-2" /> Back
-                      </Button>
+                    <div className="flex justify-end items-center gap-3 mt-auto">
                       <Button
                         type="button"
                         onClick={() => form.handleSubmit(onSubmit)()}

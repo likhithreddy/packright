@@ -15,7 +15,6 @@ import { test, expect } from '@playwright/test';
 import {
   seedMemberManagementTestData,
   cleanupMemberManagementTestData,
-  createSearchTestUsers,
   deterministicUUID,
   type SeedTestDataResult,
 } from './helpers/seed-test-data';
@@ -37,14 +36,7 @@ const PROJECT_USERNAME_MAP: Record<string, string> = {
 };
 
 test.describe('Member Management Flows', () => {
-  test.beforeAll(async () => {
-    // Create search test users (Alice Johnson, Bob Smith) ONCE for all tests
-    // These need to exist in the database since search uses Server Actions
-    searchUserIds = await createSearchTestUsers();
-    console.log(
-      `[beforeAll] Created search users: Alice=${searchUserIds.aliceId}, Bob=${searchUserIds.bobId}`
-    );
-  });
+  // searchUserIds initialization handled in beforeEach via seedMemberManagementTestData
 
   test.beforeEach(async ({ page }, testInfo) => {
     // ISSUE-#45: Generate a unique trip ID for each test to ensure test isolation
@@ -58,7 +50,11 @@ test.describe('Member Management Flows', () => {
 
     // Seed real test data for server component rendering
     // Pass the project username to ensure the correct user is used as admin
-    seedResult = await seedMemberManagementTestData({ tripId: currentTripId, projectUsername });
+    seedResult = await seedMemberManagementTestData({
+      tripId: currentTripId,
+      projectUsername,
+      includeSearchUsers: true,
+    });
 
     // Debug: Log what members were seeded
     console.log(`[Test] Seeded tripId: ${seedResult.tripId}`);
@@ -136,25 +132,25 @@ test.describe('Member Management Flows', () => {
       // ISSUE-#45: Wait for page to load to show data has loaded
       await expect(page.getByTestId('trip-dashboard-page')).toBeVisible();
 
-      // Find the invite input
-      const inviteInput = page.locator('input[placeholder*="search"]');
+      // Find the invite input using data-testid
+      const inviteInput = page.getByTestId('member-invite-input');
 
       // Wait for input to be visible, enabled, and ready
-      await expect(inviteInput).toBeVisible({ timeout: 10000 });
+      await expect(inviteInput).toBeVisible({ timeout: 15000 });
       await expect(inviteInput).toBeEnabled();
 
       // Click to focus the input
       await inviteInput.click();
 
-      // Type at least 3 characters to trigger search
-      await inviteInput.fill('ali', { timeout: 5000 });
+      // Type sequentially to ensure all events fire correctly
+      await inviteInput.pressSequentially('ali', { delay: 50 });
 
       // Wait for debounce and results (increase from 400 to 500)
       await page.waitForTimeout(500);
 
-      // Verify search results appear
-      const aliceButton = page.locator('button:has-text("Alice Johnson")').first();
-      await expect(aliceButton).toBeVisible();
+      // Verify search results appear using data-testid
+      const aliceButton = page.locator('[data-testid^="search-result-alice"]').first();
+      await expect(aliceButton).toBeVisible({ timeout: 10000 });
       await expect(page.getByText('@alicej').first()).toBeVisible();
 
       // Click on Alice Johnson to invite
@@ -179,7 +175,7 @@ test.describe('Member Management Flows', () => {
     test('should show loading state during search', async ({ page }) => {
       if (page.url().includes('/login')) return;
 
-      const inviteInput = page.locator('input[placeholder*="search"]');
+      const inviteInput = page.getByTestId('member-invite-input');
 
       // Wait for input to be visible, enabled, and ready
       await expect(inviteInput).toBeVisible({ timeout: 10000 });
@@ -189,10 +185,10 @@ test.describe('Member Management Flows', () => {
       await inviteInput.click();
 
       // Type to trigger search
-      await inviteInput.fill('ali', { timeout: 5000 });
+      await inviteInput.pressSequentially('ali', { delay: 50 });
 
-      // Check for loading spinner (might appear briefly)
-      const loadingSpinner = page.locator('[class*="animate-spin"]');
+      // Check for loading spinner using data-testid
+      const loadingSpinner = page.getByTestId('search-loading');
       const isVisible = await loadingSpinner.isVisible().catch(() => false);
 
       if (isVisible) {
@@ -208,15 +204,15 @@ test.describe('Member Management Flows', () => {
       // Wait for page to be ready
       await expect(page.getByTestId('trip-dashboard-page')).toBeVisible({ timeout: 15000 });
 
-      const inviteInput = page.locator('input[placeholder*="search"]');
+      const inviteInput = page.getByTestId('member-invite-input');
 
       // Wait for input to be ready
-      await expect(inviteInput).toBeVisible({ timeout: 10000 });
+      await expect(inviteInput).toBeVisible({ timeout: 15000 });
       await expect(inviteInput).toBeEnabled();
       await inviteInput.click();
 
       // Type only 2 characters
-      await inviteInput.fill('ab', { timeout: 10000 });
+      await inviteInput.pressSequentially('ab', { delay: 50 });
 
       // Verify minimum characters message appears
       await expect(page.getByText('Enter at least 3 characters to search')).toBeVisible();
@@ -228,24 +224,39 @@ test.describe('Member Management Flows', () => {
       // Wait for page to be ready
       await expect(page.getByTestId('trip-dashboard-page')).toBeVisible({ timeout: 15000 });
 
-      const inviteInput = page.locator('input[placeholder*="search"]');
+      const inviteInput = page.getByTestId('member-invite-input');
 
       // Wait for input to be ready
-      await expect(inviteInput).toBeVisible({ timeout: 10000 });
+      await expect(inviteInput).toBeVisible({ timeout: 15000 });
       await expect(inviteInput).toBeEnabled();
       await inviteInput.click();
 
       // Type exactly 3 or more characters (the app requires >= 3)
-      await inviteInput.fill('alice');
+      await inviteInput.pressSequentially('alice', { delay: 50 });
 
-      // Wait for debounce (300ms) + network/rendering buffer
-      await page.waitForTimeout(1500);
+      // Wait for results to appear explicitly
+      const aliceResult = page.locator('[data-testid^="search-result-alice"]').first();
 
-      // Should show results
-      const aliceResult = page.locator('button:has-text("Alice Johnson")').first();
-      await expect(aliceResult).toBeVisible({ timeout: 10000 });
-      await expect(page.getByText('Enter at least 3 characters to search')).not.toBeVisible();
-      await expect(page.getByText('Enter at least 3 characters to search')).not.toBeVisible();
+      // Diagnostics: if not visible, check what IS visible in the popover
+      try {
+        await expect(aliceResult).toBeVisible({ timeout: 15000 });
+      } catch (err) {
+        console.log('[Diagnostic] Alice result not visible. Checking popover content...');
+        const popoverContent = page.locator('[role="dialog"], .popover-content');
+        if (await popoverContent.isVisible()) {
+          const text = await popoverContent.innerText();
+          console.log(`[Diagnostic] Popover text content: "${text}"`);
+          const testIds = await popoverContent
+            .locator('[data-testid]')
+            .evaluateAll((els) => els.map((el) => el.getAttribute('data-testid')));
+          console.log(`[Diagnostic] Visible test IDs: ${testIds.join(', ')}`);
+        } else {
+          console.log('[Diagnostic] Popover is NOT visible');
+        }
+        throw err;
+      }
+
+      await expect(page.getByTestId('search-too-short')).not.toBeVisible();
     });
   });
 
@@ -256,14 +267,14 @@ test.describe('Member Management Flows', () => {
       // Wait for page to be ready
       await expect(page.getByTestId('trip-dashboard-page')).toBeVisible({ timeout: 15000 });
 
-      const inviteInput = page.locator('input[placeholder*="search"]');
+      const inviteInput = page.getByTestId('member-invite-input');
 
       // Wait for input to be visible, enabled, and ready
       await expect(inviteInput).toBeVisible({ timeout: 15000 });
       await expect(inviteInput).toBeEnabled();
       await inviteInput.click();
 
-      await inviteInput.fill('exist', { timeout: 10000 });
+      await inviteInput.pressSequentially('exist', { delay: 50 });
       await page.waitForTimeout(500);
 
       // Verify "Already member" badge appears (use .first() to handle strict mode violations)
@@ -277,14 +288,14 @@ test.describe('Member Management Flows', () => {
       // Wait for page to be ready
       await expect(page.getByTestId('trip-dashboard-page')).toBeVisible({ timeout: 15000 });
 
-      const inviteInput = page.locator('input[placeholder*="search"]');
+      const inviteInput = page.getByTestId('member-invite-input');
 
       // Wait for input to be visible, enabled, and ready
       await expect(inviteInput).toBeVisible({ timeout: 15000 });
       await expect(inviteInput).toBeEnabled();
       await inviteInput.click();
 
-      await inviteInput.fill('exist', { timeout: 10000 });
+      await inviteInput.pressSequentially('exist', { delay: 50 });
       await page.waitForTimeout(500);
 
       // Try to click on existing member - find the DISABLED button specifically
@@ -305,7 +316,7 @@ test.describe('Member Management Flows', () => {
       if (page.url().includes('/login')) return;
 
       // Wait for page to be ready
-      await expect(page.getByTestId('trip-dashboard-page')).toBeVisible({ timeout: 10000 });
+      await expect(page.getByTestId('trip-dashboard-page')).toBeVisible({ timeout: 15000 });
 
       // Mock empty search response (NOTE: Server Actions cannot be mocked with page.route)
       // This test documents expected behavior for empty results
@@ -314,14 +325,14 @@ test.describe('Member Management Flows', () => {
         await route.fulfill({ json, status: 200 });
       });
 
-      const inviteInput = page.locator('input[placeholder*="search"]');
+      const inviteInput = page.getByTestId('member-invite-input');
 
       // Wait for input to be ready
-      await expect(inviteInput).toBeVisible({ timeout: 10000 });
+      await expect(inviteInput).toBeVisible({ timeout: 15000 });
       await expect(inviteInput).toBeEnabled();
       await inviteInput.click();
 
-      await inviteInput.fill('nonexistentuser', { timeout: 10000 });
+      await inviteInput.pressSequentially('nonexistentuser', { delay: 20 });
       await page.waitForTimeout(400);
 
       // Verify "No users found" message
@@ -544,7 +555,7 @@ test.describe('Member Management Flows', () => {
       // A true non-admin test would require creating a separate trip with a different owner
 
       // The invite input should be visible since the seeded user is an admin
-      const inviteInput = page.locator('input[placeholder*="search"]');
+      const inviteInput = page.getByTestId('member-invite-input');
       await expect(inviteInput).toBeVisible({ timeout: 10000 });
     });
 
@@ -590,21 +601,18 @@ test.describe('Member Management Flows', () => {
       // Wait for page to be ready
       await expect(page.getByTestId('trip-dashboard-page')).toBeVisible({ timeout: 15000 });
 
-      const inviteInput = page.locator('input[placeholder*="search"]');
+      const inviteInput = page.getByTestId('member-invite-input');
 
       // Wait for input to be ready
       await expect(inviteInput).toBeVisible({ timeout: 15000 });
       await expect(inviteInput).toBeEnabled();
 
       // Type quickly (at least 3 characters to trigger search)
-      await inviteInput.fill('alice', { timeout: 10000 });
+      await inviteInput.pressSequentially('alice', { delay: 50 });
 
-      // Wait for debounce (300ms) + network/rendering buffer
-      await page.waitForTimeout(1500);
-
-      // Verify "Alice Johnson" is visible in the results
-      const result = page.locator('button:has-text("Alice Johnson")').first();
-      await expect(result).toBeVisible({ timeout: 10000 });
+      // Wait for results to appear explicitly
+      const result = page.locator('[data-testid^="search-result-alice"]').first();
+      await expect(result).toBeVisible({ timeout: 15000 });
     });
   });
 
@@ -615,7 +623,7 @@ test.describe('Member Management Flows', () => {
       // Wait for page to be ready
       await expect(page.getByTestId('trip-dashboard-page')).toBeVisible({ timeout: 15000 });
 
-      const inviteInput = page.locator('input[placeholder*="search"]');
+      const inviteInput = page.getByTestId('member-invite-input');
 
       // Wait for input to be ready
       await expect(inviteInput).toBeVisible({ timeout: 15000 });
@@ -626,7 +634,7 @@ test.describe('Member Management Flows', () => {
       await expect(inviteInput).toBeFocused();
 
       // Type to open results
-      await inviteInput.fill('ali', { timeout: 10000 });
+      await inviteInput.pressSequentially('ali', { delay: 50 });
       await page.waitForTimeout(500);
 
       // Should be able to navigate with arrow keys
@@ -644,14 +652,14 @@ test.describe('Member Management Flows', () => {
       // Wait for page to be ready
       await expect(page.getByTestId('trip-dashboard-page')).toBeVisible({ timeout: 15000 });
 
-      const inviteInput = page.locator('input[placeholder*="search"]');
+      const inviteInput = page.getByTestId('member-invite-input');
 
       // Wait for input to be ready
       await expect(inviteInput).toBeVisible({ timeout: 15000 });
       await expect(inviteInput).toBeEnabled();
       await inviteInput.click();
 
-      await inviteInput.fill('ali', { timeout: 10000 });
+      await inviteInput.pressSequentially('ali', { delay: 50 });
       await page.waitForTimeout(500);
 
       // ISSUE-#45: Ensure input is focused before pressing Escape

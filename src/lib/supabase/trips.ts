@@ -101,15 +101,13 @@ export async function createTrip(
             name: item,
             required_count: 1,
             category: 'Essentials',
-            status: 'needed',
           };
         }
         return {
           trip_id: trip.id,
           name: item.name,
-          required_count: item.quantity,
-          category: item.category,
-          status: 'needed',
+          required_count: item.quantity || 1,
+          category: item.category || 'Essentials',
         };
       });
 

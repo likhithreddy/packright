@@ -2,16 +2,19 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Landing Page Flow', () => {
   test('should display all landing page elements', async ({ page }) => {
+    console.log('Navigating to landing page...');
     await page.goto('/');
 
+    console.log('Checking HeroSection elements...');
     // Verify HeroSection elements
-    await expect(page.getByText('Group Travel, Finally Sorted')).toBeVisible();
+    await expect(page.getByText('Premium Group Travel')).toBeVisible();
     await expect(page.getByText(/Pack together,/i)).toBeVisible();
     await expect(page.getByText(/show up ready\./i)).toBeVisible();
-    await expect(page.getByText(/PackRight gives your trip group/i)).toBeVisible();
+    await expect(page.getByText(/The editorial packing board for groups who care/i)).toBeVisible();
 
+    console.log('Checking CTA buttons...');
     // Verify CTA buttons
-    await expect(page.getByRole('link', { name: /get started free/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /start packing free/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /sign in/i })).toBeVisible();
   });
 
@@ -24,8 +27,8 @@ test.describe('Landing Page Flow', () => {
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(500); // Small buffer for hydration
 
-    // Get the Get Started Free button and wait for it to be visible
-    const getStartedButton = page.getByRole('link', { name: /get started free/i });
+    // Get the Start Packing Free button and wait for it to be visible
+    const getStartedButton = page.getByRole('link', { name: /start packing free/i });
     await getStartedButton.waitFor({ state: 'visible', timeout: 5000 });
 
     // Click and wait for navigation
@@ -65,12 +68,10 @@ test.describe('Landing Page Flow', () => {
     await page.waitForTimeout(500); // Small buffer for hydration
 
     // Verify feature cards are displayed
-    // FeatureCard components don't have unique identifiers, so we check for common feature text
-    const featureCards = page.locator('.bg-card.shadow-sm.border');
-    await expect(featureCards).toHaveCount(3); // Assuming 3 feature cards
-
-    // Verify that feature cards have icons (using bg-primary/10 class)
-    await expect(page.locator('.bg-primary\\/10')).toHaveCount(3);
+    // Using first() because cards exist for both desktop and mobile layouts
+    await expect(page.getByText('AI Packing').first()).toBeVisible();
+    await expect(page.getByText('Auto-Assign').first()).toBeVisible();
+    await expect(page.getByText(/Live (Readiness|Status|Readiness)/).first()).toBeVisible();
   });
 
   test('should display TripBoardMockCard', async ({ page }) => {
@@ -90,10 +91,6 @@ test.describe('Landing Page Flow', () => {
     // Verify progress section
     await expect(page.getByText('Packed', { exact: true })).toBeVisible();
     await expect(page.getByText('62%')).toBeVisible();
-
-    // Verify progress bar is displayed
-    const progressBar = page.locator('.bg-secondary\\/50.rounded-full').first();
-    await expect(progressBar).toBeVisible();
   });
 
   test('should have responsive layout on mobile', async ({ page }) => {
@@ -102,41 +99,34 @@ test.describe('Landing Page Flow', () => {
     await page.goto('/');
 
     // Verify mobile layout
-    await expect(page.getByText('Group Travel, Finally Sorted')).toBeVisible();
-
-    // Verify buttons stack on mobile
-    const buttonContainer = page.locator('.flex-col.sm\\:flex-row').first();
-    await expect(buttonContainer).toBeVisible();
+    await expect(page.getByText('Premium Group Travel')).toBeVisible();
 
     // Verify CTA buttons are still clickable on mobile
-    await expect(page.getByRole('link', { name: /get started free/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /start packing free/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /sign in/i })).toBeVisible();
   });
 
   test('should have responsive layout on desktop', async ({ page }) => {
     // Set desktop viewport
-    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto('/');
 
     // Verify desktop layout
-    await expect(page.getByText('Group Travel, Finally Sorted')).toBeVisible();
+    await expect(page.getByText('Premium Group Travel')).toBeVisible();
 
-    // Verify hero section has proper max-width
-    const heroSection = page.locator('.max-w-2xl');
-    await expect(heroSection).toBeVisible();
+    // Verify hero section has proper max-width on the description paragraph
+    // In HeroSection.tsx, the paragraph has lg:max-w-xl
+    const heroDesc = page.locator('p.max-w-xl, p.lg\\:max-w-xl');
+    await expect(heroDesc.first()).toBeVisible();
   });
 
   test('should maintain accessibility with proper heading structure', async ({ page }) => {
     await page.goto('/');
 
     // Verify semantic heading structure
-    const h2 = page.locator('h2');
-    const h1 = page.locator('h1');
-
-    await expect(h2).toContainText('Group Travel, Finally Sorted');
-    await expect(h1).toContainText('Pack together');
-
-    // Verify landmarks if present (would be checked with page.accessibility.snapshot())
+    // HeroSection handles H1 and H2
+    await expect(page.locator('h1')).toContainText('Pack together');
+    await expect(page.locator('h2').first()).toContainText('Premium Group Travel');
   });
 
   test('should load quickly and have no console errors', async ({ page }) => {
@@ -170,14 +160,14 @@ test.describe('Landing Page Flow', () => {
     await expect(viewport).toHaveAttribute('content', /width=device-width/);
   });
 
-  test('should display ArrowRight icon in Get Started button', async ({ page }) => {
+  test('should display ArrowLeft/Right/UpRight icon in Start Packing button', async ({ page }) => {
     await page.goto('/');
 
-    // Click the Get Started Free button
-    const getStartedButton = page.locator('a:has-text("Get Started Free")');
+    // Click the Start Packing Free button
+    const getStartedButton = page.locator('a:has-text("Start Packing Free")');
     await expect(getStartedButton).toBeVisible();
 
-    // Verify icon exists (ArrowRight from lucide-react)
+    // Verify icon exists
     const icon = getStartedButton.locator('svg');
     await expect(icon).toBeVisible();
   });

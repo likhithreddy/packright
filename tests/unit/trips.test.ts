@@ -247,14 +247,12 @@ describe('Supabase Trips Library', () => {
           name: 'Item 1',
           required_count: 1,
           category: 'Essentials',
-          status: 'needed',
         },
         {
           trip_id: 'trip-123',
           name: 'Item 2',
           required_count: 1,
           category: 'Essentials',
-          status: 'needed',
         },
       ]);
     });

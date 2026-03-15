@@ -1,0 +1,2973 @@
+yarn run v1.22.22
+$ npx tsx tests/e2e/infra/run-with-stack.ts playwright test tests/e2e/landing-page.spec.ts
+npm warn Unknown env config "version-git-tag". This will stop working in the next major version of npm.
+npm warn Unknown env config "argv". This will stop working in the next major version of npm.
+npm warn Unknown env config "version-commit-hooks". This will stop working in the next major version of npm.
+npm warn Unknown env config "version-git-message". This will stop working in the next major version of npm.
+npm warn Unknown env config "version-tag-prefix". This will stop working in the next major version of npm.
+[run-with-stack] Starting ephemeral Supabase stack...
+[SupabaseStack] Starting PostgreSQL...
+[Postgres] The files belonging to this database system will be owned by user "postgres".
+
+[Postgres] This user must also own the server process.
+
+[Postgres] 
+
+[Postgres] The database cluster will be initialized with this locale configuration:
+
+[Postgres]   provider:    libc
+
+[Postgres]   LC_COLLATE:  C.UTF-8
+
+[Postgres]   LC_CTYPE:    C.UTF-8
+
+[Postgres]   LC_MESSAGES: en_US.UTF-8
+
+[Postgres]   LC_MONETARY: en_US.UTF-8
+
+[Postgres]   LC_NUMERIC:  en_US.UTF-8
+
+[Postgres]   LC_TIME:     en_US.UTF-8
+
+[Postgres] The default database encoding has accordingly been set to "UTF8".
+
+[Postgres] The default text search configuration will be set to "english".
+
+[Postgres] 
+
+[Postgres] Data page checksums are disabled.
+
+[Postgres] 
+
+[Postgres] fixing permissions on existing directory /var/lib/postgresql/data ... ok
+
+[Postgres] creating subdirectories ... ok
+
+[Postgres] selecting dynamic shared memory implementation ... posix
+
+[Postgres] selecting default max_connections ... 100
+
+[Postgres] selecting default shared_buffers ... 128MB
+
+[Postgres] selecting default time zone ... Etc/UTC
+
+[Postgres] creating configuration files ... ok
+
+[Postgres] running bootstrap script ... ok
+
+[Postgres] performing post-bootstrap initialization ... ok
+
+[Postgres] syncing data to disk ... ok
+
+[Postgres] 
+
+[Postgres] 
+
+[Postgres] Success. You can now start the database server using:
+
+[Postgres] 
+
+[Postgres]     pg_ctl -D /var/lib/postgresql/data -l logfile start
+
+[Postgres] 
+
+[Postgres] initdb: warning: enabling "trust" authentication for local connections
+
+[Postgres] initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+
+[Postgres] waiting for server to start.... 2026-03-15 04:05:51.824 UTC [49] LOG:  pgaudit extension initialized
+
+[Postgres]  2026-03-15 04:05:51.828 UTC [49] LOG:  pgsodium primary server secret key loaded
+
+[Postgres]  2026-03-15 04:05:51.864 UTC [49] LOG:  starting PostgreSQL 15.1 (Ubuntu 15.1-1.pgdg20.04+1) on aarch64-unknown-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0, 64-bit
+
+[Postgres]  2026-03-15 04:05:51.865 UTC [49] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+
+[Postgres]  2026-03-15 04:05:51.867 UTC [58] LOG:  database system was shut down at 2026-03-15 04:05:51 UTC
+
+[Postgres]  2026-03-15 04:05:51.871 UTC [49] LOG:  database system is ready to accept connections
+
+[Postgres]  2026-03-15 04:05:51.871 UTC [61] LOG:  TimescaleDB background worker launcher connected to shared catalogs
+
+[Postgres]  2026-03-15 04:05:51.873 UTC [63] LOG:  pg_cron scheduler started
+
+[Postgres]  done
+
+[Postgres] server started
+
+[Postgres] 
+
+[Postgres] /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/init-scripts
+
+[Postgres] 
+
+[Postgres] /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/migrate.sh
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/init-scripts/00-schema.sql
+
+[Postgres] CREATE ROLE
+
+[Postgres] REVOKE
+
+[Postgres] CREATE SCHEMA
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] REVOKE
+
+[Postgres] GRANT
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/init-scripts/00000000000000-initial-schema.sql
+
+[Postgres] CREATE PUBLICATION
+
+[Postgres] CREATE ROLE
+
+[Postgres] ALTER ROLE
+
+[Postgres] CREATE ROLE
+
+[Postgres] CREATE ROLE
+
+[Postgres] GRANT ROLE
+
+[Postgres] CREATE SCHEMA
+
+[Postgres] CREATE EXTENSION
+
+[Postgres] CREATE EXTENSION
+
+[Postgres] CREATE EXTENSION
+
+[Postgres] CREATE ROLE
+
+[Postgres] CREATE ROLE
+
+[Postgres] CREATE ROLE
+
+[Postgres] CREATE ROLE
+
+[Postgres] GRANT ROLE
+
+[Postgres] GRANT ROLE
+
+[Postgres] GRANT ROLE
+
+[Postgres] GRANT ROLE
+
+[Postgres] GRANT
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] GRANT
+
+[Postgres] ALTER ROLE
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER ROLE
+
+[Postgres] ALTER ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/init-scripts/00000000000001-auth-schema.sql
+
+[Postgres] CREATE SCHEMA
+
+[Postgres] CREATE TABLE
+
+[Postgres] CREATE INDEX
+
+[Postgres] CREATE INDEX
+
+[Postgres] COMMENT
+
+[Postgres] CREATE TABLE
+
+[Postgres] CREATE INDEX
+
+[Postgres] CREATE INDEX
+
+[Postgres] CREATE INDEX
+
+[Postgres] COMMENT
+
+[Postgres] CREATE TABLE
+
+[Postgres] COMMENT
+
+[Postgres] CREATE TABLE
+
+[Postgres] CREATE INDEX
+
+[Postgres] COMMENT
+
+[Postgres] CREATE TABLE
+
+[Postgres] COMMENT
+
+[Postgres] INSERT 0 7
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] GRANT
+
+[Postgres] CREATE ROLE
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] ALTER ROLE
+
+[Postgres] ALTER TABLE
+
+[Postgres] ALTER TABLE
+
+[Postgres] ALTER TABLE
+
+[Postgres] ALTER TABLE
+
+[Postgres] ALTER TABLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/init-scripts/00000000000002-storage-schema.sql
+
+[Postgres] CREATE SCHEMA
+
+[Postgres] GRANT
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] CREATE TABLE
+
+[Postgres] CREATE INDEX
+
+[Postgres] CREATE TABLE
+
+[Postgres] CREATE INDEX
+
+[Postgres] CREATE INDEX
+
+[Postgres] ALTER TABLE
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] CREATE TABLE
+
+[Postgres] CREATE ROLE
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] ALTER ROLE
+
+[Postgres] ALTER TABLE
+
+[Postgres] ALTER TABLE
+
+[Postgres] ALTER TABLE
+
+[Postgres] ALTER FUNCTION
+
+[Postgres] ALTER FUNCTION
+
+[Postgres] ALTER FUNCTION
+
+[Postgres] ALTER FUNCTION
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/init-scripts/00000000000003-post-setup.sql
+
+[Postgres] ALTER ROLE
+
+[Postgres] ALTER ROLE
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] CREATE EVENT TRIGGER
+
+[Postgres] COMMENT
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] COMMENT
+
+[Postgres] DO
+
+[Postgres] CREATE ROLE
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] ALTER ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/00-extension.sql
+
+[Postgres] psql:/docker-entrypoint-initdb.d/migrations/00-extension.sql:1: NOTICE:  schema "extensions" already exists, skipping
+
+[Postgres] CREATE SCHEMA
+
+[Postgres] CREATE EXTENSION
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/10000000000000_demote-postgres.sql
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] ALTER ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20211115181400_update-auth-permissions.sql
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] ALTER TABLE
+
+[Postgres] ALTER TABLE
+
+[Postgres] ALTER TABLE
+
+[Postgres] ALTER TABLE
+
+[Postgres] ALTER TABLE
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20211118015519_create-realtime-schema.sql
+
+[Postgres] CREATE SCHEMA
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20211122051245_update-realtime-permissions.sql
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20211124212715_update-auth-owner.sql
+
+[Postgres] ALTER FUNCTION
+
+[Postgres] ALTER FUNCTION
+
+[Postgres] ALTER FUNCTION
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20211130151719_update-realtime-permissions.sql
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20220118070449_enable-safeupdate-postgrest.sql
+
+[Postgres] ALTER ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20220126121436_finer-postgrest-triggers.sql
+
+[Postgres] DROP EVENT TRIGGER
+
+[Postgres] psql:/docker-entrypoint-initdb.d/migrations/20220126121436_finer-postgrest-triggers.sql:3: NOTICE:  event trigger "api_restart" does not exist, skipping
+
+[Postgres] psql:/docker-entrypoint-initdb.d/migrations/20220126121436_finer-postgrest-triggers.sql:4: NOTICE:  function extensions.notify_api_restart() does not exist, skipping
+
+[Postgres] DROP FUNCTION
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] psql:/docker-entrypoint-initdb.d/migrations/20220126121436_finer-postgrest-triggers.sql:59: NOTICE:  event trigger "pgrst_ddl_watch" does not exist, skipping
+
+[Postgres] DROP EVENT TRIGGER
+
+[Postgres] CREATE EVENT TRIGGER
+
+[Postgres] DROP EVENT TRIGGER
+
+[Postgres] psql:/docker-entrypoint-initdb.d/migrations/20220126121436_finer-postgrest-triggers.sql:64: NOTICE:  event trigger "pgrst_drop_watch" does not exist, skipping
+
+[Postgres] CREATE EVENT TRIGGER
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20220224211803_fix-postgrest-supautils.sql
+
+[Postgres] DO
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20220317095840_pg_graphql.sql
+
+[Postgres] CREATE SCHEMA
+
+[Postgres] psql:/docker-entrypoint-initdb.d/migrations/20220317095840_pg_graphql.sql:5: NOTICE:  function graphql_public.graphql(text,text,jsonb) does not exist, skipping
+
+[Postgres] DROP FUNCTION
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] GRANT
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] psql:/docker-entrypoint-initdb.d/migrations/20220317095840_pg_graphql.sql:90: NOTICE:  event trigger "issue_pg_graphql_access" does not exist, skipping
+
+[Postgres] DROP EVENT TRIGGER
+
+[Postgres] CREATE EVENT TRIGGER
+
+[Postgres] COMMENT
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] DROP EVENT TRIGGER
+
+[Postgres] psql:/docker-entrypoint-initdb.d/migrations/20220317095840_pg_graphql.sql:143: NOTICE:  event trigger "issue_graphql_placeholder" does not exist, skipping
+
+[Postgres] CREATE EVENT TRIGGER
+
+[Postgres] COMMENT
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20220321174452_fix-postgrest-alter-type-event-trigger.sql
+
+[Postgres] psql:/docker-entrypoint-initdb.d/migrations/20220321174452_fix-postgrest-alter-type-event-trigger.sql:3: NOTICE:  event trigger "api_restart" does not exist, skipping
+
+[Postgres] DROP EVENT TRIGGER
+
+[Postgres] psql:/docker-entrypoint-initdb.d/migrations/20220321174452_fix-postgrest-alter-type-event-trigger.sql:4: NOTICE:  function extensions.notify_api_restart() does not exist, skipping
+
+[Postgres] DROP FUNCTION
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] DROP EVENT TRIGGER
+
+[Postgres] CREATE EVENT TRIGGER
+
+[Postgres] DROP EVENT TRIGGER
+
+[Postgres] CREATE EVENT TRIGGER
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20220322085208_gotrue-session-limit.sql
+
+[Postgres] ALTER ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20220404205710_pg_graphql-on-by-default.sql
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] psql:/docker-entrypoint-initdb.d/migrations/20220404205710_pg_graphql-on-by-default.sql:142: NOTICE:  extension "pg_graphql" does not exist, skipping
+
+[Postgres] DROP EXTENSION
+
+[Postgres] DO
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20220609081115_grant-supabase-auth-admin-and-supabase-storage-admin-to-postgres.sql
+
+[Postgres] GRANT ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20220613123923_pg_graphql-pg-dump-perms.sql
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] DROP EXTENSION
+
+[Postgres] DO
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20220713082019_pg_cron-pg_net-temp-perms-fix.sql
+
+[Postgres] DO
+
+[Postgres] DO
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20221028101028_set_authenticator_timeout.sql
+
+[Postgres] ALTER ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20221103090837_revoke_admin.sql
+
+[Postgres] REVOKE ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20221207154255_create_pgsodium_and_vault.sql
+
+[Postgres] DO
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20230201083204_grant_auth_roles_to_postgres.sql
+
+[Postgres] GRANT ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20230224042246_grant_extensions_perms_for_postgres.sql
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] GRANT
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] ALTER DEFAULT PRIVILEGES
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20230306081037_grant_pg_monitor_to_postgres.sql
+
+[Postgres] GRANT ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20230327032006_grant_auth_roles_to_supabase_storage_admin.sql
+
+[Postgres] GRANT ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20230529180330_alter_api_roles_for_inherit.sql
+
+[Postgres] ALTER ROLE
+
+[Postgres] ALTER ROLE
+
+[Postgres] ALTER ROLE
+
+[Postgres] GRANT ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20231013070755_grant_authenticator_to_supabase_storage_admin.sql
+
+[Postgres] GRANT ROLE
+
+[Postgres] REVOKE ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20231017062225_grant_pg_graphql_permissions_for_custom_roles.sql
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] DROP EXTENSION
+
+[Postgres] DO
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20231020085357_revoke_writes_on_cron_job_from_postgres.sql
+
+[Postgres] DO
+
+[Postgres] CREATE FUNCTION
+
+[Postgres] DROP EVENT TRIGGER
+
+[Postgres] CREATE EVENT TRIGGER
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20231130133139_set_lock_timeout_to_authenticator_role.sql
+
+[Postgres] ALTER ROLE
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20240124080435_alter_lo_export_lo_import_owner.sql
+
+[Postgres] ALTER FUNCTION
+
+[Postgres] ALTER FUNCTION
+
+[Postgres] ALTER FUNCTION
+
+[Postgres] /docker-entrypoint-initdb.d/migrate.sh: running /docker-entrypoint-initdb.d/migrations/20240606060239_grant_predefined_roles_to_postgres.sql
+
+[Postgres] GRANT ROLE
+
+[Postgres]  pg_stat_statements_reset 
+
+[Postgres] --------------------------
+
+[Postgres]  
+
+[Postgres] (1 row)
+
+[Postgres] 
+
+[Postgres]  pg_stat_reset 
+
+[Postgres] ---------------
+
+[Postgres]  
+
+[Postgres] (1 row)
+
+[Postgres] 
+
+[Postgres] 
+
+[Postgres] /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/migrations
+
+[Postgres] 
+
+[Postgres] waiting for server to shut down.... 2026-03-15 04:05:52.791 UTC [49] LOG:  received fast shutdown request
+
+[Postgres]  2026-03-15 04:05:52.792 UTC [49] LOG:  aborting any active transactions
+
+[Postgres]  2026-03-15 04:05:52.792 UTC [63] LOG:  pg_cron scheduler shutting down
+
+[Postgres]  2026-03-15 04:05:52.792 UTC [61] FATAL:  terminating background worker "TimescaleDB Background Worker Launcher" due to administrator command
+
+[Postgres]  2026-03-15 04:05:52.793 UTC [49] LOG:  background worker "pg_net 0.8.0 worker" (PID 62) exited with exit code 1
+
+[Postgres]  2026-03-15 04:05:52.793 UTC [49] LOG:  background worker "logical replication launcher" (PID 64) exited with exit code 1
+
+[Postgres]  2026-03-15 04:05:52.793 UTC [49] LOG:  background worker "pg_cron launcher" (PID 63) exited with exit code 1
+
+[Postgres]  2026-03-15 04:05:52.794 UTC [49] LOG:  background worker "TimescaleDB Background Worker Launcher" (PID 61) exited with exit code 1
+
+[Postgres]  2026-03-15 04:05:52.794 UTC [56] LOG:  shutting down
+
+[Postgres]  2026-03-15 04:05:52.795 UTC [56] LOG:  checkpoint starting: shutdown immediate
+
+[Postgres]  2026-03-15 04:05:52.884 UTC [56] LOG:  checkpoint complete: wrote 341 buffers (2.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.083 s, total=0.090 s; sync files=119, longest=0.002 s, average=0.001 s; distance=2778 kB, estimate=2778 kB
+
+[Postgres]  2026-03-15 04:05:52.890 UTC [49] LOG:  database system is shut down
+
+[Postgres]  done
+
+[Postgres] server stopped
+
+[Postgres] 
+
+[Postgres] PostgreSQL init process complete; ready for start up.
+
+[Postgres] 
+
+[Postgres]  2026-03-15 04:05:52.902 UTC [1] LOG:  pgaudit extension initialized
+
+[Postgres]  2026-03-15 04:05:52.905 UTC [1] LOG:  pgsodium primary server secret key loaded
+
+[Postgres]  2026-03-15 04:05:52.920 UTC [1] LOG:  starting PostgreSQL 15.1 (Ubuntu 15.1-1.pgdg20.04+1) on aarch64-unknown-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0, 64-bit
+
+[Postgres]  2026-03-15 04:05:52.920 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+
+[Postgres]  2026-03-15 04:05:52.920 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+
+[Postgres]  2026-03-15 04:05:52.922 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+
+[Postgres]  2026-03-15 04:05:52.924 UTC [162] LOG:  database system was shut down at 2026-03-15 04:05:52 UTC
+
+[SupabaseStack] Injecting utility functions...
+[Postgres]  2026-03-15 04:05:52.927 UTC [1] LOG:  database system is ready to accept connections
+
+[Postgres]  2026-03-15 04:05:52.927 UTC [165] LOG:  TimescaleDB background worker launcher connected to shared catalogs
+
+[Postgres]  2026-03-15 04:05:52.928 UTC [167] LOG:  pg_cron scheduler started
+
+[SupabaseStack] Applying schema dump...
+[SupabaseStack] Starting GoTrue (Auth)...
+[GoTrue] {"level":"debug","msg":"Set log level to: debug","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] {"level":"info","msg":"Go runtime metrics collection started","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] {"level":"debug","msg":"Reading migrations from /usr/local/etc/auth/migrations","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] {"level":"debug","msg":"before status","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["00"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210710035447"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210722035447"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210730183235"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210909172000"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210927181326"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20211122151130"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20211124214934"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20211202183645"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220114185221"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220114185340"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220224000811"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220323170000"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220429102000"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220531120530"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220614074223"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220811173540"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221003041349"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221003041400"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221011041400"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221020193600"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221021073300"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221021082433"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221027105023"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221114143122"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221114143410"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221125140132"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221208132122"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221215195500"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221215195800"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221215195900"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230116124310"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230116124412"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230131181311"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230322519590"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230402418590"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230411005111"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230508135423"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230523124323"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230818113222"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230914180801"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20231027141322"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20231114161723"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20231117164230"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] Version          Name                                            Status    
+
+[GoTrue] 00               init_auth_schema                                Pending   
+
+[GoTrue] 20210710035447   alter_users                                     Pending   
+
+[GoTrue] 20210722035447   adds_confirmed_at                               Pending   
+
+[GoTrue] 20210730183235   add_email_change_confirmed                      Pending   
+
+[GoTrue] 20210909172000   create_identities_table                         Pending   
+
+[GoTrue] 20210927181326   add_refresh_token_parent                        Pending   
+
+[GoTrue] 20211122151130   create_user_id_idx                              Pending   
+
+[GoTrue] 20211124214934   update_auth_functions                           Pending   
+
+[GoTrue] 20211202183645   update_auth_uid                                 Pending   
+
+[GoTrue] 20220114185221   update_user_idx                                 Pending   
+
+[GoTrue] 20220114185340   add_banned_until                                Pending   
+
+[GoTrue] 20220224000811   update_auth_functions                           Pending   
+
+[GoTrue] 20220323170000   add_user_reauthentication                       Pending   
+
+[GoTrue] 20220429102000   add_unique_idx                                  Pending   
+
+[GoTrue] 20220531120530   add_auth_jwt_function                           Pending   
+
+[GoTrue] 20220614074223   add_ip_address_to_audit_log                     Pending   
+
+[GoTrue] 20220811173540   add_sessions_table                              Pending   
+
+[GoTrue] 20221003041349   add_mfa_schema                                  Pending   
+
+[GoTrue] 20221003041400   add_aal_and_factor_id_to_sessions               Pending   
+
+[GoTrue] 20221011041400   add_mfa_indexes                                 Pending   
+
+[GoTrue] 20221020193600   add_sessions_user_id_index                      Pending   
+
+[GoTrue] 20221021073300   add_refresh_tokens_session_id_revoked_index     Pending   
+
+[GoTrue] 20221021082433   add_saml                                        Pending   
+
+[GoTrue] 20221027105023   add_identities_user_id_idx                      Pending   
+
+[GoTrue] 20221114143122   add_session_not_after_column                    Pending   
+
+[GoTrue] 20221114143410   remove_parent_foreign_key_refresh_tokens        Pending   
+
+[GoTrue] 20221125140132   backfill_email_identity                         Pending   
+
+[GoTrue] 20221208132122   backfill_email_last_sign_in_at                  Pending   
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["00"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-3663013679887060969, tx=3663013679887060969)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- auth.users definition
+
+[GoTrue] 
+
+[GoTrue] CREATE TABLE IF NOT EXISTS auth.users (
+
+[GoTrue] 	instance_id uuid NULL,
+
+[GoTrue] 	id uuid NOT NULL UNIQUE,
+
+[GoTrue] 	aud varchar(255) NULL,
+
+[GoTrue] 	"role" varchar(255) NULL,
+
+[GoTrue] 	email varchar(255) NULL UNIQUE,
+
+[GoTrue] 	encrypted_password varchar(255) NULL,
+
+[GoTrue] 	confirmed_at timestamptz NULL,
+
+[GoTrue] 	invited_at timestamptz NULL,
+
+[GoTrue] 	confirmation_token varchar(255) NULL,
+
+[GoTrue] 	confirmation_sent_at timestamptz NULL,
+
+[GoTrue] 	recovery_token varchar(255) NULL,
+
+[GoTrue] 	recovery_sent_at timestamptz NULL,
+
+[GoTrue] 	email_change_token varchar(255) NULL,
+
+[GoTrue] 	email_change varchar(255) NULL,
+
+[GoTrue] 	email_change_sent_at timestamptz NULL,
+
+[GoTrue] 	last_sign_in_at timestamptz NULL,
+
+[GoTrue] 	raw_app_meta_data jsonb NULL,
+
+[GoTrue] 	raw_user_meta_data jsonb NULL,
+
+[GoTrue] 	is_super_admin bool NULL,
+
+[GoTrue] 	created_at timestamptz NULL,
+
+[GoTrue] 	updated_at timestamptz NULL,
+
+[GoTrue] 	CONSTRAINT users_pkey PRIMARY KEY (id)
+
+[GoTrue] );
+
+[GoTrue] CREATE INDEX IF NOT EXISTS users_instance_id_email_idx ON auth.users USING btree (instance_id, email);
+
+[GoTrue] CREATE INDEX IF NOT EXISTS users_instance_id_idx ON auth.users USING btree (instance_id);
+
+[GoTrue] comment on table auth.users is 'Auth: Stores user login data within a secure schema.';
+
+[GoTrue] 
+
+[GoTrue] -- auth.refresh_tokens definition
+
+[GoTrue] 
+
+[GoTrue] CREATE TABLE IF NOT EXISTS auth.refresh_tokens (
+
+[GoTrue] 	instance_id uuid NULL,
+
+[GoTrue] 	id bigserial NOT NULL,
+
+[GoTrue] 	"token" varchar(255) NULL,
+
+[GoTrue] 	user_id varchar(255) NULL,
+
+[GoTrue] 	revoked bool NULL,
+
+[GoTrue] 	created_at timestamptz NULL,
+
+[GoTrue] 	updated_at timestamptz NULL,
+
+[GoTrue] 	CONSTRAINT refresh_tokens_pkey PRIMARY KEY (id)
+
+[GoTrue] );
+
+[GoTrue] CREATE INDEX IF NOT EXISTS refresh_tokens_instance_id_idx ON auth.refresh_tokens USING btree (instance_id);
+
+[GoTrue] CREATE INDEX IF NOT EXISTS refresh_tokens_instance_id_user_id_idx ON auth.refresh_tokens USING btree (instance_id, user_id);
+
+[GoTrue] CREATE INDEX IF NOT EXISTS refresh_tokens_token_idx ON auth.refresh_tokens USING btree (token);
+
+[GoTrue] comment on table auth.refresh_tokens is 'Auth: Store of tokens used to refresh JWT tokens once they expire.';
+
+[GoTrue] 
+
+[GoTrue] -- auth.instances definition
+
+[GoTrue] 
+
+[GoTrue] CREATE TABLE IF NOT EXISTS auth.instances (
+
+[GoTrue] 	id uuid NOT NULL,
+
+[GoTrue] 	uuid uuid NULL,
+
+[GoTrue] 	raw_base_config text NULL,
+
+[GoTrue] 	created_at timestamptz NULL,
+
+[GoTrue] 20221215195500   modify_users_email_unique_index                 Pending   
+
+[GoTrue] 20221215195800   add_identities_email_column                     Pending   
+
+[GoTrue] 20221215195900   remove_sso_sessions                             Pending   
+
+[GoTrue] 20230116124310   alter_phone_type                                Pending   
+
+[GoTrue] 20230116124412   add_deleted_at                                  Pending   
+
+[GoTrue] 	updated_at timestamptz NULL,
+
+[GoTrue] 	CONSTRAINT instances_pkey PRIMARY KEY (id)
+
+[GoTrue] );
+
+[GoTrue] comment on table auth.instances is 'Auth: Manages users across multiple sites.';
+
+[GoTrue] 
+
+[GoTrue] -- auth.audit_log_entries definition
+
+[GoTrue] 
+
+[GoTrue] CREATE TABLE IF NOT EXISTS auth.audit_log_entries (
+
+[GoTrue] 	instance_id uuid NULL,
+
+[GoTrue] 	id uuid NOT NULL,
+
+[GoTrue] 	payload json NULL,
+
+[GoTrue] 	created_at timestamptz NULL,
+
+[GoTrue] 	CONSTRAINT audit_log_entries_pkey PRIMARY KEY (id)
+
+[GoTrue] );
+
+[GoTrue] CREATE INDEX IF NOT EXISTS audit_logs_instance_id_idx ON auth.audit_log_entries USING btree (instance_id);
+
+[GoTrue] comment on table auth.audit_log_entries is 'Auth: Audit trail for user actions.';
+
+[GoTrue] 
+
+[GoTrue] -- auth.schema_migrations definition
+
+[GoTrue] 
+
+[GoTrue] CREATE TABLE IF NOT EXISTS auth.schema_migrations (
+
+[GoTrue] 	"version" varchar(255) NOT NULL,
+
+[GoTrue] 	CONSTRAINT schema_migrations_pkey PRIMARY KEY ("version")
+
+[GoTrue] );
+
+[GoTrue] comment on table auth.schema_migrations is 'Auth: Manages updates to the auth system.';
+
+[GoTrue] 		
+
+[GoTrue] -- Gets the User ID from the request cookie
+
+[GoTrue] create or replace function auth.uid() returns uuid as $$
+
+[GoTrue]   select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid;
+
+[GoTrue] $$ language sql stable;
+
+[GoTrue] 
+
+[GoTrue] -- Gets the User ID from the request cookie
+
+[GoTrue] create or replace function auth.role() returns text as $$
+
+[GoTrue]   select nullif(current_setting('request.jwt.claim.role', true), '')::text;
+
+[GoTrue] $$ language sql stable;
+
+[GoTrue]  (conn=tx-3663013679887060969, tx=3663013679887060969)
+
+[GoTrue] 20230131181311   backfill_invite_identities                      Pending   
+
+[GoTrue] 20230322519590   add_flow_state_table                            Pending   
+
+[GoTrue] 20230402418590   add_authentication_method_to_flow_state_table   Pending   
+
+[GoTrue] 20230411005111   remove_duplicate_idx                            Pending   
+
+[GoTrue] 20230508135423   add_cleanup_indexes                             Pending   
+
+[GoTrue] 20230523124323   add_mfa_challenge_cleanup_index                 Pending   
+
+[GoTrue] 20230818113222   add_flow_state_to_relay_state                   Pending   
+
+[GoTrue] 20230914180801   add_mfa_factors_user_id_idx                     Pending   
+
+[GoTrue] 20231027141322   add_session_refresh_columns                     Pending   
+
+[GoTrue] 20231114161723   add_sessions_tag                                Pending   
+
+[GoTrue] 20231117164230   add_id_pkey_identities                          Pending   
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-3663013679887060969, tx=3663013679887060969)
+
+[GoTrue] {"args":["init_auth_schema"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210710035447"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-4343578299113087394, tx=4343578299113087394)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- alter user schema
+
+[GoTrue] 
+
+[GoTrue] ALTER TABLE auth.users 
+
+[GoTrue] ADD COLUMN IF NOT EXISTS phone VARCHAR(15) NULL UNIQUE DEFAULT NULL,
+
+[GoTrue] ADD COLUMN IF NOT EXISTS phone_confirmed_at timestamptz NULL DEFAULT NULL,
+
+[GoTrue] ADD COLUMN IF NOT EXISTS phone_change VARCHAR(15) NULL DEFAULT '',
+
+[GoTrue] ADD COLUMN IF NOT EXISTS phone_change_token VARCHAR(255) NULL DEFAULT '',
+
+[GoTrue] ADD COLUMN IF NOT EXISTS phone_change_sent_at timestamptz NULL DEFAULT NULL;
+
+[GoTrue] 
+
+[GoTrue] DO $$
+
+[GoTrue] BEGIN
+
+[GoTrue]   IF NOT EXISTS(SELECT *
+
+[GoTrue]     FROM information_schema.columns
+
+[GoTrue]     WHERE table_schema = 'auth' and table_name='users' and column_name='email_confirmed_at')
+
+[GoTrue]   THEN
+
+[GoTrue]       ALTER TABLE "auth"."users" RENAME COLUMN "confirmed_at" TO "email_confirmed_at";
+
+[GoTrue]   END IF;
+
+[GoTrue] END $$;
+
+[GoTrue] 
+
+[GoTrue]  (conn=tx-4343578299113087394, tx=4343578299113087394)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-4343578299113087394, tx=4343578299113087394)
+
+[GoTrue] {"args":["alter_users"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210722035447"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-7247459815885950459, tx=7247459815885950459)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- adds confirmed at
+
+[GoTrue] 
+
+[GoTrue] ALTER TABLE auth.users
+
+[GoTrue] ADD COLUMN IF NOT EXISTS confirmed_at timestamptz GENERATED ALWAYS AS (LEAST (users.email_confirmed_at, users.phone_confirmed_at)) STORED;
+
+[GoTrue]  (conn=tx-7247459815885950459, tx=7247459815885950459)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-7247459815885950459, tx=7247459815885950459)
+
+[GoTrue] {"args":["adds_confirmed_at"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210730183235"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-1628198991066027053, tx=1628198991066027053)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- adds email_change_confirmed
+
+[GoTrue] 
+
+[GoTrue] ALTER TABLE auth.users
+
+[GoTrue] ADD COLUMN IF NOT EXISTS email_change_token_current varchar(255) null DEFAULT '', 
+
+[GoTrue] ADD COLUMN IF NOT EXISTS email_change_confirm_status smallint DEFAULT 0 CHECK (email_change_confirm_status >= 0 AND email_change_confirm_status <= 2);
+
+[GoTrue] 
+
+[GoTrue] DO $$
+
+[GoTrue] BEGIN
+
+[GoTrue]   IF NOT EXISTS(SELECT *
+
+[GoTrue]     FROM information_schema.columns
+
+[GoTrue]     WHERE table_schema = 'auth' and table_name='users' and column_name='email_change_token_new')
+
+[GoTrue]   THEN
+
+[GoTrue]       ALTER TABLE "auth"."users" RENAME COLUMN "email_change_token" TO "email_change_token_new";
+
+[GoTrue]   END IF;
+
+[GoTrue] END $$;
+
+[GoTrue]  (conn=tx-1628198991066027053, tx=1628198991066027053)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-1628198991066027053, tx=1628198991066027053)
+
+[GoTrue] {"args":["add_email_change_confirmed"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210909172000"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-5747099282671213844, tx=5747099282671213844)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- adds identities table 
+
+[GoTrue] 
+
+[GoTrue] CREATE TABLE IF NOT EXISTS auth.identities (
+
+[GoTrue]     id text NOT NULL,
+
+[GoTrue]     user_id uuid NOT NULL,
+
+[GoTrue]     identity_data JSONB NOT NULL,
+
+[GoTrue]     provider text NOT NULL,
+
+[GoTrue]     last_sign_in_at timestamptz NULL,
+
+[GoTrue]     created_at timestamptz NULL,
+
+[GoTrue]     updated_at timestamptz NULL,
+
+[GoTrue]     CONSTRAINT identities_pkey PRIMARY KEY (provider, id),
+
+[GoTrue]     CONSTRAINT identities_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+
+[GoTrue] );
+
+[GoTrue] COMMENT ON TABLE auth.identities is 'Auth: Stores identities associated to a user.';
+
+[GoTrue]  (conn=tx-5747099282671213844, tx=5747099282671213844)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-5747099282671213844, tx=5747099282671213844)
+
+[GoTrue] {"args":["create_identities_table"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210927181326"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-330553736714786525, tx=330553736714786525)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- adds parent column
+
+[GoTrue] 
+
+[GoTrue] ALTER TABLE auth.refresh_tokens
+
+[GoTrue] ADD COLUMN IF NOT EXISTS parent varchar(255) NULL;
+
+[GoTrue] 
+
+[GoTrue] DO $$
+
+[GoTrue] BEGIN
+
+[GoTrue]   IF NOT EXISTS(SELECT *
+
+[GoTrue]     FROM information_schema.constraint_column_usage
+
+[GoTrue]     WHERE table_schema = 'auth' and table_name='refresh_tokens' and constraint_name='refresh_tokens_token_unique')
+
+[GoTrue]   THEN
+
+[GoTrue]       ALTER TABLE "auth"."refresh_tokens" ADD CONSTRAINT refresh_tokens_token_unique UNIQUE ("token");
+
+[GoTrue]   END IF;
+
+[GoTrue] 
+
+[GoTrue]   IF NOT EXISTS(SELECT *
+
+[GoTrue]     FROM information_schema.constraint_column_usage
+
+[GoTrue]     WHERE table_schema = 'auth' and table_name='refresh_tokens' and constraint_name='refresh_tokens_parent_fkey')
+
+[GoTrue]   THEN
+
+[GoTrue]       ALTER TABLE "auth"."refresh_tokens" ADD CONSTRAINT refresh_tokens_parent_fkey FOREIGN KEY (parent) REFERENCES auth.refresh_tokens("token");
+
+[GoTrue]   END IF;
+
+[GoTrue] 
+
+[GoTrue]   CREATE INDEX IF NOT EXISTS refresh_tokens_parent_idx ON "auth"."refresh_tokens" USING btree (parent);
+
+[GoTrue] END $$;
+
+[GoTrue] 
+
+[GoTrue]  (conn=tx-330553736714786525, tx=330553736714786525)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-330553736714786525, tx=330553736714786525)
+
+[GoTrue] {"args":["add_refresh_token_parent"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20211122151130"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-6123062133130830911, tx=6123062133130830911)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- create index on identities.user_id
+
+[GoTrue] 
+
+[GoTrue] CREATE INDEX IF NOT EXISTS identities_user_id_idx ON "auth".identities using btree (user_id);
+
+[GoTrue]  (conn=tx-6123062133130830911, tx=6123062133130830911)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-6123062133130830911, tx=6123062133130830911)
+
+[GoTrue] {"args":["create_user_id_idx"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20211124214934"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-7765269933388461072, tx=7765269933388461072)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- update auth functions
+
+[GoTrue] 
+
+[GoTrue] create or replace function auth.uid() 
+
+[GoTrue] returns uuid 
+
+[GoTrue] language sql stable
+
+[GoTrue] as $$
+
+[GoTrue]   select 
+
+[GoTrue]   coalesce(
+
+[GoTrue]     current_setting('request.jwt.claim.sub', true),
+
+[GoTrue]     (current_setting('request.jwt.claims', true)::jsonb ->> 'sub')
+
+[GoTrue]   )::uuid
+
+[GoTrue] $$;
+
+[GoTrue] 
+
+[GoTrue] create or replace function auth.role() 
+
+[GoTrue] returns text 
+
+[GoTrue] language sql stable
+
+[GoTrue] as $$
+
+[GoTrue]   select 
+
+[GoTrue]   coalesce(
+
+[GoTrue]     current_setting('request.jwt.claim.role', true),
+
+[GoTrue]     (current_setting('request.jwt.claims', true)::jsonb ->> 'role')
+
+[GoTrue]   )::text
+
+[GoTrue] $$;
+
+[GoTrue] 
+
+[GoTrue] create or replace function auth.email() 
+
+[GoTrue] returns text 
+
+[GoTrue] language sql stable
+
+[GoTrue] as $$
+
+[GoTrue]   select 
+
+[GoTrue]   coalesce(
+
+[GoTrue]     current_setting('request.jwt.claim.email', true),
+
+[GoTrue]     (current_setting('request.jwt.claims', true)::jsonb ->> 'email')
+
+[GoTrue]   )::text
+
+[GoTrue] $$;
+
+[GoTrue]  (conn=tx-7765269933388461072, tx=7765269933388461072)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-7765269933388461072, tx=7765269933388461072)
+
+[GoTrue] {"args":["update_auth_functions"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20211202183645"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-1918262419973872655, tx=1918262419973872655)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- update auth.uid()
+
+[GoTrue] 
+
+[GoTrue] create or replace function auth.uid()
+
+[GoTrue] returns uuid
+
+[GoTrue] language sql stable
+
+[GoTrue] as $$
+
+[GoTrue]   select
+
+[GoTrue]   nullif(
+
+[GoTrue]     coalesce(
+
+[GoTrue]       current_setting('request.jwt.claim.sub', true),
+
+[GoTrue]       (current_setting('request.jwt.claims', true)::jsonb ->> 'sub')
+
+[GoTrue]     ),
+
+[GoTrue]     ''
+
+[GoTrue]   )::uuid
+
+[GoTrue] $$;
+
+[GoTrue]  (conn=tx-1918262419973872655, tx=1918262419973872655)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-1918262419973872655, tx=1918262419973872655)
+
+[GoTrue] {"args":["update_auth_uid"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220114185221"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-8555681139781395849, tx=8555681139781395849)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- updates users_instance_id_email_idx definition
+
+[GoTrue] 
+
+[GoTrue] DROP INDEX IF EXISTS users_instance_id_email_idx;
+
+[GoTrue] CREATE INDEX IF NOT EXISTS users_instance_id_email_idx on "auth".users using btree (instance_id, lower(email));
+
+[GoTrue]  (conn=tx-8555681139781395849, tx=8555681139781395849)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-8555681139781395849, tx=8555681139781395849)
+
+[GoTrue] {"args":["update_user_idx"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220114185340"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-5451175923458292328, tx=5451175923458292328)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- adds banned_until column
+
+[GoTrue] 
+
+[GoTrue] ALTER TABLE auth.users
+
+[GoTrue] ADD COLUMN IF NOT EXISTS banned_until timestamptz NULL;
+
+[GoTrue]  (conn=tx-5451175923458292328, tx=5451175923458292328)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-5451175923458292328, tx=5451175923458292328)
+
+[GoTrue] {"args":["add_banned_until"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220224000811"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-5202658573717751898, tx=5202658573717751898)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- update auth functions
+
+[GoTrue] 
+
+[GoTrue] create or replace function auth.uid() 
+
+[GoTrue] returns uuid 
+
+[GoTrue] language sql stable
+
+[GoTrue] as $$
+
+[GoTrue]   select 
+
+[GoTrue]   coalesce(
+
+[GoTrue]     nullif(current_setting('request.jwt.claim.sub', true), ''),
+
+[GoTrue]     (nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'sub')
+
+[GoTrue]   )::uuid
+
+[GoTrue] $$;
+
+[GoTrue] 
+
+[GoTrue] create or replace function auth.role() 
+
+[GoTrue] returns text 
+
+[GoTrue] language sql stable
+
+[GoTrue] as $$
+
+[GoTrue]   select 
+
+[GoTrue]   coalesce(
+
+[GoTrue]     nullif(current_setting('request.jwt.claim.role', true), ''),
+
+[GoTrue]     (nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'role')
+
+[GoTrue]   )::text
+
+[GoTrue] $$;
+
+[GoTrue] 
+
+[GoTrue] create or replace function auth.email() 
+
+[GoTrue] returns text 
+
+[GoTrue] language sql stable
+
+[GoTrue] as $$
+
+[GoTrue]   select 
+
+[GoTrue]   coalesce(
+
+[GoTrue]     nullif(current_setting('request.jwt.claim.email', true), ''),
+
+[GoTrue]     (nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'email')
+
+[GoTrue]   )::text
+
+[GoTrue] $$;
+
+[GoTrue]  (conn=tx-5202658573717751898, tx=5202658573717751898)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-5202658573717751898, tx=5202658573717751898)
+
+[GoTrue] {"args":["update_auth_functions"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220323170000"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-6474949790237047320, tx=6474949790237047320)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- adds reauthentication_token and reauthentication_sent_at 
+
+[GoTrue] 
+
+[GoTrue] ALTER TABLE auth.users
+
+[GoTrue] ADD COLUMN IF NOT EXISTS reauthentication_token varchar(255) null default '',
+
+[GoTrue] ADD COLUMN IF NOT EXISTS reauthentication_sent_at timestamptz null default null;
+
+[GoTrue]  (conn=tx-6474949790237047320, tx=6474949790237047320)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-6474949790237047320, tx=6474949790237047320)
+
+[GoTrue] {"args":["add_user_reauthentication"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220429102000"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-7256648333522617777, tx=7256648333522617777)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- add partial unique indices to confirmation_token, recovery_token, email_change_token_current, email_change_token_new, phone_change_token, reauthentication_token
+
+[GoTrue] -- ignores partial unique index creation on fields which contain empty strings, whitespaces or purely numeric otps
+
+[GoTrue] 
+
+[GoTrue] DROP INDEX IF EXISTS confirmation_token_idx; 
+
+[GoTrue] DROP INDEX IF EXISTS recovery_token_idx;
+
+[GoTrue] DROP INDEX IF EXISTS email_change_token_current_idx;
+
+[GoTrue] DROP INDEX IF EXISTS email_change_token_new_idx;
+
+[GoTrue] DROP INDEX IF EXISTS reauthentication_token_idx;
+
+[GoTrue] 
+
+[GoTrue] CREATE UNIQUE INDEX IF NOT EXISTS confirmation_token_idx ON auth.users USING btree (confirmation_token) WHERE confirmation_token !~ '^[0-9 ]*$';
+
+[GoTrue] CREATE UNIQUE INDEX IF NOT EXISTS recovery_token_idx ON auth.users USING btree (recovery_token) WHERE recovery_token !~ '^[0-9 ]*$';
+
+[GoTrue] CREATE UNIQUE INDEX IF NOT EXISTS email_change_token_current_idx ON auth.users USING btree (email_change_token_current) WHERE email_change_token_current !~ '^[0-9 ]*$';
+
+[GoTrue] CREATE UNIQUE INDEX IF NOT EXISTS email_change_token_new_idx ON auth.users USING btree (email_change_token_new) WHERE email_change_token_new !~ '^[0-9 ]*$';
+
+[GoTrue] CREATE UNIQUE INDEX IF NOT EXISTS reauthentication_token_idx ON auth.users USING btree (reauthentication_token) WHERE reauthentication_token !~ '^[0-9 ]*$';
+
+[GoTrue]  (conn=tx-7256648333522617777, tx=7256648333522617777)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-7256648333522617777, tx=7256648333522617777)
+
+[GoTrue] {"args":["add_unique_idx"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220531120530"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-6230574074192548078, tx=6230574074192548078)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- add auth.jwt function
+
+[GoTrue] 
+
+[GoTrue] comment on function auth.uid() is 'Deprecated. Use auth.jwt() -> ''sub'' instead.';
+
+[GoTrue] comment on function auth.role() is 'Deprecated. Use auth.jwt() -> ''role'' instead.';
+
+[GoTrue] comment on function auth.email() is 'Deprecated. Use auth.jwt() -> ''email'' instead.';
+
+[GoTrue] 
+
+[GoTrue] create or replace function auth.jwt()
+
+[GoTrue] returns jsonb
+
+[GoTrue] language sql stable
+
+[GoTrue] as $$
+
+[GoTrue]   select 
+
+[GoTrue]     coalesce(
+
+[GoTrue]         nullif(current_setting('request.jwt.claim', true), ''),
+
+[GoTrue]         nullif(current_setting('request.jwt.claims', true), '')
+
+[GoTrue]     )::jsonb
+
+[GoTrue] $$;
+
+[GoTrue]  (conn=tx-6230574074192548078, tx=6230574074192548078)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-6230574074192548078, tx=6230574074192548078)
+
+[GoTrue] {"args":["add_auth_jwt_function"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220614074223"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-423782409428128719, tx=423782409428128719)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- Add IP Address to audit log
+
+[GoTrue] ALTER TABLE auth.audit_log_entries
+
+[GoTrue] ADD COLUMN IF NOT EXISTS ip_address VARCHAR(64) NOT NULL DEFAULT '';
+
+[GoTrue]  (conn=tx-423782409428128719, tx=423782409428128719)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-423782409428128719, tx=423782409428128719)
+
+[GoTrue] {"args":["add_ip_address_to_audit_log"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220811173540"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-3208670766347285065, tx=3208670766347285065)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- Add session_id column to refresh_tokens table
+
+[GoTrue] create table if not exists auth.sessions (
+
+[GoTrue]     id uuid not null,
+
+[GoTrue]     user_id uuid not null,
+
+[GoTrue]     created_at timestamptz null,
+
+[GoTrue]     updated_at timestamptz null,
+
+[GoTrue]     constraint sessions_pkey primary key (id),
+
+[GoTrue]     constraint sessions_user_id_fkey foreign key (user_id) references auth.users(id) on delete cascade
+
+[GoTrue] );
+
+[GoTrue] comment on table auth.sessions is 'Auth: Stores session data associated to a user.';
+
+[GoTrue] 
+
+[GoTrue] alter table auth.refresh_tokens
+
+[GoTrue] add column if not exists session_id uuid null;
+
+[GoTrue] 
+
+[GoTrue] do $$
+
+[GoTrue] begin
+
+[GoTrue]   if not exists(select *
+
+[GoTrue]     from information_schema.constraint_column_usage
+
+[GoTrue]     where table_schema = 'auth' and table_name='sessions' and constraint_name='refresh_tokens_session_id_fkey')
+
+[GoTrue]   then
+
+[GoTrue]       alter table "auth"."refresh_tokens" add constraint refresh_tokens_session_id_fkey foreign key (session_id) references auth.sessions(id) on delete cascade;
+
+[GoTrue]   end if;
+
+[GoTrue] END $$;
+
+[GoTrue]  (conn=tx-3208670766347285065, tx=3208670766347285065)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-3208670766347285065, tx=3208670766347285065)
+
+[GoTrue] {"args":["add_sessions_table"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221003041349"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-3529113666215514976, tx=3529113666215514976)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- see: https://stackoverflow.com/questions/7624919/check-if-a-user-defined-type-already-exists-in-postgresql/48382296#48382296
+
+[GoTrue] do $$ begin
+
+[GoTrue]     create type factor_type as enum('totp', 'webauthn');
+
+[GoTrue]     create type factor_status as enum('unverified', 'verified');
+
+[GoTrue]     create type aal_level as enum('aal1', 'aal2', 'aal3');
+
+[GoTrue] exception
+
+[GoTrue]     when duplicate_object then null;
+
+[GoTrue] end $$;
+
+[GoTrue] 
+
+[GoTrue] -- auth.mfa_factors definition
+
+[GoTrue] create table if not exists auth.mfa_factors(
+
+[GoTrue]        id uuid not null,
+
+[GoTrue]        user_id uuid not null,
+
+[GoTrue]        friendly_name text null,
+
+[GoTrue]        factor_type factor_type not null,
+
+[GoTrue]        status factor_status not null,
+
+[GoTrue]        created_at timestamptz not null,
+
+[GoTrue]        updated_at timestamptz not null,
+
+[GoTrue]        secret text null,
+
+[GoTrue]        constraint mfa_factors_pkey primary key(id),
+
+[GoTrue]        constraint mfa_factors_user_id_fkey foreign key (user_id) references auth.users(id) on delete cascade
+
+[GoTrue] );
+
+[GoTrue] comment on table auth.mfa_factors is 'auth: stores metadata about factors';
+
+[GoTrue] 
+
+[GoTrue] create unique index if not exists mfa_factors_user_friendly_name_unique on auth.mfa_factors (friendly_name, user_id) where trim(friendly_name) <> '';
+
+[GoTrue] 
+
+[GoTrue] -- auth.mfa_challenges definition
+
+[GoTrue] create table if not exists auth.mfa_challenges(
+
+[GoTrue]        id uuid not null,
+
+[GoTrue]        factor_id uuid not null,
+
+[GoTrue]        created_at timestamptz not null,
+
+[GoTrue]        verified_at timestamptz  null,
+
+[GoTrue]        ip_address  inet not null,
+
+[GoTrue]        constraint mfa_challenges_pkey primary key (id),
+
+[GoTrue]        constraint mfa_challenges_auth_factor_id_fkey foreign key (factor_id) references auth.mfa_factors(id) on delete cascade
+
+[GoTrue] );
+
+[GoTrue] comment on table auth.mfa_challenges is 'auth: stores metadata about challenge requests made';
+
+[GoTrue] 
+
+[GoTrue] 
+
+[GoTrue] 
+
+[GoTrue] -- add factor_id and amr claims to session
+
+[GoTrue] create table if not exists auth.mfa_amr_claims(
+
+[GoTrue]     session_id uuid not null,
+
+[GoTrue]     created_at timestamptz not null,
+
+[GoTrue]     updated_at timestamptz not null,
+
+[GoTrue]     authentication_method text not null,
+
+[GoTrue]     constraint mfa_amr_claims_session_id_authentication_method_pkey unique(session_id, authentication_method),
+
+[GoTrue]     constraint mfa_amr_claims_session_id_fkey foreign key(session_id) references auth.sessions(id) on delete cascade
+
+[GoTrue] );
+
+[GoTrue] comment on table auth.mfa_amr_claims is 'auth: stores authenticator method reference claims for multi factor authentication';
+
+[GoTrue]  (conn=tx-3529113666215514976, tx=3529113666215514976)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-3529113666215514976, tx=3529113666215514976)
+
+[GoTrue] {"args":["add_mfa_schema"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221003041400"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-8103432939199945737, tx=8103432939199945737)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- add factor_id to sessions
+
+[GoTrue]  alter table auth.sessions add column if not exists factor_id uuid null;
+
+[GoTrue]  alter table auth.sessions add column if not exists aal aal_level null;
+
+[GoTrue]  (conn=tx-8103432939199945737, tx=8103432939199945737)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-8103432939199945737, tx=8103432939199945737)
+
+[GoTrue] {"args":["add_aal_and_factor_id_to_sessions"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221011041400"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-8723679640681818183, tx=8723679640681818183)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - alter table auth.mfa_amr_claims
+
+[GoTrue]   add column if not exists id uuid not null;
+
+[GoTrue] 
+
+[GoTrue] do $$
+
+[GoTrue] begin
+
+[GoTrue]   if not exists
+
+[GoTrue]      (select constraint_name
+
+[GoTrue]       from information_schema.table_constraints
+
+[GoTrue]       where table_schema = 'auth'
+
+[GoTrue]       and table_name = 'mfa_amr_claims'
+
+[GoTrue]       and constraint_name = 'amr_id_pk')
+
+[GoTrue]   then
+
+[GoTrue]     alter table auth.mfa_amr_claims add constraint amr_id_pk primary key(id);
+
+[GoTrue]   end if;
+
+[GoTrue] end $$;
+
+[GoTrue] 
+
+[GoTrue] create index if not exists user_id_created_at_idx on auth.sessions (user_id, created_at);
+
+[GoTrue] create index if not exists factor_id_created_at_idx on auth.mfa_factors (user_id, created_at);
+
+[GoTrue] 
+
+[GoTrue]  (conn=tx-8723679640681818183, tx=8723679640681818183)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-8723679640681818183, tx=8723679640681818183)
+
+[GoTrue] {"args":["add_mfa_indexes"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221020193600"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-6239636796572030362, tx=6239636796572030362)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - create index if not exists sessions_user_id_idx on auth.sessions (user_id);
+
+[GoTrue] 
+
+[GoTrue]  (conn=tx-6239636796572030362, tx=6239636796572030362)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-6239636796572030362, tx=6239636796572030362)
+
+[GoTrue] {"args":["add_sessions_user_id_index"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221021073300"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-1851574594814833535, tx=1851574594814833535)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - create index if not exists refresh_tokens_session_id_revoked_idx on auth.refresh_tokens (session_id, revoked);
+
+[GoTrue]  (conn=tx-1851574594814833535, tx=1851574594814833535)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-1851574594814833535, tx=1851574594814833535)
+
+[GoTrue] {"args":["add_refresh_tokens_session_id_revoked_index"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221021082433"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-2995247625470638164, tx=2995247625470638164)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- Multi-instance mode (see auth.instances) table intentionally not supported and ignored.
+
+[GoTrue] 
+
+[GoTrue] create table if not exists auth.sso_providers (
+
+[GoTrue] 	id uuid not null,
+
+[GoTrue] 	resource_id text null,
+
+[GoTrue] 	created_at timestamptz null,
+
+[GoTrue] 	updated_at timestamptz null,
+
+[GoTrue] 	primary key (id),
+
+[GoTrue] 	constraint "resource_id not empty" check (resource_id = null or char_length(resource_id) > 0)
+
+[GoTrue] );
+
+[GoTrue] 
+
+[GoTrue] comment on table auth.sso_providers is 'Auth: Manages SSO identity provider information; see saml_providers for SAML.';
+
+[GoTrue] comment on column auth.sso_providers.resource_id is 'Auth: Uniquely identifies a SSO provider according to a user-chosen resource ID (case insensitive), useful in infrastructure as code.';
+
+[GoTrue] 
+
+[GoTrue] create unique index if not exists sso_providers_resource_id_idx on auth.sso_providers (lower(resource_id));
+
+[GoTrue] 
+
+[GoTrue] create table if not exists auth.sso_domains (
+
+[GoTrue] 	id uuid not null,
+
+[GoTrue] 	sso_provider_id uuid not null,
+
+[GoTrue] 	domain text not null,
+
+[GoTrue] 	created_at timestamptz null,
+
+[GoTrue] 	updated_at timestamptz null,
+
+[GoTrue] 	primary key (id),
+
+[GoTrue] 	foreign key (sso_provider_id) references auth.sso_providers (id) on delete cascade,
+
+[GoTrue] 	constraint "domain not empty" check (char_length(domain) > 0)
+
+[GoTrue] );
+
+[GoTrue] 
+
+[GoTrue] create index if not exists sso_domains_sso_provider_id_idx on auth.sso_domains (sso_provider_id);
+
+[GoTrue] create unique index if not exists sso_domains_domain_idx on auth.sso_domains (lower(domain));
+
+[GoTrue] 
+
+[GoTrue] comment on table auth.sso_domains is 'Auth: Manages SSO email address domain mapping to an SSO Identity Provider.';
+
+[GoTrue] 
+
+[GoTrue] create table if not exists auth.saml_providers (
+
+[GoTrue] 	id uuid not null,
+
+[GoTrue] 	sso_provider_id uuid not null,
+
+[GoTrue] 	entity_id text not null unique,
+
+[GoTrue] 	metadata_xml text not null,
+
+[GoTrue] 	metadata_url text null,
+
+[GoTrue] 	attribute_mapping jsonb null,
+
+[GoTrue] 	created_at timestamptz null,
+
+[GoTrue] 	updated_at timestamptz null,
+
+[GoTrue] 	primary key (id),
+
+[GoTrue] 	foreign key (sso_provider_id) references auth.sso_providers (id) on delete cascade,
+
+[GoTrue] 	constraint "metadata_xml not empty" check (char_length(metadata_xml) > 0),
+
+[GoTrue] 	constraint "metadata_url not empty" check (metadata_url = null or char_length(metadata_url) > 0),
+
+[GoTrue] 	constraint "entity_id not empty" check (char_length(entity_id) > 0)
+
+[GoTrue] );
+
+[GoTrue] 
+
+[GoTrue] create index if not exists saml_providers_sso_provider_id_idx on auth.saml_providers (sso_provider_id);
+
+[GoTrue] 
+
+[GoTrue] comment on table auth.saml_providers is 'Auth: Manages SAML Identity Provider connections.';
+
+[GoTrue] 
+
+[GoTrue] create table if not exists auth.saml_relay_states (
+
+[GoTrue] 	id uuid not null,
+
+[GoTrue] 	sso_provider_id uuid not null,
+
+[GoTrue] 	request_id text not null,
+
+[GoTrue] 	for_email text null,
+
+[GoTrue] 	redirect_to text null,
+
+[GoTrue] 	from_ip_address inet null,
+
+[GoTrue] 	created_at timestamptz null,
+
+[GoTrue] 	updated_at timestamptz null,
+
+[GoTrue] 	primary key (id),
+
+[GoTrue] 	foreign key (sso_provider_id) references auth.sso_providers (id) on delete cascade,
+
+[GoTrue] 	constraint "request_id not empty" check(char_length(request_id) > 0)
+
+[GoTrue] );
+
+[GoTrue] 
+
+[GoTrue] create index if not exists saml_relay_states_sso_provider_id_idx on auth.saml_relay_states (sso_provider_id);
+
+[GoTrue] create index if not exists saml_relay_states_for_email_idx on auth.saml_relay_states (for_email);
+
+[GoTrue] 
+
+[GoTrue] comment on table auth.saml_relay_states is 'Auth: Contains SAML Relay State information for each Service Provider initiated login.';
+
+[GoTrue] 
+
+[GoTrue] create table if not exists auth.sso_sessions (
+
+[GoTrue] 	id uuid not null,
+
+[GoTrue] 	session_id uuid not null,
+
+[GoTrue] 	sso_provider_id uuid null,
+
+[GoTrue] 	not_before timestamptz null,
+
+[GoTrue] 	not_after timestamptz null,
+
+[GoTrue] 	idp_initiated boolean default false,
+
+[GoTrue] 	created_at timestamptz null,
+
+[GoTrue] 	updated_at timestamptz null,
+
+[GoTrue] 	primary key (id),
+
+[GoTrue] 	foreign key (session_id) references auth.sessions (id) on delete cascade,
+
+[GoTrue] 	foreign key (sso_provider_id) references auth.sso_providers (id) on delete cascade
+
+[GoTrue] );
+
+[GoTrue] 
+
+[GoTrue] create index if not exists sso_sessions_session_id_idx on auth.sso_sessions (session_id);
+
+[GoTrue] create index if not exists sso_sessions_sso_provider_id_idx on auth.sso_sessions (sso_provider_id);
+
+[GoTrue] 
+
+[GoTrue] comment on table auth.sso_sessions is 'Auth: A session initiated by an SSO Identity Provider';
+
+[GoTrue] 
+
+[GoTrue]  (conn=tx-2995247625470638164, tx=2995247625470638164)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-2995247625470638164, tx=2995247625470638164)
+
+[GoTrue] {"args":["add_saml"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221027105023"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-5672169607255071939, tx=5672169607255071939)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - create index if not exists identities_user_id_idx on auth.identities using btree (user_id);
+
+[GoTrue]  (conn=tx-5672169607255071939, tx=5672169607255071939)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-5672169607255071939, tx=5672169607255071939)
+
+[GoTrue] {"args":["add_identities_user_id_idx"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221114143122"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-7683474144374621300, tx=7683474144374621300)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - alter table only auth.sessions
+
+[GoTrue]   add column if not exists not_after timestamptz;
+
+[GoTrue] 
+
+[GoTrue] comment on column auth.sessions.not_after is 'Auth: Not after is a nullable column that contains a timestamp after which the session should be regarded as expired.';
+
+[GoTrue]  (conn=tx-7683474144374621300, tx=7683474144374621300)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-7683474144374621300, tx=7683474144374621300)
+
+[GoTrue] {"args":["add_session_not_after_column"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221114143410"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-7330104376569187415, tx=7330104376569187415)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - alter table only auth.refresh_tokens
+
+[GoTrue]   drop constraint refresh_tokens_parent_fkey;
+
+[GoTrue]  (conn=tx-7330104376569187415, tx=7330104376569187415)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-7330104376569187415, tx=7330104376569187415)
+
+[GoTrue] {"args":["remove_parent_foreign_key_refresh_tokens"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221125140132"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-5670009591581181941, tx=5670009591581181941)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- backfill the auth.identities column by adding an email identity 
+
+[GoTrue] -- for all auth.users with an email and password 
+
+[GoTrue] 
+
+[GoTrue] insert into auth.identities (id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+
+[GoTrue] select id, id as user_id, jsonb_build_object('sub', id, 'email', email) as identity_data, 'email' as provider, null as last_sign_in_at, '2022-11-25' as created_at, '2022-11-25' as updated_at
+
+[GoTrue] from auth.users as users
+
+[GoTrue] where encrypted_password != '' and email is not null and not exists(select user_id from auth.identities where user_id = users.id);
+
+[GoTrue]  (conn=tx-5670009591581181941, tx=5670009591581181941)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-5670009591581181941, tx=5670009591581181941)
+
+[GoTrue] {"args":["backfill_email_identity"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221208132122"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-6592597250714330360, tx=6592597250714330360)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- previous backfill migration left last_sign_in_at to be null, which broke some projects
+
+[GoTrue] 
+
+[GoTrue] update auth.identities
+
+[GoTrue]   set last_sign_in_at = '2022-11-25'
+
+[GoTrue]   where
+
+[GoTrue]     last_sign_in_at is null and
+
+[GoTrue]     created_at = '2022-11-25' and
+
+[GoTrue]     updated_at = '2022-11-25' and
+
+[GoTrue]     provider = 'email' and
+
+[GoTrue]     id = user_id::text;
+
+[GoTrue]  (conn=tx-6592597250714330360, tx=6592597250714330360)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-6592597250714330360, tx=6592597250714330360)
+
+[GoTrue] {"args":["backfill_email_last_sign_in_at"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221215195500"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-7074222851064168721, tx=7074222851064168721)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- this change is relatively temporary
+
+[GoTrue] -- it is meant to keep database consistency guarantees until there is proper
+
+[GoTrue] -- introduction of account linking / merging / delinking APIs, at which point
+
+[GoTrue] -- rows in the users table will allow duplicates but with programmatic control
+
+[GoTrue] 
+
+[GoTrue] alter table only auth.users
+
+[GoTrue]   add column if not exists is_sso_user boolean not null default false;
+
+[GoTrue] 
+
+[GoTrue] comment on column auth.users.is_sso_user is 'Auth: Set this column to true when the account comes from SSO. These accounts can have duplicate emails.';
+
+[GoTrue] 
+
+[GoTrue] do $$
+
+[GoTrue] begin
+
+[GoTrue]   alter table only auth.users
+
+[GoTrue]     drop constraint if exists users_email_key;
+
+[GoTrue] exception
+
+[GoTrue] -- dependent object: https://www.postgresql.org/docs/current/errcodes-appendix.html
+
+[GoTrue] when SQLSTATE '2BP01' then
+
+[GoTrue]   raise notice 'Unable to drop users_email_key constraint due to dependent objects, please resolve this manually or SSO may not work';
+
+[GoTrue] end $$;
+
+[GoTrue] 
+
+[GoTrue] create unique index if not exists users_email_partial_key on auth.users (email) where (is_sso_user = false);
+
+[GoTrue] 
+
+[GoTrue] comment on index auth.users_email_partial_key is 'Auth: A partial unique index that applies only when is_sso_user is false';
+
+[GoTrue]  (conn=tx-7074222851064168721, tx=7074222851064168721)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-7074222851064168721, tx=7074222851064168721)
+
+[GoTrue] {"args":["modify_users_email_unique_index"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221215195800"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-7012795473032770652, tx=7012795473032770652)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - update
+
+[GoTrue]   auth.identities as identities
+
+[GoTrue] set
+
+[GoTrue]   identity_data = identity_data || jsonb_build_object('email', (select email from auth.users where id = identities.user_id)),
+
+[GoTrue]   updated_at = '2022-11-25'
+
+[GoTrue] where identities.provider = 'email' and identity_data->>'email' is null;
+
+[GoTrue] 
+
+[GoTrue] alter table only auth.identities
+
+[GoTrue]   add column if not exists email text generated always as (lower(identity_data->>'email')) stored;
+
+[GoTrue] 
+
+[GoTrue] comment on column auth.identities.email is 'Auth: Email is a generated column that references the optional email property in the identity_data';
+
+[GoTrue] 
+
+[GoTrue] create index if not exists identities_email_idx on auth.identities (email text_pattern_ops);
+
+[GoTrue] 
+
+[GoTrue] comment on index auth.identities_email_idx is 'Auth: Ensures indexed queries on the email column';
+
+[GoTrue]  (conn=tx-7012795473032770652, tx=7012795473032770652)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-7012795473032770652, tx=7012795473032770652)
+
+[GoTrue] {"args":["add_identities_email_column"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221215195900"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-331307453234172736, tx=331307453234172736)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- sso_sessions is not used as all of the necessary data is in sessions
+
+[GoTrue] drop table if exists auth.sso_sessions;
+
+[GoTrue] 
+
+[GoTrue]  (conn=tx-331307453234172736, tx=331307453234172736)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-331307453234172736, tx=331307453234172736)
+
+[GoTrue] {"args":["remove_sso_sessions"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230116124310"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-3444625307653255187, tx=3444625307653255187)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- alter phone field column type to accomodate for soft deletion 
+
+[GoTrue] 
+
+[GoTrue] do $$
+
+[GoTrue] begin
+
+[GoTrue]   alter table auth.users
+
+[GoTrue]     alter column phone type text,
+
+[GoTrue]     alter column phone_change type text;
+
+[GoTrue] exception
+
+[GoTrue]   -- SQLSTATE errcodes https://www.postgresql.org/docs/current/errcodes-appendix.html
+
+[GoTrue]   when SQLSTATE '0A000' then
+
+[GoTrue]     raise notice 'Unable to change data type of phone, phone_change columns due to use by a view or rule';
+
+[GoTrue]   when SQLSTATE '2BP01' then
+
+[GoTrue]     raise notice 'Unable to change data type of phone, phone_change columns due to dependent objects';
+
+[GoTrue] end $$;
+
+[GoTrue]  (conn=tx-3444625307653255187, tx=3444625307653255187)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-3444625307653255187, tx=3444625307653255187)
+
+[GoTrue] {"args":["alter_phone_type"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230116124412"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-1057317004950171985, tx=1057317004950171985)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- adds deleted_at column to auth.users 
+
+[GoTrue] 
+
+[GoTrue] alter table auth.users 
+
+[GoTrue] add column if not exists deleted_at timestamptz null;
+
+[GoTrue]  (conn=tx-1057317004950171985, tx=1057317004950171985)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-1057317004950171985, tx=1057317004950171985)
+
+[GoTrue] {"args":["add_deleted_at"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230131181311"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-2882144373758633267, tx=2882144373758633267)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- backfills the missing email identity for invited users
+
+[GoTrue] 
+
+[GoTrue] insert into auth.identities (id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+
+[GoTrue] select id, id as user_id, jsonb_build_object('sub', id, 'email', email) as identity_data, 'email' as provider, null as last_sign_in_at, '2023-01-25' as created_at, '2023-01-25' as updated_at
+
+[GoTrue] from auth.users as users
+
+[GoTrue] where invited_at is not null and not exists (select user_id from auth.identities where user_id = users.id and provider = 'email');
+
+[GoTrue]  (conn=tx-2882144373758633267, tx=2882144373758633267)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-2882144373758633267, tx=2882144373758633267)
+
+[GoTrue] {"args":["backfill_invite_identities"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230322519590"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-2435632985791755420, tx=2435632985791755420)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- see: https://stackoverflow.com/questions/7624919/check-if-a-user-defined-type-already-exists-in-postgresql/48382296#48382296
+
+[GoTrue] do $$ begin
+
+[GoTrue]     create type code_challenge_method as enum('s256', 'plain');
+
+[GoTrue] exception
+
+[GoTrue]     when duplicate_object then null;
+
+[GoTrue] end $$;
+
+[GoTrue] create table if not exists auth.flow_state(
+
+[GoTrue]        id uuid primary key,
+
+[GoTrue]        user_id uuid null,
+
+[GoTrue]        auth_code text not null,
+
+[GoTrue]        code_challenge_method code_challenge_method not null,
+
+[GoTrue]        code_challenge text not null,
+
+[GoTrue]        provider_type text not null,
+
+[GoTrue]        provider_access_token text null,
+
+[GoTrue]        provider_refresh_token text null,
+
+[GoTrue]        created_at timestamptz null,
+
+[GoTrue]        updated_at timestamptz null
+
+[GoTrue] );
+
+[GoTrue] create index if not exists idx_auth_code on auth.flow_state(auth_code);
+
+[GoTrue] comment on table auth.flow_state is 'stores metadata for pkce logins';
+
+[GoTrue]  (conn=tx-2435632985791755420, tx=2435632985791755420)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-2435632985791755420, tx=2435632985791755420)
+
+[GoTrue] {"args":["add_flow_state_table"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230402418590"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-9061996836478650590, tx=9061996836478650590)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - alter table auth.flow_state
+
+[GoTrue] add column if not exists authentication_method text not null;
+
+[GoTrue] create index if not exists idx_user_id_auth_method on auth.flow_state (user_id, authentication_method);
+
+[GoTrue] 
+
+[GoTrue] -- Update comment as we have generalized the table
+
+[GoTrue] comment on table auth.flow_state is 'stores metadata for pkce logins';
+
+[GoTrue]  (conn=tx-9061996836478650590, tx=9061996836478650590)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-9061996836478650590, tx=9061996836478650590)
+
+[GoTrue] {"args":["add_authentication_method_to_flow_state_table"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230411005111"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-8580326932092204622, tx=8580326932092204622)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - drop index if exists auth.refresh_tokens_token_idx;
+
+[GoTrue]  (conn=tx-8580326932092204622, tx=8580326932092204622)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-8580326932092204622, tx=8580326932092204622)
+
+[GoTrue] {"args":["remove_duplicate_idx"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230508135423"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-2892084628196863984, tx=2892084628196863984)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- Indexes used for cleaning up old or stale objects.
+
+[GoTrue] 
+
+[GoTrue] create index if not exists
+
+[GoTrue]   refresh_tokens_updated_at_idx
+
+[GoTrue]   on auth.refresh_tokens (updated_at desc);
+
+[GoTrue] 
+
+[GoTrue] create index if not exists
+
+[GoTrue]   flow_state_created_at_idx
+
+[GoTrue]   on auth.flow_state (created_at desc);
+
+[GoTrue] 
+
+[GoTrue] create index if not exists
+
+[GoTrue]   saml_relay_states_created_at_idx
+
+[GoTrue]   on auth.saml_relay_states (created_at desc);
+
+[GoTrue] 
+
+[GoTrue] create index if not exists
+
+[GoTrue]   sessions_not_after_idx
+
+[GoTrue]   on auth.sessions (not_after desc);
+
+[GoTrue]  (conn=tx-2892084628196863984, tx=2892084628196863984)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-2892084628196863984, tx=2892084628196863984)
+
+[GoTrue] {"args":["add_cleanup_indexes"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230523124323"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-2285506030516142850, tx=2285506030516142850)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - -- Index used to clean up mfa challenges
+
+[GoTrue] 
+
+[GoTrue] create index if not exists
+
+[GoTrue]   mfa_challenge_created_at_idx
+
+[GoTrue]   on auth.mfa_challenges (created_at desc);
+
+[GoTrue]  (conn=tx-2285506030516142850, tx=2285506030516142850)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-2285506030516142850, tx=2285506030516142850)
+
+[GoTrue] {"args":["add_mfa_challenge_cleanup_index"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230818113222"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-2698373967570330178, tx=2698373967570330178)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - alter table auth.saml_relay_states add column if not exists flow_state_id uuid references auth.flow_state(id) on delete cascade default null;
+
+[GoTrue]  (conn=tx-2698373967570330178, tx=2698373967570330178)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-2698373967570330178, tx=2698373967570330178)
+
+[GoTrue] {"args":["add_flow_state_to_relay_state"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230914180801"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-6714600821541261554, tx=6714600821541261554)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - create index if not exists mfa_factors_user_id_idx on auth.mfa_factors(user_id);
+
+[GoTrue]  (conn=tx-6714600821541261554, tx=6714600821541261554)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-6714600821541261554, tx=6714600821541261554)
+
+[GoTrue] {"args":["add_mfa_factors_user_id_idx"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20231027141322"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-123210829262987942, tx=123210829262987942)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - alter table if exists auth.sessions
+
+[GoTrue]   add column if not exists refreshed_at timestamp without time zone,
+
+[GoTrue]   add column if not exists user_agent text,
+
+[GoTrue]   add column if not exists ip inet;
+
+[GoTrue]  (conn=tx-123210829262987942, tx=123210829262987942)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-123210829262987942, tx=123210829262987942)
+
+[GoTrue] {"args":["add_session_refresh_columns"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20231114161723"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-2414142303102401255, tx=2414142303102401255)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - alter table if exists auth.sessions
+
+[GoTrue]   add column if not exists tag text;
+
+[GoTrue]  (conn=tx-2414142303102401255, tx=2414142303102401255)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-2414142303102401255, tx=2414142303102401255)
+
+[GoTrue] {"args":["add_sessions_tag"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20231117164230"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - BEGIN Transaction --- (conn=tx-5501477208430655652, tx=5501477208430655652)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - do $$
+
+[GoTrue] begin
+
+[GoTrue]     if not exists(select * 
+
+[GoTrue]         from information_schema.columns
+
+[GoTrue]         where table_schema = 'auth' and table_name='identities' and column_name='provider_id')
+
+[GoTrue]     then
+
+[GoTrue]         alter table if exists auth.identities 
+
+[GoTrue]         rename column id to provider_id;
+
+[GoTrue]     end if;
+
+[GoTrue] end$$;
+
+[GoTrue] 
+
+[GoTrue] alter table if exists auth.identities 
+
+[GoTrue]     drop constraint if exists identities_pkey,
+
+[GoTrue]     add column if not exists id uuid default gen_random_uuid() primary key;
+
+[GoTrue] 
+
+[GoTrue] do $$
+
+[GoTrue] begin
+
+[GoTrue]   if not exists
+
+[GoTrue]      (select constraint_name
+
+[GoTrue]       from information_schema.table_constraints
+
+[GoTrue]       where table_schema = 'auth'
+
+[GoTrue]       and table_name = 'identities'
+
+[GoTrue]       and constraint_name = 'identities_provider_id_provider_unique')
+
+[GoTrue]   then
+
+[GoTrue]     alter table if exists auth.identities 
+
+[GoTrue]     add constraint identities_provider_id_provider_unique 
+
+[GoTrue]     unique(provider_id, provider);
+
+[GoTrue]   end if;
+
+[GoTrue] end $$;
+
+[GoTrue]  (conn=tx-5501477208430655652, tx=5501477208430655652)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - END Transaction --- (conn=tx-5501477208430655652, tx=5501477208430655652)
+
+[GoTrue] {"args":["add_id_pkey_identities"],"component":"pop","level":"info","msg":"\u003e %s","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] {"args":[44],"component":"pop","level":"info","msg":"Successfully applied %d migrations.","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] {"args":[0.167913446],"component":"pop","level":"info","msg":"%.4f seconds","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] {"level":"info","msg":"GoTrue migrations applied successfully","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] {"level":"debug","msg":"after status","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["00"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210710035447"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210722035447"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210730183235"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210909172000"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20210927181326"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20211122151130"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20211124214934"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20211202183645"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220114185221"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220114185340"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220224000811"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220323170000"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220429102000"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220531120530"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220614074223"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20220811173540"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221003041349"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221003041400"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221011041400"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221020193600"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221021073300"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221021082433"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221027105023"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221114143122"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221114143410"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221125140132"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221208132122"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221215195500"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221215195800"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20221215195900"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230116124310"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230116124412"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230131181311"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230322519590"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230402418590"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230411005111"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230508135423"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230523124323"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230818113222"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20230914180801"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20231027141322"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20231114161723"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] [POP] 2026/03/15 04:05:53 sql - SELECT EXISTS (SELECT schema_migrations.* FROM schema_migrations AS schema_migrations WHERE version = $1) | ["20231117164230"] (conn=conn-5704754213664333959, tx=0, maxconn: 0, openconn: 1, in-use: 0, idle: 1)
+
+[GoTrue] Version          Name                                            Status    
+
+[GoTrue] 00               init_auth_schema                                Applied   
+
+[GoTrue] 20210710035447   alter_users                                     Applied   
+
+[GoTrue] 20210722035447   adds_confirmed_at                               Applied   
+
+[GoTrue] 20210730183235   add_email_change_confirmed                      Applied   
+
+[GoTrue] 20210909172000   create_identities_table                         Applied   
+
+[GoTrue] 20210927181326   add_refresh_token_parent                        Applied   
+
+[GoTrue] 20211122151130   create_user_id_idx                              Applied   
+
+[GoTrue] 20211124214934   update_auth_functions                           Applied   
+
+[GoTrue] 20211202183645   update_auth_uid                                 Applied   
+
+[GoTrue] 20220114185221   update_user_idx                                 Applied   
+
+[GoTrue] 20220114185340   add_banned_until                                Applied   
+
+[GoTrue] 20220224000811   update_auth_functions                           Applied   
+
+[GoTrue] 20220323170000   add_user_reauthentication                       Applied   
+
+[GoTrue] 20220429102000   add_unique_idx                                  Applied   
+
+[GoTrue] 20220531120530   add_auth_jwt_function                           Applied   
+
+[GoTrue] 20220614074223   add_ip_address_to_audit_log                     Applied   
+
+[GoTrue] 20220811173540   add_sessions_table                              Applied   
+
+[GoTrue] 20221003041349   add_mfa_schema                                  Applied   
+
+[GoTrue] 20221003041400   add_aal_and_factor_id_to_sessions               Applied   
+
+[GoTrue] 20221011041400   add_mfa_indexes                                 Applied   
+
+[GoTrue] 20221020193600   add_sessions_user_id_index                      Applied   
+
+[GoTrue] 20221021073300   add_refresh_tokens_session_id_revoked_index     Applied   
+
+[GoTrue] 20221021082433   add_saml                                        Applied   
+
+[GoTrue] 20221027105023   add_identities_user_id_idx                      Applied   
+
+[GoTrue] 20221114143122   add_session_not_after_column                    Applied   
+
+[GoTrue] 20221114143410   remove_parent_foreign_key_refresh_tokens        Applied   
+
+[GoTrue] 20221125140132   backfill_email_identity                         Applied   
+
+[GoTrue] 20221208132122   backfill_email_last_sign_in_at                  Applied   
+
+[GoTrue] 20221215195500   modify_users_email_unique_index                 Applied   
+
+[GoTrue] 20221215195800   add_identities_email_column                     Applied   
+
+[GoTrue] 20221215195900   remove_sso_sessions                             Applied   
+
+[GoTrue] 20230116124310   alter_phone_type                                Applied   
+
+[GoTrue] 20230116124412   add_deleted_at                                  Applied   
+
+[GoTrue] 20230131181311   backfill_invite_identities                      Applied   
+
+[GoTrue] 20230322519590   add_flow_state_table                            Applied   
+
+[GoTrue] 20230402418590   add_authentication_method_to_flow_state_table   Applied   
+
+[GoTrue] 20230411005111   remove_duplicate_idx                            Applied   
+
+[GoTrue] 20230508135423   add_cleanup_indexes                             Applied   
+
+[GoTrue] 20230523124323   add_mfa_challenge_cleanup_index                 Applied   
+
+[GoTrue] 20230818113222   add_flow_state_to_relay_state                   Applied   
+
+[GoTrue] 20230914180801   add_mfa_factors_user_id_idx                     Applied   
+
+[GoTrue] 20231027141322   add_session_refresh_columns                     Applied   
+
+[GoTrue] 20231114161723   add_sessions_tag                                Applied   
+
+[GoTrue] 20231117164230   add_id_pkey_identities                          Applied   
+
+[GoTrue] {"component":"api","level":"warning","msg":"DEPRECATION NOTICE: GOTRUE_JWT_ADMIN_GROUP_NAME not supported by Supabase's GoTrue, will be removed soon","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] {"component":"api","level":"warning","msg":"DEPRECATION NOTICE: GOTRUE_JWT_DEFAULT_GROUP_NAME not supported by Supabase's GoTrue, will be removed soon","time":"2026-03-15T04:05:53Z"}
+
+[GoTrue] {"level":"info","msg":"GoTrue API started on: 0.0.0.0:8081","time":"2026-03-15T04:05:53Z"}
+
+[SupabaseStack] Starting PostgREST...
+[PostgREST] 15/Mar/2026:04:05:54 +0000: Starting PostgREST 12.2.0 (ec89f6b)...
+
+[PostgREST] 15/Mar/2026:04:05:54 +0000: Attempting to connect to the database...
+
+[PostgREST] 15/Mar/2026:04:05:54 +0000: Listening on port 3000
+
+[PostgREST] 15/Mar/2026:04:05:54 +0000: Successfully connected to PostgreSQL 15.1 (Ubuntu 15.1-1.pgdg20.04+1) on aarch64-unknown-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0, 64-bit
+
+[PostgREST] 15/Mar/2026:04:05:54 +0000: Config reloaded
+
+[PostgREST] 15/Mar/2026:04:05:54 +0000: Listening for notifications on the "pgrst" channel
+
+[PostgREST] 15/Mar/2026:04:05:54 +0000: Schema cache queried in 3.9 milliseconds
+
+[PostgREST] 15/Mar/2026:04:05:54 +0000: Schema cache loaded 21 Relations, 23 Relationships, 8 Functions, 0 Domain Representations, 4 Media Type Handlers
+
+[SupabaseStack] Starting Nginx Proxy...
+[Nginx] /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+
+[Nginx] /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+
+[Nginx] /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+
+[Nginx] 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+
+[Nginx] 10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+
+[Nginx] /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+
+[Nginx] /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+
+[Nginx] /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+
+[Nginx] /docker-entrypoint.sh: Configuration complete; ready for start up
+
+[run-with-stack] Cleaning stale auth files...
+[run-with-stack] Creating .env.test with ephemeral Supabase credentials.
+[run-with-stack] Stack ready. Variables exported to .env.test and stack-env.json
+[run-with-stack] Running command: playwright test tests/e2e/landing-page.spec.ts
+(node:2099) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[Nginx] 192.168.147.1 - - [15/Mar/2026:04:05:56 +0000] "GET /health HTTP/1.1" 200 2 "-" "-"
+
+[Playwright] Loading environment variables from .env.test
+[dotenv@17.3.1] injecting env (0) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+Error: http://localhost:3000 is already used, make sure that nothing is running on the port/url or set reuseExistingServer:true in config.webServer.
+
+
+To open last HTML report run:
+[36m[39m
+[36m  yarn playwright show-report test-report/e2e[39m
+[36m[39m
+[run-with-stack] Cleaning up...
+[SupabaseStack] Stopping all containers...
+[GoTrue] {"level":"info","msg":"received graceful shutdown signal","time":"2026-03-15T04:05:57Z"}
+
+[Postgres]  2026-03-15 04:05:57.722 UTC [1] LOG:  received fast shutdown request
+
+[Postgres]  2026-03-15 04:05:57.724 UTC [1] LOG:  aborting any active transactions
+
+[Postgres]  2026-03-15 04:05:57.724 UTC [167] LOG:  pg_cron scheduler shutting down
+
+[Postgres]  2026-03-15 04:05:57.724 UTC [165] FATAL:  terminating background worker "TimescaleDB Background Worker Launcher" due to administrator command
+
+[Postgres]  2026-03-15 04:05:57.725 UTC [1] LOG:  background worker "TimescaleDB Background Worker Launcher" (PID 165) exited with exit code 1
+
+[Postgres]  2026-03-15 04:05:57.725 UTC [1] LOG:  background worker "pg_net 0.8.0 worker" (PID 166) exited with exit code 1
+
+[Postgres]  2026-03-15 04:05:57.725 UTC [1] LOG:  background worker "pg_cron launcher" (PID 167) exited with exit code 1
+
+[Postgres]  2026-03-15 04:05:57.725 UTC [1] LOG:  background worker "logical replication launcher" (PID 168) exited with exit code 1
+
+[Postgres]  2026-03-15 04:05:57.726 UTC [160] LOG:  shutting down
+
+[Postgres]  2026-03-15 04:05:57.727 UTC [160] LOG:  checkpoint starting: shutdown immediate
+
+[run-with-stack] Supabase stack stopped.
+[run-with-stack] Removing .env.test...
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

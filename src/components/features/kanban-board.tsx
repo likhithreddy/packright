@@ -172,7 +172,7 @@ export function KanbanBoard({
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div
         data-testid="kanban-board"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-2 sm:p-4 lg:p-6 h-full min-h-0"
+        className="flex flex-row overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 gap-4 p-2 sm:p-4 lg:p-6 h-full min-h-0 pb-6"
       >
         <KanbanColumnComponent
           id="unassigned"

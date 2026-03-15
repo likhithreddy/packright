@@ -10,7 +10,7 @@ export function BoardViewToggle() {
   const { boardViewMode, setBoardViewMode } = useBoardStore();
 
   return (
-    <div className="hidden md:flex items-center bg-stone-100 rounded-full p-1">
+    <div className="flex items-center bg-stone-100 rounded-full p-1">
       <Button
         variant="ghost"
         size="sm"
@@ -22,8 +22,8 @@ export function BoardViewToggle() {
             : 'text-stone-500 hover:text-stone-700 hover:bg-white/50'
         )}
       >
-        <Eye className="h-3.5 w-3.5 mr-1.5" />
-        <span>My View</span>
+        <Eye className="h-3.5 w-3.5 sm:mr-1.5" />
+        <span className="hidden sm:inline">My View</span>
       </Button>
       <Button
         variant="ghost"
@@ -36,8 +36,8 @@ export function BoardViewToggle() {
             : 'text-stone-500 hover:text-stone-700 hover:bg-white/50'
         )}
       >
-        <Users className="h-3.5 w-3.5 mr-1.5" />
-        <span>All Items</span>
+        <Users className="h-3.5 w-3.5 sm:mr-1.5" />
+        <span className="hidden sm:inline">All Items</span>
       </Button>
     </div>
   );

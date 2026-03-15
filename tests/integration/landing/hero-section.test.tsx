@@ -35,15 +35,15 @@ describe('HeroSection Integration', () => {
     it('renders the hero section with all elements', () => {
       render(<HeroSection />);
 
-      expect(screen.getByText(/Group Travel, Finally Sorted/i)).toBeInTheDocument();
-      expect(screen.getByText(/Pack together,/i)).toBeInTheDocument();
+      expect(screen.getByText(/Premium Group Travel/i)).toBeInTheDocument();
+      expect(screen.getByText(/Pack together/i)).toBeInTheDocument();
       expect(screen.getByText(/show up ready\./i)).toBeInTheDocument();
     });
 
     it('renders the tagline', () => {
       render(<HeroSection />);
 
-      const tagline = screen.getByText('Group Travel, Finally Sorted');
+      const tagline = screen.getByText('Premium Group Travel');
       expect(tagline).toBeInTheDocument();
       expect(tagline).toHaveClass('text-primary');
     });
@@ -53,23 +53,23 @@ describe('HeroSection Integration', () => {
 
       const heading = screen.getByText(/Pack together/i);
       expect(heading).toBeInTheDocument();
-      expect(heading).toHaveClass('text-4xl'); // has responsive classes
+      expect(heading).toHaveClass('text-3xl'); // has responsive classes
     });
 
     it('renders the description paragraph', () => {
       render(<HeroSection />);
 
-      const description = screen.getByText(/PackRight gives your trip group/i);
+      const description = screen.getByText(/The editorial packing board/i);
       expect(description).toBeInTheDocument();
-      expect(description).toHaveClass('text-muted-foreground');
+      expect(description).toHaveClass('text-stone-600');
     });
   });
 
   describe('Call-to-Action Buttons', () => {
-    it('renders "Get Started Free" button with correct link', () => {
+    it('renders "Start Packing Free" button with correct link', () => {
       render(<HeroSection />);
 
-      const getStartedButton = screen.getByText(/Get Started Free/i);
+      const getStartedButton = screen.getByText(/Start Packing Free/i);
       expect(getStartedButton).toBeInTheDocument();
 
       const link = getStartedButton.closest('a');
@@ -86,13 +86,13 @@ describe('HeroSection Integration', () => {
       expect(link).toHaveAttribute('href', '/login');
     });
 
-    it('renders ArrowRight icon in Get Started button', () => {
+    it('renders ArrowUpRight icon in Start Packing button', () => {
       render(<HeroSection />);
 
-      const getStartedButton = screen.getByText(/Get Started Free/i);
+      const getStartedButton = screen.getByText(/Start Packing Free/i);
       expect(getStartedButton).toBeInTheDocument();
 
-      // Check for SVG icon from lucide-react ArrowRight
+      // Check for SVG icon from lucide-react ArrowUpRight
       const { container } = render(<HeroSection />);
       const icon = container.querySelector('svg');
       expect(icon).toBeInTheDocument();
@@ -112,16 +112,15 @@ describe('HeroSection Integration', () => {
       render(<HeroSection />);
 
       const heading = screen.getByText(/Pack together/i);
-      expect(heading).toHaveClass('text-4xl');
-      expect(heading).toHaveClass('sm:text-5xl');
-      expect(heading).toHaveClass('md:text-6xl');
-      expect(heading).toHaveClass('xl:text-7xl');
+      expect(heading).toHaveClass('text-3xl');
+      expect(heading).toHaveClass('sm:text-6xl');
+      expect(heading).toHaveClass('md:text-7xl');
     });
 
     it('has responsive sizing on buttons', () => {
       render(<HeroSection />);
 
-      const getStartedButton = screen.getByText(/Get Started Free/i);
+      const getStartedButton = screen.getByText(/Start Packing Free/i);
       // The button should exist and be rendered
       expect(getStartedButton).toBeInTheDocument();
     });
@@ -140,7 +139,8 @@ describe('HeroSection Integration', () => {
       const { container } = render(<HeroSection />);
 
       const wrapper = container.firstChild as HTMLElement;
-      expect(wrapper).toHaveClass('gap-6');
+      expect(wrapper).toHaveClass('gap-2');
+      expect(wrapper).toHaveClass('sm:gap-6');
       expect(wrapper).toHaveClass('lg:gap-8');
     });
   });
@@ -149,7 +149,7 @@ describe('HeroSection Integration', () => {
     it('has semantic heading structure', () => {
       render(<HeroSection />);
 
-      const h2 = screen.getByText('Group Travel, Finally Sorted');
+      const h2 = screen.getByText('Premium Group Travel');
       const h1 = screen.getByText(/Pack together/i);
 
       expect(h2.tagName).toBe('H2');
@@ -159,7 +159,7 @@ describe('HeroSection Integration', () => {
     it('has descriptive link text for screen readers', () => {
       render(<HeroSection />);
 
-      expect(screen.getByRole('link', { name: /get started free/i })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /start packing free/i })).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /sign in/i })).toBeInTheDocument();
     });
   });
