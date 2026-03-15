@@ -30,19 +30,32 @@ const mockPastTrip: Trip = {
 
 describe('TripCard Component', () => {
   it('renders active trip details correctly', () => {
-    render(<TripCard trip={mockActiveTrip} />);
+    render(<TripCard trip={mockActiveTrip} memberCount={2} />);
 
     expect(screen.getByText('Summer Vacation in Paris')).toBeInTheDocument();
     expect(screen.getByText('Paris, France')).toBeInTheDocument();
-    expect(screen.getByText('Active Trip')).toBeInTheDocument();
+    expect(screen.getByText('Active')).toBeInTheDocument();
+    expect(screen.getByText('2 members')).toBeInTheDocument();
+    // Should render 0% by default for uniformity
+    expect(screen.getByText('Group Readiness')).toBeInTheDocument();
+    expect(screen.getByText('0%')).toBeInTheDocument();
   });
 
   it('renders past trip details correctly', () => {
-    render(<TripCard trip={mockPastTrip} />);
+    render(<TripCard trip={mockPastTrip} memberCount={1} />);
 
     expect(screen.getByText('Winter Ski Trip')).toBeInTheDocument();
     expect(screen.getByText('Aspen, Colorado')).toBeInTheDocument();
-    expect(screen.getByText('Past Trip')).toBeInTheDocument();
+    expect(screen.getByText('Past')).toBeInTheDocument();
+    expect(screen.getByText('1 member')).toBeInTheDocument();
+    // Should render 0% by default for uniformity
+    expect(screen.getByText('0%')).toBeInTheDocument();
+  });
+
+  it('renders readiness progress when percentage is provided', () => {
+    render(<TripCard trip={mockActiveTrip} percentage={45} />);
+    expect(screen.getByText('Group Readiness')).toBeInTheDocument();
+    expect(screen.getByText('45%')).toBeInTheDocument();
   });
 
   it('links to the correct trip ID', () => {
@@ -60,10 +73,10 @@ describe('TripCard Component', () => {
     };
     const { format } = require('date-fns');
     const startStr = format(new Date(sameMonthTrip.date_start), 'MMM d');
-    const endStr = format(new Date(sameMonthTrip.date_end), 'MMM d, yyyy');
+    const endStr = format(new Date(sameMonthTrip.date_end), 'MMM d');
 
     render(<TripCard trip={sameMonthTrip} />);
-    expect(screen.getByText(`${startStr} - ${endStr}`)).toBeInTheDocument();
+    expect(screen.getByText(`${startStr} – ${endStr}`)).toBeInTheDocument();
   });
 
   it('formats dates correctly for trips spanning different months', () => {
@@ -74,10 +87,10 @@ describe('TripCard Component', () => {
     };
     const { format } = require('date-fns');
     const startStr = format(new Date(spanningTrip.date_start), 'MMM d');
-    const endStr = format(new Date(spanningTrip.date_end), 'MMM d, yyyy');
+    const endStr = format(new Date(spanningTrip.date_end), 'MMM d');
 
     render(<TripCard trip={spanningTrip} />);
-    expect(screen.getByText(`${startStr} - ${endStr}`)).toBeInTheDocument();
+    expect(screen.getByText(`${startStr} – ${endStr}`)).toBeInTheDocument();
   });
 
   it('has appropriate accessibility labels', () => {

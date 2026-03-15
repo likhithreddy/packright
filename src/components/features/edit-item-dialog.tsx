@@ -138,7 +138,11 @@ export function EditItemDialog({
                       placeholder="Enter quantity"
                       className="h-10"
                       {...field}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      value={field.value ?? ''}
+                      onChange={(e) => {
+                        const val = e.target.valueAsNumber;
+                        field.onChange(isNaN(val) ? 0 : val);
+                      }}
                       min={1}
                       max={1000}
                     />

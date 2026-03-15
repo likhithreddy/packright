@@ -19,9 +19,10 @@ import {
 interface AutoAssignButtonProps {
   tripId: string;
   className?: string;
+  onSuccess?: () => void;
 }
 
-export function AutoAssignButton({ tripId, className }: AutoAssignButtonProps) {
+export function AutoAssignButton({ tripId, className, onSuccess }: AutoAssignButtonProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isPending, setIsPending] = React.useState(false);
   const router = useRouter();
@@ -41,6 +42,10 @@ export function AutoAssignButton({ tripId, className }: AutoAssignButtonProps) {
 
       toast.success(result.message || 'Items assigned successfully!');
       setIsOpen(false);
+
+      if (onSuccess) {
+        onSuccess();
+      }
 
       // Refresh the page to show updated claims
       router.refresh();
