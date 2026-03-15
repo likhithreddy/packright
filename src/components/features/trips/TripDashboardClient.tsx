@@ -12,6 +12,7 @@ import { PackingBoard } from '@/components/features/packing-board';
 import { ViewToggle } from '@/components/features/view-toggle';
 import { BoardViewToggle } from '@/components/features/board-view-toggle';
 import { ReadinessVisualizer } from '@/components/features/readiness-visualizer';
+import { AutoAssignButton } from '@/components/features/trips/auto-assign-button';
 import { getInitials } from '@/lib/profile-utils';
 import { TripMemberWithProfile } from '@/lib/supabase/trip-members';
 import { Trip } from '@/types/database.types';
@@ -199,6 +200,7 @@ export function TripDashboardClient({
                 </span>
                 <span>{stats.percentClaimed}% claimed</span>
                 <span>{stats.percentPacked}% packed</span>
+                {currentUserIsAdmin && <AutoAssignButton tripId={tripId} className="ml-1" />}
                 <span className="hidden xs:inline">{stats.unassignedItems} unassigned</span>
               </div>
 

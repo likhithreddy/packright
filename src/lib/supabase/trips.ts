@@ -101,7 +101,6 @@ export async function createTrip(
             name: item,
             required_count: 1,
             category: 'Essentials',
-            status: 'needed',
           };
         }
         return {
@@ -109,7 +108,6 @@ export async function createTrip(
           name: item.name,
           required_count: item.quantity || 1,
           category: item.category || 'Essentials',
-          status: 'needed',
         };
       });
 

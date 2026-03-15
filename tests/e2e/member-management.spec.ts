@@ -15,7 +15,6 @@ import { test, expect } from '@playwright/test';
 import {
   seedMemberManagementTestData,
   cleanupMemberManagementTestData,
-  createSearchTestUsers,
   deterministicUUID,
   type SeedTestDataResult,
 } from './helpers/seed-test-data';
@@ -37,14 +36,7 @@ const PROJECT_USERNAME_MAP: Record<string, string> = {
 };
 
 test.describe('Member Management Flows', () => {
-  test.beforeAll(async () => {
-    // Create search test users (Alice Johnson, Bob Smith) ONCE for all tests
-    // These need to exist in the database since search uses Server Actions
-    searchUserIds = await createSearchTestUsers();
-    console.log(
-      `[beforeAll] Created search users: Alice=${searchUserIds.aliceId}, Bob=${searchUserIds.bobId}`
-    );
-  });
+  // searchUserIds initialization handled in beforeEach via seedMemberManagementTestData
 
   test.beforeEach(async ({ page }, testInfo) => {
     // ISSUE-#45: Generate a unique trip ID for each test to ensure test isolation
@@ -58,7 +50,11 @@ test.describe('Member Management Flows', () => {
 
     // Seed real test data for server component rendering
     // Pass the project username to ensure the correct user is used as admin
-    seedResult = await seedMemberManagementTestData({ tripId: currentTripId, projectUsername });
+    seedResult = await seedMemberManagementTestData({
+      tripId: currentTripId,
+      projectUsername,
+      includeSearchUsers: true,
+    });
 
     // Debug: Log what members were seeded
     console.log(`[Test] Seeded tripId: ${seedResult.tripId}`);

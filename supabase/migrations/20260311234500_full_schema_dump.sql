@@ -288,7 +288,7 @@ CREATE POLICY "items_delete" ON public.items FOR DELETE TO public USING (is_admi
 
 -- Item Claims
 CREATE POLICY "item_claims_select" ON public.item_claims FOR SELECT TO public USING (EXISTS ( SELECT 1 FROM items i WHERE ((i.id = item_claims.item_id) AND (is_member_of(i.trip_id) OR (EXISTS ( SELECT 1 FROM trips t WHERE ((t.id = i.trip_id) AND (t.created_by = auth.uid()))))))));
-CREATE POLICY "item_claims_insert" ON public.item_claims FOR INSERT TO public WITH CHECK (((user_id = auth.uid()) AND (EXISTS ( SELECT 1 FROM items i WHERE ((i.id = item_claims.item_id) AND (is_member_of(i.trip_id) OR (EXISTS ( SELECT 1 FROM trips t WHERE ((t.id = i.trip_id) AND (t.created_by = auth.uid()))))))))));
+CREATE POLICY "item_claims_insert" ON public.item_claims FOR INSERT TO public WITH CHECK ((user_id = auth.uid()) OR is_admin_of(trip_id));
 CREATE POLICY "item_claims_update" ON public.item_claims FOR UPDATE TO public USING (user_id = auth.uid());
 CREATE POLICY "item_claims_delete" ON public.item_claims FOR DELETE TO public USING (user_id = auth.uid());
 

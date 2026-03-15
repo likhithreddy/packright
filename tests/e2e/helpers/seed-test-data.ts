@@ -49,6 +49,7 @@ export interface SeedTestDataOptions {
   currentUserId?: string;
   numberOfMembers?: number; // Number of members to create (default: 2)
   projectUsername?: string; // Specific project username to use (e.g., 'e2e_chromium', 'e2e_firefox')
+  includeSearchUsers?: boolean; // Whether to create Alice/Bob search users
 }
 
 export interface SeedTestDataResult {
@@ -234,7 +235,12 @@ export async function createSearchTestUsers(): Promise<{
 export async function seedMemberManagementTestData(options: SeedTestDataOptions = {}) {
   // Use a valid UUID for the trip ID
   const tripId = options.tripId || deterministicUUID('test-trip-123');
-  const { currentUserId, numberOfMembers = 2, projectUsername } = options;
+  const {
+    currentUserId,
+    numberOfMembers = 2,
+    projectUsername,
+    includeSearchUsers = false,
+  } = options;
 
   // Get current user ID from profiles if not provided
   let userId = currentUserId;
@@ -252,6 +258,7 @@ export async function seedMemberManagementTestData(options: SeedTestDataOptions 
       .limit(1);
 
     userId = profiles?.[0]?.id;
+    console.log(`[seedTestData] Found userId ${userId} for username "${usernameQuery.username}"`);
 
     // Fallback to any e2e user if specific user not found
     if (!userId) {
@@ -298,22 +305,20 @@ export async function seedMemberManagementTestData(options: SeedTestDataOptions 
   // This fixes foreign key constraint issues and timing problems
   await new Promise((resolve) => setTimeout(resolve, 200));
 
-  // 2. Create trip member for current user (admin) - use randomUUID for uniqueness
-  const { error: memberError } = await supabase.from('trip_members').upsert(
+  // 2. Create trip member for current user (admin) - use randomUUID  // 2. Add members
+  console.log(`[seedTestData] Adding userId ${userId} as admin to trip ${tripId}`);
+  const { error: adminError } = await supabase.from('trip_members').upsert(
     {
-      id: randomUUID(),
       trip_id: tripId,
       user_id: userId,
       role: 'admin',
     },
     { onConflict: 'trip_id,user_id' }
   );
-  if (memberError) {
-    console.error(`[seedTestData] Failed to upsert trip member:`, JSON.stringify(memberError));
+  if (adminError) {
+    console.error(`[seedTestData] Failed to add admin member: ${JSON.stringify(adminError)}`);
   } else {
-    console.log(
-      `[seedTestData] Successfully created trip member for user ${userId} on trip ${tripId}`
-    );
+    console.log(`[seedTestData] Successfully added admin ${userId} to trip ${tripId}`);
   }
 
   // ISSUE-#45: Add explicit wait for database commit to ensure data is visible to server components
@@ -458,11 +463,18 @@ export async function seedMemberManagementTestData(options: SeedTestDataOptions 
     }
   }
 
+  // 4. Create search users if requested
+  let searchUserIds = undefined;
+  if (includeSearchUsers) {
+    searchUserIds = await createSearchTestUsers();
+  }
+
   return {
     tripId,
     currentUserId: userId,
     existingMemberId: existingMemberTripId,
     createdAuthUserId: createdExistingUserId,
+    searchUserIds,
     verifiedAdmin: !!verifyMember, // Include verification status in result
   };
 }
@@ -710,12 +722,12 @@ export async function seedKanbanBoardData(options: {
     // Set status-based fields
     if (item.status === 'claimed' && item.claimed_by) {
       itemData.claimed_by = item.claimed_by;
-      itemData.claimed_quantity = item.claimed_quantity || item.quantity;
+      itemData.claimed_quantity = item.claimed_quantity || item.required_count;
     } else if (item.status === 'packed' && item.claimed_by) {
       itemData.claimed_by = item.claimed_by;
-      itemData.claimed_quantity = item.claimed_quantity || item.quantity;
+      itemData.claimed_quantity = item.claimed_quantity || item.required_count;
       itemData.packed_by = item.claimed_by;
-      itemData.packed_quantity = item.claimed_quantity || item.quantity;
+      itemData.packed_quantity = item.claimed_quantity || item.required_count;
     }
 
     const { error } = await supabase.from('items').insert(itemData);
@@ -863,4 +875,66 @@ export async function seedLargeBoardData(options: { tripId: string; itemCount: n
   await new Promise((resolve) => setTimeout(resolve, 500));
 
   console.log(`[seedTestData] Successfully created ${itemCount} items for trip ${tripId}`);
+}
+
+/**
+ * Seed items and claims specifically for auto-assign testing
+ */
+export async function seedAutoAssignItems(options: {
+  tripId: string;
+  items: Array<{
+    name: string;
+    required_count: number;
+    category?: string;
+  }>;
+  existingClaims?: Array<{
+    userId: string;
+    itemId: string;
+    quantity: number;
+  }>;
+}) {
+  const { tripId, items, existingClaims = [] } = options;
+
+  console.log(`[seedTestData] Seeding auto-assign items for trip ${tripId}`);
+
+  // 1. Insert items
+  const itemsToInsert = items.map((item) => ({
+    id: randomUUID(),
+    trip_id: tripId,
+    name: item.name,
+    category: item.category || 'Essentials',
+    required_count: item.required_count,
+    claim_type: 'multiple',
+  }));
+
+  const { error: itemsError } = await supabase.from('items').insert(itemsToInsert);
+  if (itemsError) {
+    console.error(`[seedTestData] Failed to insert items:`, JSON.stringify(itemsError));
+    throw itemsError;
+  }
+
+  // Map names to IDs for claims
+  const itemMap = new Map(itemsToInsert.map((i) => [i.name, i.id]));
+
+  // 2. Insert existing claims if any
+  if (existingClaims.length > 0) {
+    const claimsToInsert = existingClaims.map((claim) => ({
+      id: randomUUID(),
+      trip_id: tripId,
+      item_id: claim.itemId,
+      user_id: claim.userId,
+      quantity: claim.quantity,
+    }));
+
+    const { error: claimsError } = await supabase.from('item_claims').insert(claimsToInsert);
+    if (claimsError) {
+      console.error(`[seedTestData] Failed to insert claims:`, JSON.stringify(claimsError));
+      throw claimsError;
+    }
+  }
+
+  // Wait for database commit
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  return { itemIds: Array.from(itemMap.values()), itemMap };
 }
