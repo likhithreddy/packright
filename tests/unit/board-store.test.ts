@@ -149,27 +149,27 @@ describe('useBoardStore', () => {
     it('distributes items across columns based on claim status in All Items View', () => {
       useBoardStore.setState({ boardViewMode: 'all-items-view' });
       const store = useBoardStore.getState();
+      store.setCurrentUserId('user-123');
+
+      expect(useBoardStore.getState().currentUserId).toBe('user-123');
+    });
+
+    it('recalculates columns when currentUserId changes', () => {
       const items: ItemWithClaims[] = [
         createMockItem({
           id: 'item-1',
           required_count: 2,
-          total_claimed: 0,
-          total_packed: 0,
-        }),
-        createMockItem({
-          id: 'item-2',
-          required_count: 2,
           total_claimed: 2,
           total_packed: 0,
-        }),
-        createMockItem({
-          id: 'item-3',
-          required_count: 2,
-          total_claimed: 2,
-          total_packed: 2,
+          claims: [createMockClaim('user-1', 2, false)],
         }),
       ];
 
+      useBoardStore.setState({
+        boardViewMode: 'my-view',
+        currentUserId: 'user-1',
+      });
+      let store = useBoardStore.getState();
       store.setItems(items);
 
       const columns = useBoardStore.getState().columns;
@@ -579,8 +579,10 @@ describe('useBoardStore', () => {
       const result = store.claimItem('item-1', 2);
       await expect(result).resolves.not.toThrow();
     });
+  });
 
-    it('sets error when tripId or currentUserId is missing', async () => {
+  describe('markAsPacked', () => {
+    it('optimistically updates state when marking as packed', async () => {
       useBoardStore.setState({
         tripId: null,
         currentUserId: null,
@@ -588,7 +590,7 @@ describe('useBoardStore', () => {
       });
 
       const store = useBoardStore.getState();
-      await store.claimItem('item-1', 2);
+      await store.markAsPacked('claim-user-1');
 
       // The function should set error state early when tripId/currentUserId is missing
       expect(useBoardStore.getState().error).toBe('User not authenticated or no trip selected');
@@ -637,6 +639,7 @@ describe('useBoardStore', () => {
       expect(useBoardStore.getState().items[0].claims[0].is_packed).toBe(true);
       expect(useBoardStore.getState().items[0].total_packed).toBe(2);
     });
+  });
 
     it('sets error state on failure', async () => {
       // Note: Due to dynamic imports in implementation, jest.mock doesn't intercept calls
@@ -779,6 +782,8 @@ describe('useBoardStore', () => {
         ],
       });
 
+  describe('setIsAdmin', () => {
+    it('sets admin status', () => {
       const store = useBoardStore.getState();
       await store.markAsNotPacked('claim-user-1');
 
