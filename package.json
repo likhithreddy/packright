@@ -13,7 +13,8 @@
     "test:watch": "jest --watch",
     "test:report": "jest tests/unit tests/integration --coverage",
     "test:e2e": "npx tsx tests/e2e/infra/run-with-stack.ts playwright test",
-    "test:e2e:direct": "playwright test"
+    "test:e2e:direct": "playwright test",
+    "test:e2e:show-report": "playwright show-report test-report/e2e"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
