@@ -4,13 +4,30 @@
 
 ---
 
+## 📦 Final Project Deliverables (CS7180)
+
+| Deliverable              | Link                                                                                                                                                              |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Demo Video**           | [Watch on YouTube](https://youtu.be/_mb5iR5gVps)                                                                                                                  |
+| **Technical Blog**       | [Read on Medium](https://likhithreddyrechintala.medium.com/from-chaos-to-collaboration-building-a-real-time-packing-app-with-ai-powered-development-e5cb202f1c50) |
+| **Blog Cross-Post**      | [Read on LinkedIn](https://www.linkedin.com/posts/likhithreddyrechintala_packright-traveltech-grouptravel-activity-7439199827726438400-BmMp)                      |
+| **Live Application**     | [packright-hl.vercel.app](https://packright-hl.vercel.app)                                                                                                        |
+| **Git Repository**       | [github.com/likhithreddy/packright](https://github.com/likhithreddy/packright)                                                                                    |
+| **API Documentation**    | [OpenAPI Spec](./docs/openapi.yaml)                                                                                                                               |
+| **Test Coverage Report** | [View Report](./test-report/index.html)                                                                                                                           |
+| **E2E Test Report**      | [View Report](./test-report/e2e/index.html)                                                                                                                       |
+| **Evaluation Dashboard** | [View Metrics](./docs/EVALUATION_DASHBOARD.md)                                                                                                                    |
+
+---
+
 ## Quick Links
 
-| Resource           | Link                                                                                   |
-| ------------------ | -------------------------------------------------------------------------------------- |
-| **Demo Video**     | [Youtube Demo Video](https://www.youtube.com/watch?v=PLACEHOLDER)                      |
-| **Technical Blog** | [Technical Blog Post](https://PLACEHOLDER)                                             |
-| **Git Repository** | [https://github.com/likhithreddy/packright](https://github.com/likhithreddy/packright) |
+| Resource            | Link                                                                                                                                                              |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Demo Video**      | [Watch on YouTube](https://youtu.be/_mb5iR5gVps)                                                                                                                  |
+| **Technical Blog**  | [Read on Medium](https://likhithreddyrechintala.medium.com/from-chaos-to-collaboration-building-a-real-time-packing-app-with-ai-powered-development-e5cb202f1c50) |
+| **Blog Cross-Post** | [Read on LinkedIn](https://www.linkedin.com/posts/likhithreddyrechintala_packright-traveltech-grouptravel-activity-7439199827726438400-BmMp)                      |
+| **Git Repository**  | [https://github.com/likhithreddy/packright](https://github.com/likhithreddy/packright)                                                                            |
 
 ---
 

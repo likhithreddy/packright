@@ -25,7 +25,7 @@ PackRight is a collaborative web application that helps groups coordinate packin
 
 ### Core Capabilities
 
-1. **AI-Powered List Generation:** Uses GroqAPI (llama-3.1-70b-versatile) to generate contextualized packing lists based on trip descriptions
+1. **AI-Powered List Generation:** Uses GroqAPI (llama-3.3-70b-versatile) to generate contextualized packing lists based on trip descriptions
 2. **Real-Time Collaboration:** Multi-user kanban board with instant updates via Supabase Realtime
 3. **Fair Distribution:** Algorithm that automatically assigns items to team members
 4. **Progress Tracking:** Visual group readiness metrics and per-member contribution tracking
@@ -42,8 +42,8 @@ PackRight is a collaborative web application that helps groups coordinate packin
 │  │   Client Side   │    │  Server Side    │    │   Database      │  │
 │  │   (Browser)     │    │  (Vercel)       │    │  (Supabase)     │  │
 │  ├─────────────────┤    ├─────────────────┤    ├─────────────────┤  │
-│  │ • Next.js 14    │────│ • API Routes    │────│ • PostgreSQL    │  │
-│  │ • React 18      │    │ • Server Comps  │    │ • Auth          │  │
+│  │ • Next.js 16    │────│ • API Routes    │────│ • PostgreSQL    │  │
+│  │ • React 19      │    │ • Server Comps  │    │ • Auth          │  │
 │  │ • Zustand       │    │ • GroqAPI       │    │ • Realtime      │  │
 │  │ • dnd-kit       │    └─────────────────┘    │ • RLS Policies  │  │
 │  │ • Framer Motion │                           └─────────────────┘  │
@@ -60,7 +60,7 @@ PackRight is a collaborative web application that helps groups coordinate packin
 
 ### Frontend Technologies
 
-#### Next.js 14 (App Router)
+#### Next.js 16 (App Router)
 
 **Why We Chose It:**
 
@@ -198,13 +198,13 @@ colors: {
 
 - **Speed:** Fastest inference API available (50-100ms token generation)
 - **Cost:** Significantly cheaper than alternatives at time of selection
-- **Model Quality:** llama-3.1-70b-versatile provides excellent structured JSON output
+- **Model Quality:** llama-3.3-70b-versatile provides excellent structured JSON output
 - **Simple API:** Straightforward REST API without complex SDK requirements
 
 **Model Selection:**
 
 ```
-Model: llama-3.1-70b-versatile
+Model: llama-3.3-70b-versatile
 - 70 billion parameters for high-quality reasoning
 - Optimized for structured JSON output
 - Fast inference with Groq's LPU servers
@@ -232,9 +232,21 @@ src/
 │   ├── (dashboard)/             # Protected dashboard routes
 │   │   ├── dashboard/           # User's trip list
 │   │   └── trip/[id]/           # Individual trip view
+│   ├── actions/                 # Server Actions (form handlers, mutations)
+│   │   ├── trips.ts             # Trip creation actions
+│   │   └── trip-members.ts      # Member management actions
 │   ├── api/                     # API routes
-│   │   └── generate-list/       # AI list generation endpoint
-│   └── layout.tsx               # Root layout
+│   │   ├── generate-list/       # AI list generation endpoint
+│   │   ├── trips/[id]/          # Trip-specific endpoints
+│   │   │   └── auto-assign/     # Auto-assign items endpoint
+│   │   └── openapi/             # API documentation
+│   │       └── spec/            # OpenAPI spec endpoint
+│   ├── auth/                    # Supabase auth callback routes
+│   │   └── callback/            # OAuth callback handler
+│   ├── docs/                    # API documentation pages
+│   ├── onboarding/              # User onboarding flow
+│   ├── layout.tsx               # Root layout
+│   └── page.tsx                 # Landing page
 │
 ├── components/
 │   ├── ui/                      # Base Shadcn UI components
@@ -250,11 +262,17 @@ src/
 │       ├── auth/                # Authentication flows
 │       │   ├── LoginForm.tsx
 │       │   └── SignupForm.tsx
-│       ├── trips/               # Trip management
+│       ├── landing/             # Landing page components
+│       │   └── Hero.tsx
+│       ├── profile/             # User profile components
+│       │   └── ProfileSettings.tsx
+│       ├── trips/               # Trip management components
 │       │   ├── TripDashboardClient.tsx
 │       │   ├── new-trip-modal.tsx
-│       │   └── members-modal.tsx
-│       ├── packing-board/       # Kanban board
+│       │   ├── members-modal.tsx
+│       │   ├── trip-card.tsx
+│       │   └── trip-grid.tsx
+│       ├── packing-board/       # Kanban board components
 │       │   ├── kanban-board.tsx
 │       │   ├── kanban-column.tsx
 │       │   └── kanban-card.tsx
@@ -266,15 +284,19 @@ src/
 │   │   ├── server.ts            # Server client
 │   │   ├── items.ts             # Item queries
 │   │   ├── trips.ts             # Trip queries
-│   │   └── trip-members.ts      # Member queries
-│   └── utils.ts                 # General utilities
+│   │   ├── trip-members.ts      # Member queries
+│   │   └── auto-assign.ts       # Auto-assign algorithm
+│   └── utils/                   # General utilities
+│       ├── category-icons.tsx   # Category icon mappings
+│       └── ...                  # Other utility files
 │
 ├── store/                       # Zustand stores
 │   └── board-store.ts           # Board state management
 │
 └── types/                       # TypeScript definitions
     ├── board.types.ts           # Board-related types
-    └── database.types.ts        # Database-generated types
+    ├── database.types.ts        # Database-generated types
+    └── ...                      # Other type definitions
 ```
 
 ### Key Components
@@ -401,6 +423,73 @@ interface TripDashboardClientProps {
 - Autocomplete search for users by username
 - Real-time username availability checking
 - Invite confirmation dialog
+
+---
+
+### Server Actions
+
+Server Actions provide a way to run server-side code directly from client components, reducing the need for separate API routes.
+
+#### Purpose
+
+Server Actions in PackRight handle form submissions and mutations that require server-side validation and database operations.
+
+#### Key Files
+
+**`src/app/actions/trips.ts`**
+
+- `createTripAction(data: NewTripInput)`: Creates a new trip with validation
+  - Validates input using Zod schema
+  - Authenticates the user
+  - Creates trip and initial admin membership
+  - Returns success/error response
+
+**`src/app/actions/trip-members.ts`**
+
+- `searchUsersAction(query: string)`: Searches for users by username (min 3 chars)
+- `getTripMembersAction(tripId: string)`: Fetches all trip members with profiles
+- `inviteTripMemberAction(tripId, userId, fullName)`: Invites a user to the trip (admin only)
+- `removeTripMemberAction(tripId, userId)`: Removes a member from the trip (admin only)
+
+#### Response Pattern
+
+All Server Actions return a standardized response type:
+
+```typescript
+type ActionResponse<T> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+  warning?: string;
+};
+```
+
+#### Usage Example
+
+```typescript
+// In a form component
+'use client';
+
+import { createTripAction } from '@/app/actions/trips';
+
+export function NewTripForm() {
+  async function handleSubmit(formData: FormData) {
+    const result = await createTripAction({
+      title: formData.get('title'),
+      destination: formData.get('destination'),
+      // ...
+    });
+
+    if (result.success) {
+      // Handle success
+    } else {
+      // Show error
+    }
+  }
+
+  return <form action={handleSubmit}>...</form>;
+}
+```
 
 ---
 
@@ -1174,7 +1263,7 @@ Current architecture supports:
   ├───────────────────────────────────────────────────────────────────────┤
   │                                                                       │
   │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌───────────┐  │
-  │  │   React 18   │  │   Zustand    │  │   dnd-kit    │  │Framer M.  │  │
+  │  │   React 19   │  │   Zustand    │  │   dnd-kit    │  │Framer M.  │  │
   │  │ Components   │  │  State Store │  │  Drag & Drop │  │Animation  │  │
   │  └──────────────┘  └──────────────┘  └──────────────┘  └───────────┘  │
   │                                                                       │
@@ -1205,7 +1294,7 @@ Current architecture supports:
           │  Supabase   │ │  GroqAPI    │  │   Vercel    │
           │   Cloud     │ │  (AI Model) │  │    CDN      │
           ├─────────────┤ ├─────────────┤  ├─────────────┤
-          │ PostgreSQL  │ │ llama-3.1   │  │ Static      │
+          │ PostgreSQL  │ │ llama-3.3   │  │ Static      │
           │ Auth        │ │ 70b-vers.   │  │ Assets      │
           │ Realtime    │ │             │  │             │
           │ RLS Policies│ │             │  │             │
@@ -1226,6 +1315,44 @@ Current architecture supports:
   │                                                                       │
   └───────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Testing Architecture
+
+PackRight uses a comprehensive testing strategy with multiple test types:
+
+### Test Structure
+
+```
+tests/
+├── e2e/                          # Playwright E2E tests
+│   ├── flows/                    # User flow tests
+│   └── infra/                    # Test infrastructure
+│       └── run-with-stack.ts     # Stack runner for E2E tests
+├── integration/                  # Integration tests
+│   └── *.test.tsx                # Component integration tests
+├── unit/                         # Unit tests
+│   └── *.test.ts                 # Isolated unit tests
+└── helpers/                      # Test utilities and fixtures
+    ├── index.ts                  # Helper exports
+    ├── render-helpers.tsx        # Custom render utilities
+    ├── supabase-mock.ts          # Supabase mock factory
+    └── test-data-builder.ts      # Test data generators
+```
+
+### Test Helpers
+
+The `tests/helpers/` directory provides reusable testing utilities:
+
+- **render-helpers.tsx**: Custom React Testing Library render functions with providers
+- **supabase-mock.ts**: Mock Supabase client for isolated testing
+- **test-data-builder.ts**: Builder pattern for creating test data
+
+### Coverage Requirements
+
+- **Minimum Coverage:** 80% (branches, functions, lines, statements)
+- **CI Blocker:** PRs cannot merge if coverage drops below 80%
 
 ---
 

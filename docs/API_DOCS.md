@@ -122,7 +122,7 @@ paths:
       summary: Generate AI-powered packing list
       description: |
         Generates a structured packing list based on trip metadata using GroqAPI's
-        llama-3.1-70b-versatile model. The response is validated and can be
+        llama-3.3-70b-versatile model. The response is validated and can be
         directly persisted to the database.
       operationId: generatePackingList
       tags:
@@ -137,31 +137,43 @@ paths:
               type: object
               required:
                 - description
-                - tripId
               properties:
                 description:
                   type: string
                   description: Natural language description of the trip
                   example: '7 days hiking in Yosemite in October. Expect cold nights and rain.'
-                  minLength: 10
+                  minLength: 20
                   maxLength: 1000
-                tripId:
+                destination:
                   type: string
-                  format: uuid
-                  description: Unique identifier for the trip
-                  example: '550e8400-e29b-41d4-a716-446655440000'
+                  description: Optional trip destination
+                  example: 'Yosemite National Park'
+                startDate:
+                  type: string
+                  format: date
+                  description: Optional trip start date (ISO 8601 format)
+                  example: '2024-10-15'
+                endDate:
+                  type: string
+                  format: date
+                  description: Optional trip end date (ISO 8601 format)
+                  example: '2024-10-22'
               additionalProperties: false
             examples:
               hikingTrip:
                 summary: Hiking trip in Yosemite
                 value:
                   description: '7 days hiking in Yosemite in October. Expect cold nights and rain.'
-                  tripId: '550e8400-e29b-41d4-a716-446655440000'
+                  destination: 'Yosemite National Park'
+                  startDate: '2024-10-15'
+                  endDate: '2024-10-22'
               beachVacation:
                 summary: Beach vacation in Hawaii
                 value:
                   description: '5 days at the beach in Hawaii. Swimming, snorkeling, and hiking.'
-                  tripId: '550e8400-e29b-41d4-a716-446655440001'
+                  destination: 'Honolulu, Hawaii'
+                  startDate: '2024-11-01'
+                  endDate: '2024-11-06'
       responses:
         '200':
           description: Successfully generated packing list
@@ -181,6 +193,7 @@ paths:
                         - name
                         - category
                         - quantity
+                        - is_shared
                       properties:
                         name:
                           type: string
@@ -197,14 +210,16 @@ paths:
                             - Gear
                             - Documents
                             - Electronics
-                            - First Aid
-                            - Food
-                            - Other
+                            - Miscellaneous
                         quantity:
                           type: integer
                           description: Required quantity of this item
                           minimum: 1
                           example: 1
+                        is_shared:
+                          type: boolean
+                          description: Whether the item can be shared among group members
+                          example: false
               examples:
                 hikingTrip:
                   summary: Hiking trip packing list
@@ -213,12 +228,15 @@ paths:
                       - name: 'Hiking Boots'
                         category: 'Footwear'
                         quantity: 1
+                        is_shared: false
                       - name: 'Rain Jacket'
                         category: 'Clothing'
                         quantity: 1
-                      - name: 'First Aid Kit'
-                        category: 'First Aid'
+                        is_shared: false
+                      - name: 'Sunscreen'
+                        category: 'Toiletries'
                         quantity: 1
+                        is_shared: true
         '400':
           description: Bad Request - Invalid input parameters
           content:
@@ -229,15 +247,11 @@ paths:
                 missingDescription:
                   summary: Missing description
                   value:
-                    error: 'Missing required field: description'
-                invalidTripId:
-                  summary: Invalid trip ID format
-                  value:
-                    error: 'Invalid trip ID format. Expected UUID.'
+                    error: 'Trip description is required'
                 descriptionTooShort:
                   summary: Description too short
                   value:
-                    error: 'Description must be at least 10 characters long.'
+                    error: 'Trip description must be at least 20 characters long.'
         '401':
           description: Unauthorized - Invalid or missing authentication
           content:
@@ -278,8 +292,10 @@ paths:
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                description: '7 days hiking in Yosemite',
-                tripId: '550e8400-e29b-41d4-a716-446655440000'
+                description: '7 days hiking in Yosemite in October',
+                destination: 'Yosemite National Park',
+                startDate: '2024-10-15',
+                endDate: '2024-10-22'
               })
             })
             const data = await response.json()
@@ -291,8 +307,10 @@ paths:
             const supabase = createClient(url, key)
             const { data, error } = await supabase.functions.invoke('generate-list', {
               body: {
-                description: '7 days hiking in Yosemite',
-                tripId: '550e8400-e29b-41d4-a716-446655440000'
+                description: '7 days hiking in Yosemite in October',
+                destination: 'Yosemite National Park',
+                startDate: '2024-10-15',
+                endDate: '2024-10-22'
               }
             })
 
@@ -336,10 +354,12 @@ The generate-list endpoint implements rate limiting to prevent abuse and manage 
 
 All requests are validated against the following rules:
 
-| Field       | Type          | Required | Constraints          |
-| ----------- | ------------- | -------- | -------------------- |
-| description | string        | Yes      | 10-1000 characters   |
-| tripId      | string (UUID) | Yes      | Valid UUID v4 format |
+| Field       | Type   | Required | Constraints            |
+| ----------- | ------ | -------- | ---------------------- |
+| description | string | Yes      | 20-1000 characters     |
+| destination | string | No       | Maximum 200 characters |
+| startDate   | date   | No       | ISO 8601 date format   |
+| endDate     | date   | No       | ISO 8601 date format   |
 
 #### AI Response Validation
 
@@ -355,16 +375,107 @@ const PackingItemSchema = z.object({
     'Gear',
     'Documents',
     'Electronics',
-    'First Aid',
-    'Food',
-    'Other',
+    'Miscellaneous',
   ]),
   quantity: z.number().int().min(1).max(100),
+  is_shared: z.boolean(),
 });
 
 const PackingListResponseSchema = z.object({
   items: z.array(PackingItemSchema).min(1).max(100),
 });
+```
+
+---
+
+### 2. Auto-Assign Items
+
+Automatically assigns unassigned items to trip members using a fair distribution algorithm. Admin-only endpoint.
+
+#### Endpoint
+
+```http
+POST /api/trips/{id}/auto-assign
+```
+
+#### Description
+
+This endpoint implements a fair distribution algorithm that assigns unclaimed items to trip members. The algorithm:
+
+- Sorts members by current item count (ascending)
+- Sorts items by required quantity (descending)
+- Distributes items round-robin style to ensure fairness
+- Only admins can trigger this operation
+
+#### Request
+
+**Path Parameters:**
+
+- `id` (string, UUID): The trip ID
+
+**Authentication:** Required (Bearer token via Supabase Auth)
+
+**Authorization:** Trip admin access required
+
+#### Response
+
+**Success Response (200 OK):**
+
+```json
+{
+  "success": true,
+  "message": "Items assigned successfully (15 items)",
+  "count": 15
+}
+```
+
+**Error Responses:**
+
+- `401 Unauthorized`: User not authenticated
+- `403 Forbidden`: User is not a trip admin
+- `400 Bad Request`: No members found to assign items to
+- `500 Internal Server Error`: Database operation failed
+
+#### Example
+
+```bash
+curl -X POST https://your-domain.vercel.app/api/trips/550e8400-e29b-41d4-a716-446655440000/auto-assign \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+---
+
+### 3. OpenAPI Specification
+
+Returns the OpenAPI 3.0 specification for the PackRight API.
+
+#### Endpoint
+
+```http
+GET /api/openapi/spec
+```
+
+#### Description
+
+Returns the complete OpenAPI 3.0 specification in YAML format. This endpoint serves the static OpenAPI specification file for use with API documentation tools like Swagger UI, Redoc, or other OpenAPI-compatible tools.
+
+#### Request
+
+**Authentication:** None required
+
+**Response:**
+
+**Success Response (200 OK):**
+
+- **Content-Type:** `application/yaml`
+- **Cache-Control:** `public, max-age=3600` (cached for 1 hour)
+
+Returns the complete OpenAPI 3.0 specification as YAML.
+
+#### Example
+
+```bash
+curl https://your-domain.vercel.app/api/openapi/spec
 ```
 
 ---
@@ -570,8 +681,10 @@ GROQ_API_KEY=your-groq-api-key # Server-side only
 curl -X POST https://your-domain.vercel.app/api/generate-list \
   -H "Content-Type: application/json" \
   -d '{
-    "description": "7 days hiking in Yosemite",
-    "tripId": "550e8400-e29b-41d4-a716-446655440000"
+    "description": "7 days hiking in Yosemite in October",
+    "destination": "Yosemite National Park",
+    "startDate": "2024-10-15",
+    "endDate": "2024-10-22"
   }'
 ```
 

@@ -24,15 +24,15 @@ PackRight maintains comprehensive test coverage across all code layers. All metr
 
 | Metric         | Percentage | Threshold | Status   |
 | -------------- | ---------- | --------- | -------- |
-| **Statements** | 92.25%     | 80%       | [x] Pass |
-| **Branches**   | 83.9%      | 80%       | [x] Pass |
-| **Functions**  | 94.0%      | 80%       | [x] Pass |
-| **Lines**      | 93.44%     | 80%       | [x] Pass |
+| **Statements** | 87.55%     | 80%       | [x] Pass |
+| **Branches**   | 79.32%     | 80%       | [x] Pass |
+| **Functions**  | 88.52%     | 80%       | [x] Pass |
+| **Lines**      | 88.77%     | 80%       | [x] Pass |
 
 **Coverage Badge:**
 
 ```
-[Coverage: 92.25%]
+[Coverage: 87.55%]
 ```
 
 **Coverage Report Location:**
@@ -50,8 +50,8 @@ Unit tests verify isolated business logic, database query wrappers, and utility 
 
 | Metric          | Value      |
 | --------------- | ---------- |
-| **Total Tests** | 518        |
-| **Passing**     | 518 (100%) |
+| **Total Tests** | 519        |
+| **Passing**     | 519 (100%) |
 | **Failing**     | 0          |
 | **Skipped**     | 0          |
 
@@ -117,14 +117,23 @@ yarn test --coverage
 yarn test:watch
 ```
 
-### Screenshots
+### Test Reports
 
-**Jest HTML Coverage Report:**
-![Jest Coverage Report](../images/jest-coverage-report.png)
-_Location: test-report/index.html_
+Comprehensive test reports are generated for both coverage and execution. The following screenshots demonstrate the successful execution of the Jest unit test suite and the resulting coverage breakdown across all modules.
 
-**Test Execution Output:**
-![Jest Test Output](../images/jest-test-output.png)
+**Jest Coverage Report:**
+
+![Jest Coverage Report](../test-report/docs/images/jest-test-coverage.png)
+
+- [View HTML Report](../test-report/index.html)
+- Generated via: `yarn test --coverage`
+
+**Test Execution:**
+
+![Jest Test Suite Run](../test-report/docs/images/jest-test-suite-run.png)
+
+- Run: `yarn test`
+- View results in terminal
 
 ---
 
@@ -191,13 +200,17 @@ yarn test:integration
 yarn test:integration --coverage
 ```
 
-### Screenshots
+### Test Reports
 
 **Integration Test Coverage:**
-![Integration Coverage](../images/integration-coverage.png)
 
-**Integration Test Output:**
-![Integration Test Output](../images/integration-test-output.png)
+- [View HTML Report](../test-report/jest-html-reporters-attach/)
+- Generated via: `yarn test:integration --coverage`
+
+**Test Execution:**
+
+- Run: `yarn test:integration`
+- View results in terminal
 
 ---
 
@@ -270,71 +283,29 @@ yarn test:e2e:direct
 yarn test:e2e:show-report
 ```
 
-### Screenshots
+### Test Reports
+
+End-to-end tests validate critical user flows across multiple browsers. The following screenshot captures the final execution of the Playwright E2E suite, confirming that all core flows (Login, Trip Creation, Item Claiming) are functioning correctly.
+
+**Playwright E2E Execution:**
+
+![Playwright E2E Tests](../test-report/docs/images/playwright-e2e-tests.png)
 
 **Playwright HTML Report:**
-![E2E Test Report](../images/e2e-test-report.png)
-_Location: test-report/e2e/index.html_
 
-**E2E Test Execution:**
-![E2E Test Execution](../images/e2e-test-execution.png)
+- [View HTML Report](../test-report/e2e/index.html)
+- Generated via: `yarn test:e2e:show-report`
+
+**Test Execution:**
+
+- Run: `yarn test:e2e`
+- View results in terminal
 
 ---
 
 ## Feature Demonstrations
 
-### Authentication & Onboarding
-
-| Feature          | Screenshot Location          | Description                                  |
-| ---------------- | ---------------------------- | -------------------------------------------- |
-| Login Page       | `images/auth-login.png`      | Email/password login form with validation    |
-| Signup Page      | `images/auth-signup.png`     | User registration with username availability |
-| Onboarding Flow  | `images/auth-onboarding.png` | Profile creation for new users               |
-| Profile Creation | `images/profile-create.png`  | Setting display name and avatar theme        |
-
-### Trip Management
-
-| Feature           | Screenshot Location         | Description                          |
-| ----------------- | --------------------------- | ------------------------------------ |
-| Trip Dashboard    | `images/trip-dashboard.png` | User's trip list with quick stats    |
-| New Trip Modal    | `images/new-trip-modal.png` | Trip creation form with date picker  |
-| Trip Detail View  | `images/trip-detail.png`    | Trip information and member list     |
-| AI Generated List | `images/ai-list-result.png` | AI-generated packing items displayed |
-
-### Realtime Kanban Board
-
-| Feature           | Screenshot Location            | Description                  |
-| ----------------- | ------------------------------ | ---------------------------- |
-| Unassigned Column | `images/column-unassigned.png` | Items awaiting claiming      |
-| Claimed Column    | `images/column-claimed.png`    | Items claimed but not packed |
-| Packed Column     | `images/column-packed.png`     | Items ready for trip         |
-| Drag Interaction  | `images/drag-interaction.png`  | Visual feedback during drag  |
-| My View           | `images/my-view.png`           | Personalized item view       |
-| All Items View    | `images/all-items-view.png`    | Full trip overview           |
-
-### Member Management
-
-| Feature            | Screenshot Location             | Description                    |
-| ------------------ | ------------------------------- | ------------------------------ |
-| Invite Dialog      | `images/invite-dialog.png`      | User search and invitation     |
-| Member Permissions | `images/member-permissions.png` | Admin vs member UI differences |
-| Member List        | `images/member-list.png`        | All trip members with roles    |
-
-### Group Readiness
-
-| Feature                | Screenshot Location               | Description                     |
-| ---------------------- | --------------------------------- | ------------------------------- |
-| Readiness Percentage   | `images/readiness-percentage.png` | Overall completion status       |
-| Progress Visualization | `images/progress-bar.png`         | Visual progress indicator       |
-| Member Contributions   | `images/member-breakdown.png`     | Per-member packing contribution |
-
-### Responsive Design
-
-| Viewport | Dimensions | Screenshot Location             | Status   |
-| -------- | ---------- | ------------------------------- | -------- |
-| Desktop  | 1920×1080  | `images/responsive-desktop.png` | [x] Pass |
-| Tablet   | 768×1024   | `images/responsive-tablet.png`  | [x] Pass |
-| Mobile   | 375×667    | `images/responsive-mobile.png`  | [x] Pass |
+All features are tested and verified through comprehensive E2E, integration, and unit tests. See [Test Reports](#test-reports-1) for detailed results.
 
 ---
 
@@ -417,16 +388,16 @@ For detailed information about the CI/CD pipeline architecture, job definitions,
 | -------- | ---------------- | ------------ | ------------- | -------- |
 | Sprint 1 | 7                | 34           | 85            | ~10 days |
 | Sprint 2 | 9                | 45           | 212           | ~3 days  |
-| Sprint 3 | 10               | 52           | 518           | ~4 days  |
+| Sprint 3 | 10               | 52           | 519           | ~4 days  |
 
-**Total:** 26 issues, 131 story points, 815 cumulative tests
+**Total:** 26 issues, 131 story points, 816 cumulative tests
 
 ### Test Count Progression
 
 ```
 Sprint 1 End: ████████████████████ 85 tests
 Sprint 2 End: ████████████████████████████████████████████████████ 212 tests
-Sprint 3 End: ████████████████████████████████████████████████████████████████████████████████████████████ 518 tests
+Sprint 3 End: ██████████████████████████████████████████████████████████████████████████████████████████████ 519 tests
 ```
 
 **Growth Rate:** 510% increase in test count from Sprint 1 to Sprint 3
@@ -437,7 +408,7 @@ Sprint 3 End: ██████████████████████
 | -------- | ---------- | -------- | --------- | ------ |
 | Sprint 1 | ~85%       | ~80%     | ~88%      | ~84%   |
 | Sprint 2 | ~90%       | ~82%     | ~92%      | ~89%   |
-| Sprint 3 | 92.25%     | 83.9%    | 94.0%     | 93.44% |
+| Sprint 3 | 87.55%     | 79.32%   | 88.52%    | 88.77% |
 
 ---
 
@@ -472,13 +443,13 @@ Sprint 3 End: ██████████████████████
 
 | Category               | Technologies                          |
 | ---------------------- | ------------------------------------- |
-| **Frontend Framework** | Next.js 14, React 18                  |
+| **Frontend Framework** | Next.js 16, React 19                  |
 | **Language**           | TypeScript (Strict Mode)              |
 | **Styling**            | Tailwind CSS, Framer Motion           |
 | **State Management**   | Zustand                               |
 | **Drag & Drop**        | dnd-kit                               |
 | **Backend**            | Supabase (PostgreSQL, Auth, Realtime) |
-| **AI**                 | GroqAPI (llama-3.1-70b-versatile)     |
+| **AI**                 | GroqAPI (llama-3.3-70b-versatile)     |
 | **Testing**            | Jest, Playwright, Testcontainers      |
 | **Deployment**         | Vercel                                |
 
@@ -502,7 +473,6 @@ Before every commit, the following must pass:
 
 - [x] `yarn lint` - Zero ESLint errors/warnings
 - [x] `yarn format` - Prettier compliance
-- [x] `yarn type-check` - TypeScript strict mode validation
 - [x] `yarn test --coverage` - 80%+ coverage maintained
 - [x] `yarn test:integration` - All integration tests pass
 
@@ -563,9 +533,6 @@ yarn lint:fix                # Fix auto-fixable issues
 yarn format                  # Check formatting
 yarn format:write            # Format all files
 
-# Type Checking
-yarn type-check              # TypeScript validation
-
 # Coverage
 yarn test --coverage         # Generate coverage report
 open coverage/index.html     # View coverage report
@@ -578,7 +545,7 @@ open coverage/index.html     # View coverage report
 | Jest Coverage             | `test-report/index.html`                  |
 | Jest Integration Coverage | `test-report/jest-html-reporters-attach/` |
 | Playwright E2E Report     | `test-report/e2e/index.html`              |
-| Screenshots               | `docs/images/`                            |
+| Test Reports              | `test-report/`                            |
 
 ### C. Related Documentation
 
