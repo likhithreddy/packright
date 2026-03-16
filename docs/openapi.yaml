@@ -16,6 +16,10 @@ servers:
 tags:
   - name: AI Generation
     description: AI-powered packing list generation
+  - name: Trip Management
+    description: Trip member and item management operations
+  - name: API Documentation
+    description: API specification endpoints
 
 paths:
   /api/generate-list:
@@ -23,7 +27,7 @@ paths:
       summary: Generate AI-powered packing list
       description: |
         Generates a structured packing list based on trip metadata using GroqAPI's
-        llama-3.1-70b-versatile model. The response is validated and can be
+        llama-3.3-70b-versatile model. The response is validated and can be
         directly persisted to the database.
       operationId: generatePackingList
       tags:
@@ -41,12 +45,16 @@ paths:
                 summary: Hiking trip in Yosemite
                 value:
                   description: '7 days hiking in Yosemite in October. Expect cold nights and rain.'
-                  tripId: '550e8400-e29b-41d4-a716-446655440000'
+                  destination: 'Yosemite National Park'
+                  startDate: '2024-10-15'
+                  endDate: '2024-10-22'
               beachVacation:
                 summary: Beach vacation in Hawaii
                 value:
                   description: '5 days at the beach in Hawaii. Swimming, snorkeling, and hiking.'
-                  tripId: '550e8400-e29b-41d4-a716-446655440001'
+                  destination: 'Honolulu, Hawaii'
+                  startDate: '2024-11-01'
+                  endDate: '2024-11-06'
       responses:
         '200':
           description: Successfully generated packing list
@@ -62,12 +70,15 @@ paths:
                       - name: 'Hiking Boots'
                         category: 'Footwear'
                         quantity: 1
+                        is_shared: false
                       - name: 'Rain Jacket'
                         category: 'Clothing'
                         quantity: 1
-                      - name: 'First Aid Kit'
-                        category: 'First Aid'
+                        is_shared: false
+                      - name: 'Sunscreen'
+                        category: 'Toiletries'
                         quantity: 1
+                        is_shared: true
         '400':
           description: Bad Request - Invalid input parameters
           content:
@@ -78,15 +89,11 @@ paths:
                 missingDescription:
                   summary: Missing description
                   value:
-                    error: 'Missing required field: description'
-                invalidTripId:
-                  summary: Invalid trip ID format
-                  value:
-                    error: 'Invalid trip ID format. Expected UUID.'
+                    error: 'Trip description is required'
                 descriptionTooShort:
                   summary: Description too short
                   value:
-                    error: 'Description must be at least 10 characters long.'
+                    error: 'Trip description must be at least 20 characters long.'
         '401':
           description: Unauthorized - Invalid or missing authentication
           content:
@@ -125,8 +132,10 @@ paths:
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                description: '7 days hiking in Yosemite',
-                tripId: '550e8400-e29b-41d4-a716-446655440000'
+                description: '7 days hiking in Yosemite in October',
+                destination: 'Yosemite National Park',
+                startDate: '2024-10-15',
+                endDate: '2024-10-22'
               })
             })
             const data = await response.json()
@@ -138,10 +147,134 @@ paths:
             const supabase = createClient(url, key)
             const { data, error } = await supabase.functions.invoke('generate-list', {
               body: {
-                description: '7 days hiking in Yosemite',
-                tripId: '550e8400-e29b-41d4-a716-446655440000'
+                description: '7 days hiking in Yosemite in October',
+                destination: 'Yosemite National Park',
+                startDate: '2024-10-15',
+                endDate: '2024-10-22'
               }
             })
+
+  /api/trips/{id}/auto-assign:
+    post:
+      summary: Auto-assign items to trip members
+      description: |
+        Automatically assigns unassigned items to trip members using a fair distribution
+        algorithm. Sorts members by current item count and distributes items round-robin.
+        Only trip admins can perform this operation.
+      operationId: autoAssignItems
+      tags:
+        - Trip Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The trip ID
+          schema:
+            type: string
+            format: uuid
+          example: '550e8400-e29b-41d4-a716-446655440000'
+      responses:
+        '200':
+          description: Items assigned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                  - count
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Items assigned successfully (15 items)'
+                  count:
+                    type: integer
+                    description: Number of items assigned
+                    example: 15
+              examples:
+                success:
+                  summary: Successful assignment
+                  value:
+                    success: true
+                    message: 'Items assigned successfully (15 items)'
+                    count: 15
+                noItems:
+                  summary: No items to assign
+                  value:
+                    success: true
+                    message: 'Items assigned successfully (already complete)'
+                    count: 0
+        '401':
+          description: Unauthorized - User not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Unauthorized'
+        '403':
+          description: Forbidden - User is not a trip admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Forbidden: Admin access required'
+        '400':
+          description: Bad Request - No members found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'No members found to assign items to'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Failed to save assignments'
+
+  /api/openapi/spec:
+    get:
+      summary: Get OpenAPI specification
+      description: |
+        Returns the complete OpenAPI 3.0 specification for the PackRight API in YAML format.
+        This endpoint serves the static specification for use with API documentation tools.
+      operationId: getOpenApiSpec
+      tags:
+        - API Documentation
+      responses:
+        '200':
+          description: OpenAPI specification in YAML format
+          content:
+            application/yaml:
+              schema:
+                type: string
+                description: OpenAPI 3.0 specification as YAML
+          headers:
+            Cache-Control:
+              description: Cache for 1 hour
+              schema:
+                type: string
+                example: 'public, max-age=3600'
+        '500':
+          description: Internal Server Error - Failed to load specification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Failed to load API specification'
+                message: 'File not found'
 
 components:
   securitySchemes:
@@ -173,19 +306,28 @@ components:
       type: object
       required:
         - description
-        - tripId
       properties:
         description:
           type: string
           description: Natural language description of the trip
           example: '7 days hiking in Yosemite in October. Expect cold nights and rain.'
-          minLength: 10
+          minLength: 20
           maxLength: 1000
-        tripId:
+        destination:
           type: string
-          format: uuid
-          description: Unique identifier for the trip
-          example: '550e8400-e29b-41d4-a716-446655440000'
+          description: Optional trip destination
+          example: 'Yosemite National Park'
+          maxLength: 200
+        startDate:
+          type: string
+          format: date
+          description: Optional trip start date (ISO 8601 format)
+          example: '2024-10-15'
+        endDate:
+          type: string
+          format: date
+          description: Optional trip end date (ISO 8601 format)
+          example: '2024-10-22'
       additionalProperties: false
 
     PackingItem:
@@ -194,6 +336,7 @@ components:
         - name
         - category
         - quantity
+        - is_shared
       properties:
         name:
           type: string
@@ -210,14 +353,16 @@ components:
             - Gear
             - Documents
             - Electronics
-            - First Aid
-            - Food
-            - Other
+            - Miscellaneous
         quantity:
           type: integer
           description: Required quantity of this item
           minimum: 1
           example: 1
+        is_shared:
+          type: boolean
+          description: Whether the item can be shared among group members
+          example: false
 
     GenerateListResponse:
       type: object

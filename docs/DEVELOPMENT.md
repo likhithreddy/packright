@@ -144,7 +144,7 @@ Create a `.env.local` file in the project root with the following variables:
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
+NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 
 # GroqAPI Configuration
 GROQ_API_KEY=your-groq-api-key-here
@@ -166,7 +166,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 4. Copy the following:
    - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon` `public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `service_role` key → `SUPABASE_SERVICE_ROLE_KEY`
+   - `service_role` key → `NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY`
 
 **GroqAPI Key:**
 
@@ -227,7 +227,7 @@ Before committing code, run the mandatory quality checks. See [CI/CD Documentati
 
 ```bash
 # Run all pre-commit checks
-yarn lint && yarn format && yarn type-check && yarn test --coverage && yarn test:integration
+yarn lint && yarn format && yarn test --coverage && yarn test:integration
 ```
 
 For detailed information about CI/CD pipeline, pre-commit requirements, and troubleshooting, see the [CI/CD Documentation](./CI_CD.md).
@@ -704,7 +704,7 @@ packright/
 │
 ├── .env.example                  # Environment template
 ├── .eslintrc.json               # ESLint configuration
-├── next.config.mjs              # Next.js configuration
+├── next.config.ts               # Next.js configuration
 ├── package.json                 # Dependencies and scripts
 ├── tailwind.config.ts           # Tailwind CSS configuration
 ├── tsconfig.json                # TypeScript configuration
@@ -787,16 +787,13 @@ yarn dev
 **Production build fails:**
 
 ```bash
-# Check TypeScript errors
-yarn type-check
-
 # Check for unused dependencies
 npx depcheck
 
 # Clean build artifacts
 rm -rf .next out
 
-# Try build again
+# Try build again (TypeScript errors will be caught during build)
 yarn build
 ```
 

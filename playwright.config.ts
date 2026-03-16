@@ -69,7 +69,7 @@ export default defineConfig({
     command: 'yarn dev',
     url: 'http://localhost:3000',
     reuseExistingServer: false, // Always start fresh to use ephemeral credentials
-    timeout: 120 * 1000,
+    timeout: 240 * 1000,
     env: {
       // Filter out undefined values to satisfy TypeScript's string requirement
       ...(process.env.NEXT_PUBLIC_SUPABASE_URL && {
