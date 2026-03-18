@@ -9,6 +9,7 @@ import { ClaimQuantityDialog } from './claim-quantity-dialog';
 import { EditItemDialog } from './edit-item-dialog';
 import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
 import { UnclaimDialog } from './unclaim-dialog';
+import { AddItemDialog } from './add-item-dialog';
 import { useBoardStore } from '@/store/board-store';
 import { AlertTriangle } from 'lucide-react';
 import {
@@ -17,6 +18,7 @@ import {
   subscribeToTripItems,
   updateItem,
   deleteItem,
+  createItem,
 } from '@/lib/supabase/items';
 import { Trip, KanbanColumn, ItemWithClaims, ItemClaim } from '@/types/database.types';
 import { UserProfile } from '@/lib/utils';
@@ -77,6 +79,9 @@ export function PackingBoard() {
   const [unclaimDialogOpen, setUnclaimDialogOpen] = React.useState(false);
   const [unclaimingClaimId, setUnclaimingClaimId] = React.useState<string | null>(null);
   const [unclaimingClaimQuantity, setUnclaimingClaimQuantity] = React.useState(0);
+
+  // State for add item dialog
+  const [addItemDialogOpen, setAddItemDialogOpen] = React.useState(false);
 
   // State for trip data
   const [trip, setTrip] = React.useState<Trip | null>(null);
@@ -374,6 +379,39 @@ export function PackingBoard() {
     }
   };
 
+  // Handle add item
+  const handleAddItem = async (
+    name: string,
+    requiredCount: number,
+    category: string,
+    claimType: 'single' | 'multiple'
+  ) => {
+    if (!tripId) {
+      setError('No trip selected');
+      throw new Error('No trip selected');
+    }
+
+    try {
+      const { error } = await createItem(supabase, tripId, {
+        name,
+        required_count: requiredCount,
+        category,
+        claim_type: claimType,
+      });
+
+      if (error) {
+        setError(error.message);
+        throw error;
+      }
+
+      // Reload trip data to show the new item
+      await loadTripData(true);
+    } catch (err) {
+      console.error('Failed to add item:', err);
+      throw err;
+    }
+  };
+
   // Handle move item (drag and drop)
   const handleMoveItem = async (itemId: string, fromColumn: string, toColumn: string) => {
     try {
@@ -493,6 +531,7 @@ export function PackingBoard() {
         onMoveItem={handleMoveItem}
         onReorderItem={reorderItem}
         onPersistReorder={persistReorder}
+        onAddItem={() => setAddItemDialogOpen(true)}
       />
     );
   };
@@ -541,6 +580,15 @@ export function PackingBoard() {
         claimedQuantity={unclaimingClaimQuantity}
         onConfirm={handleUnclaimConfirm}
       />
+
+      {/* Add Item Dialog - Admin only */}
+      {isAdmin && (
+        <AddItemDialog
+          open={addItemDialogOpen}
+          onOpenChange={setAddItemDialogOpen}
+          onSave={handleAddItem}
+        />
+      )}
     </div>
   );
 }

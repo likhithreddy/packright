@@ -6,6 +6,8 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { ItemWithClaims, type KanbanColumn as KanbanColumnType } from '@/types/database.types';
 import { BoardViewMode } from '@/types/board.types';
 import { KanbanCard } from './kanban-card';
+import { AddItemCard } from './add-item-card';
+import { Plus } from 'lucide-react';
 
 interface KanbanColumnProps {
   id: KanbanColumnType;
@@ -20,6 +22,7 @@ interface KanbanColumnProps {
   onUnclaim: (claimId: string, quantity: number) => void;
   onEditItem: (itemId: string) => void;
   onDeleteItem: (itemId: string) => void;
+  onAddItem?: () => void;
 }
 
 const columnStyles: Record<KanbanColumnType, { bg: string; header: string; border: string }> = {
@@ -53,6 +56,7 @@ export function KanbanColumn({
   onUnclaim,
   onEditItem,
   onDeleteItem,
+  onAddItem,
 }: KanbanColumnProps) {
   const styles = columnStyles[id];
   const itemIds = items.map((item) => `${id}:${item.id}`);
@@ -116,13 +120,34 @@ export function KanbanColumn({
         className={`${styles.header} rounded-t-2xl px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between flex-shrink-0`}
       >
         <h2 className="font-serif text-base sm:text-lg text-[#2D3A30]">{title}</h2>
-        <span className="bg-white/60 px-2 py-0.5 rounded-full text-xs font-medium text-[#2D3A30]">
-          {items.length}
-        </span>
+        <div className="flex items-center gap-2">
+          {id === 'unassigned' && isAdmin && onAddItem && (
+            <button
+              type="button"
+              onClick={onAddItem}
+              className="text-stone-500 hover:text-stone-700 transition-colors p-0.5"
+              title="Add new item"
+            >
+              <Plus className="h-4 w-4" />
+            </button>
+          )}
+          <span className="bg-white/60 px-2 py-0.5 rounded-full text-xs font-medium text-[#2D3A30]">
+            {items.length}
+          </span>
+        </div>
       </div>
 
       {/* Cards container */}
-      <div className="flex-1 p-2 sm:p-3 overflow-y-auto">{renderCards()}</div>
+      <div className="flex-1 p-2 sm:p-3 overflow-y-auto">
+        <div className="flex flex-col gap-2 sm:gap-3 group">
+          {renderCards()}
+          {id === 'unassigned' && isAdmin && onAddItem && (
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+              <AddItemCard onClick={onAddItem} />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

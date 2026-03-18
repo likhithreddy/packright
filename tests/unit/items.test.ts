@@ -7,6 +7,7 @@ import {
   updateClaimQuantity,
   deleteItem,
   updateItem,
+  createItem,
 } from '@/lib/supabase/items';
 
 describe('items lib functions', () => {
@@ -594,6 +595,155 @@ describe('items lib functions', () => {
       expect(result.error).toBeNull();
       expect(mockUpdate).toHaveBeenCalledWith({ name: 'New Name' });
       expect(mockUpdateEq).toHaveBeenCalledWith('id', 'item-1');
+    });
+  });
+
+  describe('createItem', () => {
+    beforeEach(() => {
+      // Setup mocks for createItem
+      mockFrom.mockReturnValue({
+        select: mockSelect,
+        insert: mockInsert,
+        update: mockUpdate,
+        delete: mockDelete,
+      });
+
+      mockSelect.mockReturnValue({
+        eq: mockEq,
+        in: mockIn,
+        order: mockOrder,
+        maybeSingle: mockMaybeSingle,
+        single: mockSingle,
+      });
+
+      mockInsert.mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          single: mockSingle,
+        }),
+      });
+    });
+
+    it('should create an item successfully', async () => {
+      const mockNewItem = {
+        id: 'new-item-1',
+        trip_id: 'trip-1',
+        name: 'New Item',
+        required_count: 2,
+        category: 'Essentials',
+        claim_type: 'single' as const,
+        sort_order: 0,
+        created_at: new Date().toISOString(),
+        claims: [],
+      };
+
+      // Mock the order query to return empty list (no existing items)
+      mockOrder.mockResolvedValueOnce({ data: null, error: null });
+      // Mock the insert to return the new item
+      mockSingle.mockResolvedValueOnce({ data: mockNewItem, error: null });
+
+      const result = await createItem(mockSupabase, 'trip-1', {
+        name: 'New Item',
+        required_count: 2,
+        category: 'Essentials',
+        claim_type: 'single',
+      });
+
+      expect(result.error).toBeNull();
+      expect(result.data).toMatchObject({
+        id: 'new-item-1',
+        name: 'New Item',
+        required_count: 2,
+        category: 'Essentials',
+        claim_type: 'single',
+        sort_order: 0,
+        total_claimed: 0,
+        total_packed: 0,
+        claims: [],
+      });
+    });
+
+    it('should set sort_order correctly based on existing items', async () => {
+      const mockExistingItem = {
+        id: 'existing-item',
+        sort_order: 5,
+      };
+      const mockNewItem = {
+        id: 'new-item-1',
+        trip_id: 'trip-1',
+        name: 'New Item',
+        required_count: 1,
+        category: 'Clothing',
+        claim_type: 'multiple' as const,
+        sort_order: 6, // Should be existing sort_order + 1
+        created_at: new Date().toISOString(),
+        claims: [],
+      };
+
+      // Mock the order query to return an existing item with sort_order 5
+      mockOrder.mockResolvedValueOnce({ data: mockExistingItem, error: null });
+      // Mock the insert to return the new item
+      mockSingle.mockResolvedValueOnce({ data: mockNewItem, error: null });
+
+      const result = await createItem(mockSupabase, 'trip-1', {
+        name: 'New Item',
+        required_count: 1,
+        category: 'Clothing',
+        claim_type: 'multiple',
+      });
+
+      expect(result.error).toBeNull();
+      expect(result.data?.sort_order).toBe(6);
+    });
+
+    it('should handle database errors during item creation', async () => {
+      const mockError = { code: 'P0001', message: 'Insert failed' } as PostgrestError;
+
+      // Mock the order query to return empty list
+      mockOrder.mockResolvedValueOnce({ data: null, error: null });
+      // Mock the insert to return an error
+      mockSingle.mockResolvedValueOnce({ data: null, error: mockError });
+
+      const result = await createItem(mockSupabase, 'trip-1', {
+        name: 'New Item',
+        required_count: 1,
+        category: 'Essentials',
+        claim_type: 'single',
+      });
+
+      expect(result.data).toBeNull();
+      expect(result.error).toEqual(mockError);
+    });
+
+    it('should handle errors when fetching existing items', async () => {
+      const mockError = { code: 'P0002', message: 'Query failed' } as PostgrestError;
+
+      // Mock the order query to return an error
+      mockOrder.mockResolvedValueOnce({ data: null, error: mockError });
+
+      const result = await createItem(mockSupabase, 'trip-1', {
+        name: 'New Item',
+        required_count: 1,
+        category: 'Essentials',
+        claim_type: 'single',
+      });
+
+      expect(result.data).toBeNull();
+      expect(result.error).toEqual(mockError);
+    });
+
+    it('should catch and return exceptions', async () => {
+      const error = new Error('Connection failed');
+      mockOrder.mockRejectedValue(error);
+
+      const result = await createItem(mockSupabase, 'trip-1', {
+        name: 'New Item',
+        required_count: 1,
+        category: 'Essentials',
+        claim_type: 'single',
+      });
+
+      expect(result.data).toBeNull();
+      expect(result.error).toBeTruthy();
     });
   });
 });

@@ -304,3 +304,93 @@ export function subscribeToTripItems(
     )
     .subscribe();
 }
+
+/**
+ * Creates a new item for a trip.
+ * This function is admin-only and enforces RLS policies.
+ *
+ * @param supabase - Supabase client instance
+ * @param tripId - The trip ID
+ * @param itemData - The item data to create
+ * @returns The created item with claims or error
+ */
+export async function createItem(
+  supabase: SupabaseClient,
+  tripId: string,
+  itemData: {
+    name: string;
+    required_count: number;
+    category: string;
+    claim_type: 'single' | 'multiple';
+  }
+): Promise<{ data: ItemWithClaims | null; error: PostgrestError | null }> {
+  try {
+    // Determine the sort_order for the new item (append to end)
+    const { data: existingItems, error: fetchError } = await supabase
+      .from('items')
+      .select('sort_order')
+      .eq('trip_id', tripId)
+      .order('sort_order', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (fetchError) {
+      return { data: null, error: fetchError };
+    }
+
+    const nextSortOrder = (existingItems?.sort_order ?? -1) + 1;
+
+    // Create the item
+    const { data, error } = await supabase
+      .from('items')
+      .insert({
+        trip_id: tripId,
+        name: itemData.name,
+        required_count: itemData.required_count,
+        category: itemData.category,
+        claim_type: itemData.claim_type,
+        sort_order: nextSortOrder,
+      })
+      .select(
+        `
+        *,
+        item_claims(*)
+      `
+      )
+      .single();
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    // Return the item in the expected format
+    const newItemData = data as unknown;
+    const itemWithClaims: ItemWithClaims = {
+      id: (newItemData as { id: string }).id,
+      trip_id: (newItemData as { trip_id: string }).trip_id,
+      name: (newItemData as { name: string }).name,
+      required_count: (newItemData as { required_count: number }).required_count,
+      category: (newItemData as { category: string }).category,
+      claim_type: (newItemData as { claim_type: 'single' | 'multiple' }).claim_type,
+      sort_order: (newItemData as { sort_order: number }).sort_order,
+      created_at: (newItemData as { created_at: string }).created_at,
+      claims: (newItemData as { item_claims?: [] }).item_claims || [],
+      total_claimed: 0,
+      total_packed: 0,
+    };
+
+    return { data: itemWithClaims, error: null };
+  } catch (err) {
+    const error = err as Error & { message?: string };
+    return {
+      data: null,
+      error: {
+        message: error.message || 'Unknown error',
+        name: 'Error',
+        code: 'P0000',
+        details: '',
+        hint: '',
+      } as PostgrestError,
+    };
+  }
+}
