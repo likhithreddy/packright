@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+require('@testing-library/jest-dom');
 
 // Force UTC for all tests to ensure consistent date formatting
 process.env.TZ = 'UTC';
@@ -7,25 +7,22 @@ process.env.TZ = 'UTC';
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co';
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key';
 
-// Node 22+ (which the user is running) has global fetch, Request, Response, TextEncoder, TextDecoder, etc.
-// No polyfills needed if running in 'node' test environment.
-
 // Mock cn utility globally for all tests - Phase 1: Fix ~40 failing integration tests
 jest.mock('@/lib/utils', () => {
   // Helper function to get display name (matching actual implementation)
-  const getUserDisplayName = (profile: unknown, userId?: string): string => {
+  const getUserDisplayName = (profile, userId) => {
     if (!profile) {
       return userId ? `User ${userId.slice(0, 4)}` : 'Unknown User';
     }
     return (
-      (profile as { full_name?: string })?.full_name ||
-      (profile as { username?: string })?.username ||
+      profile?.full_name ||
+      profile?.username ||
       (userId ? `User ${userId.slice(0, 4)}` : 'Unknown User')
     );
   };
 
   // Helper function to get initials (matching actual implementation)
-  const getUserInitials = (profile: unknown, userId?: string): string => {
+  const getUserInitials = (profile, userId) => {
     const name = getUserDisplayName(profile, userId);
     return name
       .split(' ')
@@ -36,8 +33,11 @@ jest.mock('@/lib/utils', () => {
   };
 
   return {
-    cn: (...classes: unknown[]) => classes.filter(Boolean).join(' '),
+    cn: (...classes) => classes.filter(Boolean).join(' '),
     getUserDisplayName,
     getUserInitials,
   };
 });
+
+// Node 22+ (which the user is running) has global fetch, Request, Response, TextEncoder, TextDecoder, etc.
+// No polyfills needed if running in 'node' test environment.
