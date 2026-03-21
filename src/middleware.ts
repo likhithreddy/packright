@@ -4,7 +4,10 @@ import { NextResponse, type NextRequest } from 'next/server';
 /**
  * Next.js Middleware for session management and auth-based routing.
  *
- * This implementation uses getUser() for secure JWT verification on every request.
+ * PERFORMANCE OPTIMIZATION: Uses route-based auth strategy:
+ * - Public routes: Skip auth check entirely (fastest)
+ * - Auth routes: Use getSession() - reads local cookie, no network call
+ * - Protected routes: Use getUser() - secure JWT verification with Supabase
  */
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -32,41 +35,52 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  /**
-   * IMPORTANT: getUser() verifies the JWT with Supabase.
-   * This is more secure than getSession() which only reads the cookie locally.
-   */
-  console.log(`[MIDDLEWARE] URL: ${process.env.NEXT_PUBLIC_SUPABASE_URL}`);
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-  console.log(`[MIDDLEWARE] User: ${user?.id ?? 'null'}, Error: ${error?.message ?? 'none'}`);
-
   const { pathname } = request.nextUrl;
 
-  // Define protected routes
-  const isProtectedRoute = pathname.startsWith('/dashboard') || pathname.startsWith('/onboarding');
-
-  // Define auth routes (where authenticated users should not go)
+  // Route classification for optimized auth checking
+  const isPublicRoute =
+    pathname === '/' || pathname.startsWith('/landing') || pathname.startsWith('/docs');
   const isAuthRoute = ['/login', '/signup', '/forgot-password', '/reset-password'].includes(
     pathname
   );
+  const isProtectedRoute = pathname.startsWith('/dashboard') || pathname.startsWith('/onboarding');
 
-  // 1. Redirect unauthenticated users away from protected routes
-  if (!user && isProtectedRoute) {
-    const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = '/login';
-    // Add 'next' parameter to return after login
-    redirectUrl.searchParams.set('next', pathname);
-    return NextResponse.redirect(redirectUrl);
+  // PUBLIC ROUTES: Skip auth check entirely - fastest path
+  if (isPublicRoute) {
+    return supabaseResponse;
   }
 
-  // 2. Redirect authenticated users away from auth-related pages
-  if (user && isAuthRoute) {
-    const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = '/dashboard';
-    return NextResponse.redirect(redirectUrl);
+  // AUTH ROUTES: Use getSession() - no network call, just reads local cookie
+  if (isAuthRoute) {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    // Redirect authenticated users away from auth pages
+    if (session) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = '/dashboard';
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    return supabaseResponse;
+  }
+
+  // PROTECTED ROUTES: Use getUser() - secure JWT verification with Supabase
+  if (isProtectedRoute) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    // Redirect unauthenticated users to login
+    if (!user) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = '/login';
+      redirectUrl.searchParams.set('next', pathname);
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    return supabaseResponse;
   }
 
   return supabaseResponse;

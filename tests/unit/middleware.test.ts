@@ -34,15 +34,18 @@ jest.spyOn(NextResponse, 'redirect').mockImplementation(
 
 describe('Auth Middleware', () => {
   let mockGetUser: jest.Mock;
-  let mockAuth: { getUser: jest.Mock };
+  let mockGetSession: jest.Mock;
+  let mockAuth: { getUser: jest.Mock; getSession: jest.Mock };
 
   beforeEach(() => {
     jest.clearAllMocks();
 
     // Mock user behavior
     mockGetUser = jest.fn();
+    mockGetSession = jest.fn();
     mockAuth = {
       getUser: mockGetUser,
+      getSession: mockGetSession,
     };
 
     (createServerClient as jest.Mock).mockReturnValue({
@@ -87,7 +90,8 @@ describe('Auth Middleware', () => {
   });
 
   it('redirects authenticated users away from /login to /dashboard', async () => {
-    mockGetUser.mockResolvedValue({ data: { user: { id: 'test-user' } }, error: null });
+    // Auth routes use getSession(), not getUser()
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'test-user' } } }, error: null });
     const req = createMockRequest('/login');
 
     await middleware(req);
@@ -102,7 +106,8 @@ describe('Auth Middleware', () => {
 
     for (const route of authRoutes) {
       jest.clearAllMocks();
-      mockGetUser.mockResolvedValue({ data: { user: { id: 'test-user' } }, error: null });
+      // Auth routes use getSession(), not getUser()
+      mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'test-user' } } }, error: null });
       const req = createMockRequest(route);
       await middleware(req);
       expect(NextResponse.redirect).toHaveBeenCalled();
