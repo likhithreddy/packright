@@ -1,15 +1,15 @@
 window.jest_html_reporters_callback__({
   numFailedTestSuites: 0,
   numFailedTests: 0,
-  numPassedTestSuites: 36,
-  numPassedTests: 493,
+  numPassedTestSuites: 39,
+  numPassedTests: 597,
   numPendingTestSuites: 0,
   numPendingTests: 0,
   numRuntimeErrorTestSuites: 0,
   numTodoTests: 0,
-  numTotalTestSuites: 36,
-  numTotalTests: 493,
-  startTime: 1773643680684,
+  numTotalTestSuites: 39,
+  numTotalTests: 597,
+  startTime: 1774131010592,
   success: false,
   testResults: [
     {
@@ -18,16 +18,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643694151,
-        loadTestEnvironmentEnd: 1773643680873,
-        loadTestEnvironmentStart: 1773643680688,
-        runtime: 13278,
-        setupAfterEnvEnd: 1773643680931,
-        setupAfterEnvStart: 1773643680904,
-        setupFilesEnd: 1773643680873,
-        setupFilesStart: 1773643680873,
+        end: 1774131024315,
+        loadTestEnvironmentEnd: 1774131010707,
+        loadTestEnvironmentStart: 1774131010595,
+        runtime: 13608,
+        setupAfterEnvEnd: 1774131010754,
+        setupAfterEnvStart: 1774131010736,
+        setupFilesEnd: 1774131010707,
+        setupFilesStart: 1774131010707,
         slow: true,
-        start: 1773643680873,
+        start: 1774131010707,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/new-trip-modal.test.tsx',
@@ -35,7 +35,7 @@ window.jest_html_reporters_callback__({
       testResults: [
         {
           ancestorTitles: ['NewTripModal Integration'],
-          duration: 62,
+          duration: 63,
           failureMessages: [],
           fullName: 'NewTripModal Integration renders the modal when trigger is clicked',
           status: 'passed',
@@ -43,7 +43,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['NewTripModal Integration'],
-          duration: 86,
+          duration: 85,
           failureMessages: [],
           fullName: 'NewTripModal Integration disables the Next button if title is not filled',
           status: 'passed',
@@ -51,7 +51,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['NewTripModal Integration'],
-          duration: 3474,
+          duration: 3487,
           failureMessages: [],
           fullName: 'NewTripModal Integration submits correctly using "Skip & Create" flow',
           status: 'passed',
@@ -59,7 +59,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['NewTripModal Integration'],
-          duration: 4065,
+          duration: 4209,
           failureMessages: [],
           fullName:
             'NewTripModal Integration navigates to step 3 when valid AI prompt is provided and allows item selection',
@@ -68,7 +68,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['NewTripModal Integration'],
-          duration: 3482,
+          duration: 3529,
           failureMessages: [],
           fullName:
             'NewTripModal Integration shows a warning toast (not success) when server returns a warning on Skip & Create',
@@ -78,7 +78,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['NewTripModal Integration'],
-          duration: 142,
+          duration: 162,
           failureMessages: [],
           fullName: 'NewTripModal Integration closes modal and resets form when Cancel is clicked',
           status: 'passed',
@@ -86,7 +86,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['NewTripModal Integration'],
-          duration: 652,
+          duration: 688,
           failureMessages: [],
           fullName:
             'NewTripModal Integration navigates back from step 2 to step 1 when Back is clicked',
@@ -95,7 +95,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['NewTripModal Integration'],
-          duration: 580,
+          duration: 674,
           failureMessages: [],
           fullName:
             'NewTripModal Integration disables Get Suggestions btn below 20 chars and enables it at exactly 20 chars',
@@ -104,7 +104,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['NewTripModal Integration'],
-          duration: 375,
+          duration: 423,
           failureMessages: [],
           fullName: 'NewTripModal Integration shows error toast when createTripAction fails',
           status: 'passed',
@@ -118,16 +118,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643706552,
-        loadTestEnvironmentEnd: 1773643694160,
-        loadTestEnvironmentStart: 1773643694155,
-        runtime: 12392,
-        setupAfterEnvEnd: 1773643694207,
-        setupAfterEnvStart: 1773643694182,
-        setupFilesEnd: 1773643694160,
-        setupFilesStart: 1773643694160,
+        end: 1774131036893,
+        loadTestEnvironmentEnd: 1774131024326,
+        loadTestEnvironmentStart: 1774131024318,
+        runtime: 12567,
+        setupAfterEnvEnd: 1774131024353,
+        setupAfterEnvStart: 1774131024339,
+        setupFilesEnd: 1774131024326,
+        setupFilesStart: 1774131024326,
         slow: true,
-        start: 1773643694160,
+        start: 1774131024326,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/OnboardingForm.test.tsx',
@@ -135,7 +135,7 @@ window.jest_html_reporters_callback__({
       testResults: [
         {
           ancestorTitles: ['OnboardingForm'],
-          duration: 2220,
+          duration: 2241,
           failureMessages: [],
           fullName: 'OnboardingForm covers full 3-step submission flow with upsert',
           status: 'passed',
@@ -143,7 +143,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['OnboardingForm'],
-          duration: 2043,
+          duration: 2017,
           failureMessages: [],
           fullName: 'OnboardingForm handles back navigation',
           status: 'passed',
@@ -151,7 +151,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['OnboardingForm'],
-          duration: 474,
+          duration: 484,
           failureMessages: [],
           fullName: 'OnboardingForm handles username taken state in Step 1',
           status: 'passed',
@@ -159,7 +159,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['OnboardingForm'],
-          duration: 2525,
+          duration: 2558,
           failureMessages: [],
           fullName: 'OnboardingForm handles database conflict (23505) after confirm',
           status: 'passed',
@@ -167,7 +167,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['OnboardingForm'],
-          duration: 2209,
+          duration: 2269,
           failureMessages: [],
           fullName: 'OnboardingForm handles unexpected submission error',
           status: 'passed',
@@ -175,7 +175,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['OnboardingForm'],
-          duration: 1667,
+          duration: 1711,
           failureMessages: [],
           fullName: 'OnboardingForm covers initials generation variations and display in Step 2',
           status: 'passed',
@@ -183,7 +183,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['OnboardingForm'],
-          duration: 103,
+          duration: 145,
           failureMessages: [],
           fullName: 'OnboardingForm validates username format and length',
           status: 'passed',
@@ -191,7 +191,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['OnboardingForm'],
-          duration: 30,
+          duration: 32,
           failureMessages: [],
           fullName: 'OnboardingForm validates full name length',
           status: 'passed',
@@ -199,7 +199,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['OnboardingForm'],
-          duration: 541,
+          duration: 571,
           failureMessages: [],
           fullName: 'OnboardingForm can cancel the handle confirmation dialog',
           status: 'passed',
@@ -207,7 +207,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['OnboardingForm'],
-          duration: 465,
+          duration: 475,
           failureMessages: [],
           fullName: 'OnboardingForm disables next button if username is not available',
           status: 'passed',
@@ -217,20 +217,309 @@ window.jest_html_reporters_callback__({
     },
     {
       numFailingTests: 0,
+      numPassingTests: 31,
+      numPendingTests: 0,
+      numTodoTests: 0,
+      perfStats: {
+        end: 1774131039165,
+        loadTestEnvironmentEnd: 1774131036902,
+        loadTestEnvironmentStart: 1774131036895,
+        runtime: 2262,
+        setupAfterEnvEnd: 1774131036953,
+        setupAfterEnvStart: 1774131036927,
+        setupFilesEnd: 1774131036903,
+        setupFilesStart: 1774131036903,
+        slow: false,
+        start: 1774131036903,
+      },
+      testFilePath:
+        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/add-item-dialog.test.tsx',
+      failureMessage: null,
+      testResults: [
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Dialog Rendering'],
+          duration: 27,
+          failureMessages: [],
+          fullName: 'AddItemDialog Integration Dialog Rendering renders dialog when open is true',
+          status: 'passed',
+          title: 'renders dialog when open is true',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Dialog Rendering'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Dialog Rendering does not render dialog when open is false',
+          status: 'passed',
+          title: 'does not render dialog when open is false',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Dialog Rendering'],
+          duration: 11,
+          failureMessages: [],
+          fullName: 'AddItemDialog Integration Dialog Rendering renders all form fields',
+          status: 'passed',
+          title: 'renders all form fields',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Dialog Rendering'],
+          duration: 13,
+          failureMessages: [],
+          fullName: 'AddItemDialog Integration Dialog Rendering renders dialog buttons',
+          status: 'passed',
+          title: 'renders dialog buttons',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Validation'],
+          duration: 30,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Form Validation shows required error for item name when empty',
+          status: 'passed',
+          title: 'shows required error for item name when empty',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Validation'],
+          duration: 231,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Form Validation shows error for item name exceeding 100 characters',
+          status: 'passed',
+          title: 'shows error for item name exceeding 100 characters',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Validation'],
+          duration: 118,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Form Validation shows error for invalid quantity (zero)',
+          status: 'passed',
+          title: 'shows error for invalid quantity (zero)',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Validation'],
+          duration: 101,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Form Validation shows error for invalid quantity (negative)',
+          status: 'passed',
+          title: 'shows error for invalid quantity (negative)',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Validation'],
+          duration: 136,
+          failureMessages: [],
+          fullName: 'AddItemDialog Integration Form Validation validates quantity boundary at 1000',
+          status: 'passed',
+          title: 'validates quantity boundary at 1000',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Validation'],
+          duration: 42,
+          failureMessages: [],
+          fullName: 'AddItemDialog Integration Form Validation shows error for empty category',
+          status: 'passed',
+          title: 'shows error for empty category',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Validation'],
+          duration: 85,
+          failureMessages: [],
+          fullName: 'AddItemDialog Integration Form Validation accepts valid boundary values',
+          status: 'passed',
+          title: 'accepts valid boundary values',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Validation'],
+          duration: 112,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Form Validation accepts maximum valid quantity (1000)',
+          status: 'passed',
+          title: 'accepts maximum valid quantity (1000)',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Submission'],
+          duration: 126,
+          failureMessages: [],
+          fullName: 'AddItemDialog Integration Form Submission submits form with valid data',
+          status: 'passed',
+          title: 'submits form with valid data',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Submission'],
+          duration: 131,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Form Submission creates new category when typing non-existent value',
+          status: 'passed',
+          title: 'creates new category when typing non-existent value',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Submission'],
+          duration: 89,
+          failureMessages: [],
+          fullName: 'AddItemDialog Integration Form Submission defaults to single claim type',
+          status: 'passed',
+          title: 'defaults to single claim type',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Error Handling'],
+          duration: 105,
+          failureMessages: [],
+          fullName: 'AddItemDialog Integration Error Handling handles API errors gracefully',
+          status: 'passed',
+          title: 'handles API errors gracefully',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Error Handling'],
+          duration: 86,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Error Handling does not close dialog on submission error',
+          status: 'passed',
+          title: 'does not close dialog on submission error',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Loading States'],
+          duration: 75,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Loading States shows loading state during submission',
+          status: 'passed',
+          title: 'shows loading state during submission',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Loading States'],
+          duration: 80,
+          failureMessages: [],
+          fullName: 'AddItemDialog Integration Loading States disables buttons during submission',
+          status: 'passed',
+          title: 'disables buttons during submission',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Modal Open/Close Behavior'],
+          duration: 22,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Modal Open/Close Behavior closes dialog when Cancel button is clicked',
+          status: 'passed',
+          title: 'closes dialog when Cancel button is clicked',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Modal Open/Close Behavior'],
+          duration: 77,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Modal Open/Close Behavior closes dialog after successful submission',
+          status: 'passed',
+          title: 'closes dialog after successful submission',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Modal Open/Close Behavior'],
+          duration: 83,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Modal Open/Close Behavior does not close dialog when clicking outside during submission',
+          status: 'passed',
+          title: 'does not close dialog when clicking outside during submission',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Reset'],
+          duration: 32,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Form Reset resets form when dialog is closed and reopened',
+          status: 'passed',
+          title: 'resets form when dialog is closed and reopened',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Reset'],
+          duration: 90,
+          failureMessages: [],
+          fullName: 'AddItemDialog Integration Form Reset resets form after successful submission',
+          status: 'passed',
+          title: 'resets form after successful submission',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Form Reset'],
+          duration: 57,
+          failureMessages: [],
+          fullName: 'AddItemDialog Integration Form Reset resets form when Cancel is clicked',
+          status: 'passed',
+          title: 'resets form when Cancel is clicked',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Claim Type Options'],
+          duration: 11,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Claim Type Options shows descriptive text for single person claim type',
+          status: 'passed',
+          title: 'shows descriptive text for single person claim type',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Claim Type Options'],
+          duration: 10,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Claim Type Options shows descriptive text for multiple people claim type',
+          status: 'passed',
+          title: 'shows descriptive text for multiple people claim type',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Claim Type Options'],
+          duration: 39,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Claim Type Options allows switching between claim types',
+          status: 'passed',
+          title: 'allows switching between claim types',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Combobox Integration'],
+          duration: 17,
+          failureMessages: [],
+          fullName: 'AddItemDialog Integration Combobox Integration opens combobox when clicked',
+          status: 'passed',
+          title: 'opens combobox when clicked',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Combobox Integration'],
+          duration: 28,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Combobox Integration filters categories when typing in search',
+          status: 'passed',
+          title: 'filters categories when typing in search',
+        },
+        {
+          ancestorTitles: ['AddItemDialog Integration', 'Combobox Integration'],
+          duration: 45,
+          failureMessages: [],
+          fullName:
+            'AddItemDialog Integration Combobox Integration displays selected category in combobox',
+          status: 'passed',
+          title: 'displays selected category in combobox',
+        },
+      ],
+    },
+    {
+      numFailingTests: 0,
       numPassingTests: 12,
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643707903,
-        loadTestEnvironmentEnd: 1773643706556,
-        loadTestEnvironmentStart: 1773643706553,
-        runtime: 1347,
-        setupAfterEnvEnd: 1773643706597,
-        setupAfterEnvStart: 1773643706575,
-        setupFilesEnd: 1773643706556,
-        setupFilesStart: 1773643706556,
+        end: 1774131040761,
+        loadTestEnvironmentEnd: 1774131039177,
+        loadTestEnvironmentStart: 1774131039174,
+        runtime: 1584,
+        setupAfterEnvEnd: 1774131039192,
+        setupAfterEnvStart: 1774131039183,
+        setupFilesEnd: 1774131039177,
+        setupFilesStart: 1774131039177,
         slow: false,
-        start: 1773643706556,
+        start: 1774131039177,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/SignupForm.test.tsx',
@@ -238,7 +527,7 @@ window.jest_html_reporters_callback__({
       testResults: [
         {
           ancestorTitles: ['SignupForm'],
-          duration: 13,
+          duration: 12,
           failureMessages: [],
           fullName: 'SignupForm renders all necessary fields',
           status: 'passed',
@@ -246,7 +535,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SignupForm'],
-          duration: 21,
+          duration: 19,
           failureMessages: [],
           fullName: 'SignupForm shows validation errors on empty submission',
           status: 'passed',
@@ -254,7 +543,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SignupForm'],
-          duration: 192,
+          duration: 189,
           failureMessages: [],
           fullName: 'SignupForm shows validation error when passwords do not match',
           status: 'passed',
@@ -262,7 +551,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SignupForm'],
-          duration: 173,
+          duration: 222,
           failureMessages: [],
           fullName: 'SignupForm submits successfully when data is valid and username is unique',
           status: 'passed',
@@ -270,7 +559,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SignupForm'],
-          duration: 149,
+          duration: 172,
           failureMessages: [],
           fullName: 'SignupForm throws an error if the username is already taken',
           status: 'passed',
@@ -278,7 +567,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SignupForm'],
-          duration: 136,
+          duration: 164,
           failureMessages: [],
           fullName: 'SignupForm handles generic username query errors',
           status: 'passed',
@@ -286,7 +575,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SignupForm'],
-          duration: 144,
+          duration: 228,
           failureMessages: [],
           fullName: 'SignupForm handles generic auth sign up errors',
           status: 'passed',
@@ -294,7 +583,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SignupForm'],
-          duration: 10,
+          duration: 25,
           failureMessages: [],
           fullName: 'SignupForm handles Google OAuth click',
           status: 'passed',
@@ -302,7 +591,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SignupForm'],
-          duration: 171,
+          duration: 230,
           failureMessages: [],
           fullName: 'SignupForm handles auth error when already registered',
           status: 'passed',
@@ -310,7 +599,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SignupForm'],
-          duration: 187,
+          duration: 222,
           failureMessages: [],
           fullName: 'SignupForm handles email enumeration fake success',
           status: 'passed',
@@ -318,7 +607,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SignupForm'],
-          duration: 18,
+          duration: 19,
           failureMessages: [],
           fullName: 'SignupForm handles Google OAuth error',
           status: 'passed',
@@ -326,7 +615,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SignupForm'],
-          duration: 38,
+          duration: 40,
           failureMessages: [],
           fullName: 'SignupForm toggles password visibility correctly',
           status: 'passed',
@@ -340,16 +629,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643708670,
-        loadTestEnvironmentEnd: 1773643707909,
-        loadTestEnvironmentStart: 1773643707906,
-        runtime: 760,
-        setupAfterEnvEnd: 1773643707926,
-        setupAfterEnvStart: 1773643707916,
-        setupFilesEnd: 1773643707910,
-        setupFilesStart: 1773643707910,
+        end: 1774131041507,
+        loadTestEnvironmentEnd: 1774131040766,
+        loadTestEnvironmentStart: 1774131040762,
+        runtime: 740,
+        setupAfterEnvEnd: 1774131040785,
+        setupAfterEnvStart: 1774131040774,
+        setupFilesEnd: 1774131040767,
+        setupFilesStart: 1774131040767,
         slow: false,
-        start: 1773643707910,
+        start: 1774131040767,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/member-invite-input.test.tsx',
@@ -374,7 +663,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Rendering'],
-          duration: 2,
+          duration: 1,
           failureMessages: [],
           fullName: 'MemberInviteInput Integration Rendering should have correct input attributes',
           status: 'passed',
@@ -382,7 +671,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Rendering'],
-          duration: 1,
+          duration: 2,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Rendering should not show loading spinner initially',
@@ -409,7 +698,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Minimum Characters Validation'],
-          duration: 23,
+          duration: 19,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Minimum Characters Validation should show minimum characters message for 1-2 characters',
@@ -418,7 +707,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Minimum Characters Validation'],
-          duration: 25,
+          duration: 26,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Minimum Characters Validation should trigger search at exactly 3 characters',
@@ -445,7 +734,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Search Results Display'],
-          duration: 19,
+          duration: 15,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Search Results Display should display username with @ prefix',
@@ -454,7 +743,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Search Results Display'],
-          duration: 28,
+          duration: 27,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Search Results Display should show "No users found" message for empty results',
@@ -463,7 +752,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Search Results Display'],
-          duration: 19,
+          duration: 20,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Search Results Display should limit results to 5 users',
@@ -472,7 +761,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Loading States'],
-          duration: 22,
+          duration: 19,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Loading States should show loading spinner on individual user during invite',
@@ -481,7 +770,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', '"You" Badge for Current User'],
-          duration: 25,
+          duration: 23,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration "You" Badge for Current User should show "You" badge for current user',
@@ -490,7 +779,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', '"You" Badge for Current User'],
-          duration: 29,
+          duration: 24,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration "You" Badge for Current User should prevent clicking on current user',
@@ -499,7 +788,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', '"You" Badge for Current User'],
-          duration: 17,
+          duration: 15,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration "You" Badge for Current User should show UserPlus icon instead of You badge for non-current users',
@@ -511,7 +800,7 @@ window.jest_html_reporters_callback__({
             'MemberInviteInput Integration',
             '"Already member" Badge for Existing Members',
           ],
-          duration: 18,
+          duration: 19,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration "Already member" Badge for Existing Members should show "Already member" badge for existing trip members',
@@ -523,7 +812,7 @@ window.jest_html_reporters_callback__({
             'MemberInviteInput Integration',
             '"Already member" Badge for Existing Members',
           ],
-          duration: 17,
+          duration: 18,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration "Already member" Badge for Existing Members should prevent clicking on existing members',
@@ -541,7 +830,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Invite Flow - Success'],
-          duration: 12,
+          duration: 13,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Invite Flow - Success should close popover and clear search after successful invite',
@@ -550,7 +839,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Invite Flow - Errors'],
-          duration: 14,
+          duration: 11,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Invite Flow - Errors should show error toast when invite fails',
@@ -559,7 +848,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Invite Flow - Errors'],
-          duration: 12,
+          duration: 11,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Invite Flow - Errors should show generic error toast when no error message provided',
@@ -568,7 +857,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Invite Flow - Errors'],
-          duration: 18,
+          duration: 19,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Invite Flow - Errors should show error toast when network error occurs',
@@ -577,7 +866,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Invite Flow - Errors'],
-          duration: 11,
+          duration: 12,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Invite Flow - Errors should show error and keep popover open on failure',
@@ -586,7 +875,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Search Error Handling'],
-          duration: 7,
+          duration: 6,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Search Error Handling should handle search action failure gracefully',
@@ -595,7 +884,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Search Error Handling'],
-          duration: 7,
+          duration: 6,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Search Error Handling should handle search action rejection',
@@ -613,7 +902,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Edge Cases - Input Validation'],
-          duration: 7,
+          duration: 6,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Edge Cases - Input Validation should handle whitespace-only input',
@@ -622,7 +911,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Edge Cases - Input Validation'],
-          duration: 15,
+          duration: 13,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Edge Cases - Input Validation should trim whitespace from search query',
@@ -631,7 +920,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Edge Cases - Input Validation'],
-          duration: 16,
+          duration: 18,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Edge Cases - Input Validation should handle special characters in search',
@@ -640,7 +929,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Edge Cases - Input Validation'],
-          duration: 116,
+          duration: 117,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Edge Cases - Input Validation should handle very long search queries',
@@ -658,7 +947,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Edge Cases - User Data'],
-          duration: 12,
+          duration: 11,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Edge Cases - User Data should handle user with null full_name',
@@ -676,7 +965,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Edge Cases - User Data'],
-          duration: 8,
+          duration: 11,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Edge Cases - User Data should display avatar with initials using full_name',
@@ -694,7 +983,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Accessibility'],
-          duration: 9,
+          duration: 8,
           failureMessages: [],
           fullName: 'MemberInviteInput Integration Accessibility should be keyboard navigable',
           status: 'passed',
@@ -702,7 +991,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Accessibility'],
-          duration: 8,
+          duration: 9,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Accessibility should have appropriate ARIA attributes',
@@ -720,7 +1009,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Props Variations'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Props Variations should render with custom tripId and userId',
@@ -747,7 +1036,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Props Variations'],
-          duration: 12,
+          duration: 11,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Props Variations should work without onInviteSuccess callback',
@@ -756,7 +1045,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Popover Interaction'],
-          duration: 9,
+          duration: 10,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Popover Interaction should open popover on input focus when typing',
@@ -765,7 +1054,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MemberInviteInput Integration', 'Popover Interaction'],
-          duration: 9,
+          duration: 10,
           failureMessages: [],
           fullName:
             'MemberInviteInput Integration Popover Interaction should reset search when popover closes',
@@ -780,16 +1069,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643709180,
-        loadTestEnvironmentEnd: 1773643708701,
-        loadTestEnvironmentStart: 1773643708698,
-        runtime: 479,
-        setupAfterEnvEnd: 1773643708715,
-        setupAfterEnvStart: 1773643708706,
-        setupFilesEnd: 1773643708701,
-        setupFilesStart: 1773643708701,
+        end: 1774131042011,
+        loadTestEnvironmentEnd: 1774131041520,
+        loadTestEnvironmentStart: 1774131041517,
+        runtime: 491,
+        setupAfterEnvEnd: 1774131041534,
+        setupAfterEnvStart: 1774131041525,
+        setupFilesEnd: 1774131041520,
+        setupFilesStart: 1774131041520,
         slow: false,
-        start: 1773643708701,
+        start: 1774131041520,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/SecuritySettingsForm.test.tsx',
@@ -797,7 +1086,7 @@ window.jest_html_reporters_callback__({
       testResults: [
         {
           ancestorTitles: ['SecuritySettingsForm'],
-          duration: 126,
+          duration: 122,
           failureMessages: [],
           fullName: 'SecuritySettingsForm handles email/password user password change flow',
           status: 'passed',
@@ -805,7 +1094,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SecuritySettingsForm'],
-          duration: 95,
+          duration: 99,
           failureMessages: [],
           fullName: 'SecuritySettingsForm handles incorrect current password',
           status: 'passed',
@@ -813,7 +1102,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SecuritySettingsForm'],
-          duration: 94,
+          duration: 98,
           failureMessages: [],
           fullName: 'SecuritySettingsForm handles OAuth user Set Password flow',
           status: 'passed',
@@ -821,7 +1110,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['SecuritySettingsForm'],
-          duration: 127,
+          duration: 134,
           failureMessages: [],
           fullName: 'SecuritySettingsForm handles validation and crash branches',
           status: 'passed',
@@ -835,16 +1124,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643709633,
-        loadTestEnvironmentEnd: 1773643709188,
-        loadTestEnvironmentStart: 1773643709183,
-        runtime: 445,
-        setupAfterEnvEnd: 1773643709206,
-        setupAfterEnvStart: 1773643709195,
-        setupFilesEnd: 1773643709188,
-        setupFilesStart: 1773643709188,
+        end: 1774131042480,
+        loadTestEnvironmentEnd: 1774131042017,
+        loadTestEnvironmentStart: 1774131042012,
+        runtime: 463,
+        setupAfterEnvEnd: 1774131042041,
+        setupAfterEnvStart: 1774131042027,
+        setupFilesEnd: 1774131042017,
+        setupFilesStart: 1774131042017,
         slow: false,
-        start: 1773643709188,
+        start: 1774131042017,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/members-modal.test.tsx',
@@ -860,7 +1149,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Rendering'],
-          duration: 1,
+          duration: 2,
           failureMessages: [],
           fullName:
             'MembersModal Integration Rendering should not render modal when open prop is false',
@@ -869,7 +1158,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Rendering'],
-          duration: 8,
+          duration: 7,
           failureMessages: [],
           fullName:
             'MembersModal Integration Rendering should display correct member count in header',
@@ -878,7 +1167,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Rendering'],
-          duration: 5,
+          duration: 6,
           failureMessages: [],
           fullName:
             'MembersModal Integration Rendering should display singular "member" when only one member',
@@ -887,7 +1176,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Rendering'],
-          duration: 12,
+          duration: 7,
           failureMessages: [],
           fullName: 'MembersModal Integration Rendering should display all member names',
           status: 'passed',
@@ -895,7 +1184,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Rendering'],
-          duration: 8,
+          duration: 7,
           failureMessages: [],
           fullName: 'MembersModal Integration Rendering should display all usernames with @ prefix',
           status: 'passed',
@@ -903,7 +1192,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Rendering'],
-          duration: 6,
+          duration: 7,
           failureMessages: [],
           fullName: 'MembersModal Integration Rendering should show Users icon',
           status: 'passed',
@@ -937,7 +1226,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', '"(You)" Badge'],
-          duration: 6,
+          duration: 7,
           failureMessages: [],
           fullName: 'MembersModal Integration "(You)" Badge should only show "(You)" badge once',
           status: 'passed',
@@ -945,7 +1234,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Avatar Display'],
-          duration: 5,
+          duration: 11,
           failureMessages: [],
           fullName:
             'MembersModal Integration Avatar Display should display avatars for all members',
@@ -954,7 +1243,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Avatar Display'],
-          duration: 6,
+          duration: 7,
           failureMessages: [],
           fullName:
             'MembersModal Integration Avatar Display should display initials from full name',
@@ -963,7 +1252,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Avatar Display'],
-          duration: 5,
+          duration: 4,
           failureMessages: [],
           fullName:
             'MembersModal Integration Avatar Display should handle null full_name gracefully',
@@ -972,7 +1261,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Avatar Display'],
-          duration: 8,
+          duration: 5,
           failureMessages: [],
           fullName:
             'MembersModal Integration Avatar Display should handle null username gracefully',
@@ -981,7 +1270,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Empty State'],
-          duration: 5,
+          duration: 4,
           failureMessages: [],
           fullName:
             'MembersModal Integration Empty State should show "No members" message when members array is empty',
@@ -999,7 +1288,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Empty State'],
-          duration: 4,
+          duration: 5,
           failureMessages: [],
           fullName:
             'MembersModal Integration Empty State should not show remove buttons in empty state',
@@ -1008,7 +1297,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Empty State'],
-          duration: 4,
+          duration: 6,
           failureMessages: [],
           fullName:
             'MembersModal Integration Empty State should show invite input in empty state when user is admin',
@@ -1026,7 +1315,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Remove Button - Admin View'],
-          duration: 6,
+          duration: 7,
           failureMessages: [],
           fullName:
             'MembersModal Integration Remove Button - Admin View should show remove buttons for admins when currentUserIsAdmin is true',
@@ -1035,7 +1324,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Remove Button - Admin View'],
-          duration: 5,
+          duration: 6,
           failureMessages: [],
           fullName:
             'MembersModal Integration Remove Button - Admin View should not show remove button for admin members',
@@ -1071,7 +1360,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Remove Button - Non-Admin View'],
-          duration: 5,
+          duration: 10,
           failureMessages: [],
           fullName:
             'MembersModal Integration Remove Button - Non-Admin View should show "Only trip admins can manage members" message for non-admins',
@@ -1098,7 +1387,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Remove Member Flow - Success'],
-          duration: 22,
+          duration: 17,
           failureMessages: [],
           fullName:
             'MembersModal Integration Remove Member Flow - Success should show confirmation dialog when remove button is clicked',
@@ -1134,7 +1423,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Remove Member Flow - Success'],
-          duration: 11,
+          duration: 14,
           failureMessages: [],
           fullName:
             'MembersModal Integration Remove Member Flow - Success should use username when full_name is null in success toast',
@@ -1152,7 +1441,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Remove Member Flow - Cancelled'],
-          duration: 9,
+          duration: 8,
           failureMessages: [],
           fullName:
             'MembersModal Integration Remove Member Flow - Cancelled should not show success toast when cancelled',
@@ -1161,7 +1450,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Remove Member Flow - Cancelled'],
-          duration: 9,
+          duration: 7,
           failureMessages: [],
           fullName:
             'MembersModal Integration Remove Member Flow - Cancelled should not call onMembersChange when cancelled',
@@ -1188,7 +1477,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Remove Member Flow - Errors'],
-          duration: 13,
+          duration: 14,
           failureMessages: [],
           fullName:
             'MembersModal Integration Remove Member Flow - Errors should show error toast when action fails',
@@ -1197,7 +1486,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Remove Member Flow - Errors'],
-          duration: 12,
+          duration: 11,
           failureMessages: [],
           fullName:
             'MembersModal Integration Remove Member Flow - Errors should show generic error toast when no error message provided',
@@ -1206,7 +1495,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Remove Member Flow - Errors'],
-          duration: 10,
+          duration: 12,
           failureMessages: [],
           fullName:
             'MembersModal Integration Remove Member Flow - Errors should show error toast when network error occurs',
@@ -1215,7 +1504,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Remove Member Flow - Errors'],
-          duration: 8,
+          duration: 9,
           failureMessages: [],
           fullName:
             'MembersModal Integration Remove Member Flow - Errors should keep modal open on error',
@@ -1259,7 +1548,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Edge Cases'],
-          duration: 10,
+          duration: 7,
           failureMessages: [],
           fullName:
             'MembersModal Integration Edge Cases should handle large member list with scrolling',
@@ -1276,7 +1565,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Edge Cases'],
-          duration: 4,
+          duration: 3,
           failureMessages: [],
           fullName:
             'MembersModal Integration Edge Cases should handle member with both null full_name and null username',
@@ -1285,7 +1574,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Loading State During Removal'],
-          duration: 11,
+          duration: 14,
           failureMessages: [],
           fullName:
             'MembersModal Integration Loading State During Removal should show loading spinner during removal',
@@ -1294,7 +1583,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Loading State During Removal'],
-          duration: 11,
+          duration: 12,
           failureMessages: [],
           fullName:
             'MembersModal Integration Loading State During Removal should disable remove button during removal',
@@ -1303,7 +1592,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['MembersModal Integration', 'Loading State During Removal'],
-          duration: 4,
+          duration: 3,
           failureMessages: [],
           fullName:
             'MembersModal Integration Loading State During Removal should accept different trip IDs',
@@ -1344,16 +1633,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643710167,
-        loadTestEnvironmentEnd: 1773643709802,
-        loadTestEnvironmentStart: 1773643709799,
-        runtime: 365,
-        setupAfterEnvEnd: 1773643709818,
-        setupAfterEnvStart: 1773643709807,
-        setupFilesEnd: 1773643709802,
-        setupFilesStart: 1773643709802,
+        end: 1774131042934,
+        loadTestEnvironmentEnd: 1774131042553,
+        loadTestEnvironmentStart: 1774131042551,
+        runtime: 380,
+        setupAfterEnvEnd: 1774131042570,
+        setupAfterEnvStart: 1774131042560,
+        setupFilesEnd: 1774131042554,
+        setupFilesStart: 1774131042554,
         slow: false,
-        start: 1773643709802,
+        start: 1774131042554,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/LoginForm.test.tsx',
@@ -1377,7 +1666,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['LoginForm'],
-          duration: 81,
+          duration: 83,
           failureMessages: [],
           fullName: 'LoginForm handles Supabase sign-in errors gracefully',
           status: 'passed',
@@ -1385,7 +1674,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['LoginForm'],
-          duration: 83,
+          duration: 80,
           failureMessages: [],
           fullName: 'LoginForm submits correctly with valid credentials',
           status: 'passed',
@@ -1401,7 +1690,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['LoginForm'],
-          duration: 83,
+          duration: 91,
           failureMessages: [],
           fullName: 'LoginForm handles email not confirmed error',
           status: 'passed',
@@ -1417,7 +1706,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['LoginForm'],
-          duration: 18,
+          duration: 20,
           failureMessages: [],
           fullName: 'LoginForm toggles password visibility correctly',
           status: 'passed',
@@ -1431,16 +1720,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643710535,
-        loadTestEnvironmentEnd: 1773643710172,
-        loadTestEnvironmentStart: 1773643710169,
-        runtime: 362,
-        setupAfterEnvEnd: 1773643710189,
-        setupAfterEnvStart: 1773643710179,
-        setupFilesEnd: 1773643710173,
-        setupFilesStart: 1773643710173,
+        end: 1774131043305,
+        loadTestEnvironmentEnd: 1774131042940,
+        loadTestEnvironmentStart: 1774131042935,
+        runtime: 365,
+        setupAfterEnvEnd: 1774131042959,
+        setupAfterEnvStart: 1774131042948,
+        setupFilesEnd: 1774131042940,
+        setupFilesStart: 1774131042940,
         slow: false,
-        start: 1773643710173,
+        start: 1774131042940,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/auto-assign-button.test.tsx',
@@ -1497,7 +1786,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['AutoAssignButton Integration'],
-          duration: 27,
+          duration: 25,
           failureMessages: [],
           fullName: 'AutoAssignButton Integration should show error toast on API error',
           status: 'passed',
@@ -1513,7 +1802,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['AutoAssignButton Integration'],
-          duration: 21,
+          duration: 23,
           failureMessages: [],
           fullName:
             'AutoAssignButton Integration should show generic error toast when error is not an Error instance',
@@ -1530,7 +1819,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['AutoAssignButton Integration'],
-          duration: 22,
+          duration: 24,
           failureMessages: [],
           fullName: 'AutoAssignButton Integration should refresh page after successful assignment',
           status: 'passed',
@@ -1544,16 +1833,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643710776,
-        loadTestEnvironmentEnd: 1773643710543,
-        loadTestEnvironmentStart: 1773643710539,
-        runtime: 233,
-        setupAfterEnvEnd: 1773643710559,
-        setupAfterEnvStart: 1773643710549,
-        setupFilesEnd: 1773643710543,
-        setupFilesStart: 1773643710543,
+        end: 1774131043555,
+        loadTestEnvironmentEnd: 1774131043311,
+        loadTestEnvironmentStart: 1774131043307,
+        runtime: 244,
+        setupAfterEnvEnd: 1774131043330,
+        setupAfterEnvStart: 1774131043318,
+        setupFilesEnd: 1774131043311,
+        setupFilesStart: 1774131043311,
         slow: false,
-        start: 1773643710543,
+        start: 1774131043311,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/ResetPasswordForm.test.tsx',
@@ -1569,7 +1858,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ResetPasswordForm'],
-          duration: 35,
+          duration: 30,
           failureMessages: [],
           fullName: 'ResetPasswordForm shows validation errors for short password',
           status: 'passed',
@@ -1577,7 +1866,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ResetPasswordForm'],
-          duration: 74,
+          duration: 76,
           failureMessages: [],
           fullName: 'ResetPasswordForm handles Supabase errors correctly',
           status: 'passed',
@@ -1585,7 +1874,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ResetPasswordForm'],
-          duration: 76,
+          duration: 84,
           failureMessages: [],
           fullName: 'ResetPasswordForm submits correctly with valid password',
           status: 'passed',
@@ -1595,67 +1884,20 @@ window.jest_html_reporters_callback__({
     },
     {
       numFailingTests: 0,
-      numPassingTests: 3,
-      numPendingTests: 0,
-      numTodoTests: 0,
-      perfStats: {
-        end: 1773643711000,
-        loadTestEnvironmentEnd: 1773643710780,
-        loadTestEnvironmentStart: 1773643710776,
-        runtime: 220,
-        setupAfterEnvEnd: 1773643710797,
-        setupAfterEnvStart: 1773643710787,
-        setupFilesEnd: 1773643710780,
-        setupFilesStart: 1773643710780,
-        slow: false,
-        start: 1773643710780,
-      },
-      testFilePath:
-        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/EditProfileModal.test.tsx',
-      failureMessage: null,
-      testResults: [
-        {
-          ancestorTitles: ['EditProfileModal'],
-          duration: 121,
-          failureMessages: [],
-          fullName: 'EditProfileModal renders and handles successful update',
-          status: 'passed',
-          title: 'renders and handles successful update',
-        },
-        {
-          ancestorTitles: ['EditProfileModal'],
-          duration: 36,
-          failureMessages: [],
-          fullName: 'EditProfileModal handles database error and unexpected crashes',
-          status: 'passed',
-          title: 'handles database error and unexpected crashes',
-        },
-        {
-          ancestorTitles: ['EditProfileModal'],
-          duration: 15,
-          failureMessages: [],
-          fullName: 'EditProfileModal handles cancel button click',
-          status: 'passed',
-          title: 'handles cancel button click',
-        },
-      ],
-    },
-    {
-      numFailingTests: 0,
       numPassingTests: 4,
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643711195,
-        loadTestEnvironmentEnd: 1773643711005,
-        loadTestEnvironmentStart: 1773643711003,
+        end: 1774131043750,
+        loadTestEnvironmentEnd: 1774131043560,
+        loadTestEnvironmentStart: 1774131043556,
         runtime: 190,
-        setupAfterEnvEnd: 1773643711019,
-        setupAfterEnvStart: 1773643711011,
-        setupFilesEnd: 1773643711005,
-        setupFilesStart: 1773643711005,
+        setupAfterEnvEnd: 1774131043577,
+        setupAfterEnvStart: 1774131043567,
+        setupFilesEnd: 1774131043560,
+        setupFilesStart: 1774131043560,
         slow: false,
-        start: 1773643711005,
+        start: 1774131043560,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/dashboard-page.test.tsx',
@@ -1663,7 +1905,7 @@ window.jest_html_reporters_callback__({
       testResults: [
         {
           ancestorTitles: ['DashboardPage Integration'],
-          duration: 19,
+          duration: 23,
           failureMessages: [],
           fullName:
             'DashboardPage Integration renders trips correctly categorized into active and past',
@@ -1699,20 +1941,107 @@ window.jest_html_reporters_callback__({
     },
     {
       numFailingTests: 0,
+      numPassingTests: 3,
+      numPendingTests: 0,
+      numTodoTests: 0,
+      perfStats: {
+        end: 1774131043998,
+        loadTestEnvironmentEnd: 1774131043755,
+        loadTestEnvironmentStart: 1774131043753,
+        runtime: 242,
+        setupAfterEnvEnd: 1774131043782,
+        setupAfterEnvStart: 1774131043768,
+        setupFilesEnd: 1774131043756,
+        setupFilesStart: 1774131043756,
+        slow: false,
+        start: 1774131043756,
+      },
+      testFilePath:
+        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/EditProfileModal.test.tsx',
+      failureMessage: null,
+      testResults: [
+        {
+          ancestorTitles: ['EditProfileModal'],
+          duration: 122,
+          failureMessages: [],
+          fullName: 'EditProfileModal renders and handles successful update',
+          status: 'passed',
+          title: 'renders and handles successful update',
+        },
+        {
+          ancestorTitles: ['EditProfileModal'],
+          duration: 39,
+          failureMessages: [],
+          fullName: 'EditProfileModal handles database error and unexpected crashes',
+          status: 'passed',
+          title: 'handles database error and unexpected crashes',
+        },
+        {
+          ancestorTitles: ['EditProfileModal'],
+          duration: 16,
+          failureMessages: [],
+          fullName: 'EditProfileModal handles cancel button click',
+          status: 'passed',
+          title: 'handles cancel button click',
+        },
+      ],
+    },
+    {
+      numFailingTests: 0,
+      numPassingTests: 2,
+      numPendingTests: 0,
+      numTodoTests: 0,
+      perfStats: {
+        end: 1774131044176,
+        loadTestEnvironmentEnd: 1774131044001,
+        loadTestEnvironmentStart: 1774131043998,
+        runtime: 175,
+        setupAfterEnvEnd: 1774131044015,
+        setupAfterEnvStart: 1774131044006,
+        setupFilesEnd: 1774131044001,
+        setupFilesStart: 1774131044001,
+        slow: false,
+        start: 1774131044001,
+      },
+      testFilePath:
+        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/ProfileView.test.tsx',
+      failureMessage: null,
+      testResults: [
+        {
+          ancestorTitles: ['ProfileView'],
+          duration: 15,
+          failureMessages: [],
+          fullName:
+            'ProfileView renders correctly and handles name initials and packing style branches',
+          status: 'passed',
+          title: 'renders correctly and handles name initials and packing style branches',
+        },
+        {
+          ancestorTitles: ['ProfileView'],
+          duration: 124,
+          failureMessages: [],
+          fullName: 'ProfileView triggers the edit modal and updates the view on save',
+          status: 'passed',
+          title: 'triggers the edit modal and updates the view on save',
+        },
+      ],
+    },
+    {
+      numFailingTests: 0,
       numPassingTests: 26,
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643711384,
-        loadTestEnvironmentEnd: 1773643711200,
-        loadTestEnvironmentStart: 1773643711198,
-        runtime: 184,
-        setupAfterEnvEnd: 1773643711214,
-        setupAfterEnvStart: 1773643711205,
-        setupFilesEnd: 1773643711200,
-        setupFilesStart: 1773643711200,
+        end: 1774131044365,
+        loadTestEnvironmentEnd: 1774131044179,
+        loadTestEnvironmentStart: 1774131044177,
+        runtime: 186,
+        setupAfterEnvEnd: 1774131044196,
+        setupAfterEnvStart: 1774131044186,
+        setupFilesEnd: 1774131044179,
+        setupFilesStart: 1774131044179,
         slow: false,
-        start: 1773643711200,
+        start: 1774131044179,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/edit-item-dialog.test.tsx',
@@ -1744,7 +2073,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Rendering'],
-          duration: 2,
+          duration: 3,
           failureMessages: [],
           fullName: 'EditItemDialog Integration Rendering renders description about updating item',
           status: 'passed',
@@ -1752,7 +2081,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Rendering'],
-          duration: 3,
+          duration: 2,
           failureMessages: [],
           fullName: 'EditItemDialog Integration Rendering renders Item Name label and input',
           status: 'passed',
@@ -1760,7 +2089,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Rendering'],
-          duration: 2,
+          duration: 3,
           failureMessages: [],
           fullName:
             'EditItemDialog Integration Rendering renders Required Quantity label and input',
@@ -1769,7 +2098,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Rendering'],
-          duration: 3,
+          duration: 2,
           failureMessages: [],
           fullName:
             'EditItemDialog Integration Rendering renders Claim Type label with radio buttons',
@@ -1778,7 +2107,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Rendering'],
-          duration: 2,
+          duration: 3,
           failureMessages: [],
           fullName: 'EditItemDialog Integration Rendering renders Cancel button',
           status: 'passed',
@@ -1804,7 +2133,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Rendering'],
-          duration: 3,
+          duration: 2,
           failureMessages: [],
           fullName:
             'EditItemDialog Integration Rendering pre-fills quantity input with requiredCount prop',
@@ -1813,7 +2142,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Claim Type Options'],
-          duration: 2,
+          duration: 3,
           failureMessages: [],
           fullName:
             'EditItemDialog Integration Claim Type Options shows "Single person" option with description',
@@ -1831,7 +2160,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Form Submission'],
-          duration: 13,
+          duration: 12,
           failureMessages: [],
           fullName:
             'EditItemDialog Integration Form Submission calls onSave with form values when Save Changes is clicked',
@@ -1849,7 +2178,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Form Submission'],
-          duration: 15,
+          duration: 11,
           failureMessages: [],
           fullName: 'EditItemDialog Integration Form Submission shows loading state while saving',
           status: 'passed',
@@ -1857,7 +2186,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Form Submission'],
-          duration: 12,
+          duration: 11,
           failureMessages: [],
           fullName: 'EditItemDialog Integration Form Submission disables buttons while saving',
           status: 'passed',
@@ -1865,7 +2194,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Form Submission'],
-          duration: 10,
+          duration: 12,
           failureMessages: [],
           fullName: 'EditItemDialog Integration Form Submission handles save error gracefully',
           status: 'passed',
@@ -1882,7 +2211,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Cancel Behavior'],
-          duration: 9,
+          duration: 10,
           failureMessages: [],
           fullName: 'EditItemDialog Integration Cancel Behavior resets form when Cancel is clicked',
           status: 'passed',
@@ -1898,7 +2227,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Edge Cases'],
-          duration: 3,
+          duration: 2,
           failureMessages: [],
           fullName: 'EditItemDialog Integration Edge Cases handles maximum quantity (1000)',
           status: 'passed',
@@ -1922,7 +2251,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Error Handling Extended'],
-          duration: 10,
+          duration: 9,
           failureMessages: [],
           fullName:
             'EditItemDialog Integration Error Handling Extended displays error message when save fails',
@@ -1931,7 +2260,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['EditItemDialog Integration', 'Error Handling Extended'],
-          duration: 17,
+          duration: 15,
           failureMessages: [],
           fullName:
             'EditItemDialog Integration Error Handling Extended prevents closing while submitting',
@@ -1942,60 +2271,20 @@ window.jest_html_reporters_callback__({
     },
     {
       numFailingTests: 0,
-      numPassingTests: 2,
-      numPendingTests: 0,
-      numTodoTests: 0,
-      perfStats: {
-        end: 1773643711581,
-        loadTestEnvironmentEnd: 1773643711402,
-        loadTestEnvironmentStart: 1773643711399,
-        runtime: 179,
-        setupAfterEnvEnd: 1773643711423,
-        setupAfterEnvStart: 1773643711413,
-        setupFilesEnd: 1773643711402,
-        setupFilesStart: 1773643711402,
-        slow: false,
-        start: 1773643711402,
-      },
-      testFilePath:
-        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/ProfileView.test.tsx',
-      failureMessage: null,
-      testResults: [
-        {
-          ancestorTitles: ['ProfileView'],
-          duration: 14,
-          failureMessages: [],
-          fullName:
-            'ProfileView renders correctly and handles name initials and packing style branches',
-          status: 'passed',
-          title: 'renders correctly and handles name initials and packing style branches',
-        },
-        {
-          ancestorTitles: ['ProfileView'],
-          duration: 121,
-          failureMessages: [],
-          fullName: 'ProfileView triggers the edit modal and updates the view on save',
-          status: 'passed',
-          title: 'triggers the edit modal and updates the view on save',
-        },
-      ],
-    },
-    {
-      numFailingTests: 0,
       numPassingTests: 4,
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643711734,
-        loadTestEnvironmentEnd: 1773643711586,
-        loadTestEnvironmentStart: 1773643711583,
-        runtime: 148,
-        setupAfterEnvEnd: 1773643711600,
-        setupAfterEnvStart: 1773643711591,
-        setupFilesEnd: 1773643711586,
-        setupFilesStart: 1773643711586,
+        end: 1774131044520,
+        loadTestEnvironmentEnd: 1774131044373,
+        loadTestEnvironmentStart: 1774131044371,
+        runtime: 147,
+        setupAfterEnvEnd: 1774131044388,
+        setupAfterEnvStart: 1774131044379,
+        setupFilesEnd: 1774131044373,
+        setupFilesStart: 1774131044373,
         slow: false,
-        start: 1773643711586,
+        start: 1774131044373,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/ForgotPasswordForm.test.tsx',
@@ -2003,7 +2292,7 @@ window.jest_html_reporters_callback__({
       testResults: [
         {
           ancestorTitles: ['ForgotPasswordForm'],
-          duration: 5,
+          duration: 6,
           failureMessages: [],
           fullName: 'ForgotPasswordForm renders correctly',
           status: 'passed',
@@ -2011,7 +2300,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ForgotPasswordForm'],
-          duration: 11,
+          duration: 16,
           failureMessages: [],
           fullName: 'ForgotPasswordForm shows validation errors for empty email',
           status: 'passed',
@@ -2019,7 +2308,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ForgotPasswordForm'],
-          duration: 45,
+          duration: 44,
           failureMessages: [],
           fullName: 'ForgotPasswordForm handles Supabase errors correctly',
           status: 'passed',
@@ -2027,7 +2316,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ForgotPasswordForm'],
-          duration: 45,
+          duration: 44,
           failureMessages: [],
           fullName: 'ForgotPasswordForm submits correctly with valid email',
           status: 'passed',
@@ -2041,16 +2330,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643711883,
-        loadTestEnvironmentEnd: 1773643711739,
-        loadTestEnvironmentStart: 1773643711736,
+        end: 1774131044668,
+        loadTestEnvironmentEnd: 1774131044523,
+        loadTestEnvironmentStart: 1774131044521,
         runtime: 144,
-        setupAfterEnvEnd: 1773643711755,
-        setupAfterEnvStart: 1773643711745,
-        setupFilesEnd: 1773643711739,
-        setupFilesStart: 1773643711739,
+        setupAfterEnvEnd: 1774131044539,
+        setupAfterEnvStart: 1774131044530,
+        setupFilesEnd: 1774131044524,
+        setupFilesStart: 1774131044524,
         slow: false,
-        start: 1773643711739,
+        start: 1774131044524,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/unclaim-dialog.test.tsx',
@@ -2066,7 +2355,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['UnclaimDialog Integration', 'Rendering'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName: 'UnclaimDialog Integration Rendering does not render dialog when closed',
           status: 'passed',
@@ -2074,7 +2363,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['UnclaimDialog Integration', 'Rendering'],
-          duration: 2,
+          duration: 1,
           failureMessages: [],
           fullName: 'UnclaimDialog Integration Rendering renders title "Unclaim Item"',
           status: 'passed',
@@ -2082,7 +2371,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['UnclaimDialog Integration', 'Rendering'],
-          duration: 1,
+          duration: 2,
           failureMessages: [],
           fullName: 'UnclaimDialog Integration Rendering renders item name in description',
           status: 'passed',
@@ -2098,7 +2387,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['UnclaimDialog Integration', 'Rendering'],
-          duration: 2,
+          duration: 1,
           failureMessages: [],
           fullName: 'UnclaimDialog Integration Rendering renders quantity input field',
           status: 'passed',
@@ -2106,7 +2395,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['UnclaimDialog Integration', 'Rendering'],
-          duration: 1,
+          duration: 2,
           failureMessages: [],
           fullName: 'UnclaimDialog Integration Rendering renders Cancel button',
           status: 'passed',
@@ -2114,7 +2403,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['UnclaimDialog Integration', 'Rendering'],
-          duration: 6,
+          duration: 2,
           failureMessages: [],
           fullName:
             'UnclaimDialog Integration Rendering renders Unclaim button when not submitting',
@@ -2123,7 +2412,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['UnclaimDialog Integration', 'Rendering'],
-          duration: 12,
+          duration: 16,
           failureMessages: [],
           fullName: 'UnclaimDialog Integration Rendering renders loading state when submitting',
           status: 'passed',
@@ -2131,7 +2420,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['UnclaimDialog Integration', 'Form Behavior'],
-          duration: 2,
+          duration: 1,
           failureMessages: [],
           fullName:
             'UnclaimDialog Integration Form Behavior sets max attribute on input to claimedQuantity',
@@ -2214,7 +2503,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['UnclaimDialog Integration', 'Edge Cases'],
-          duration: 2,
+          duration: 1,
           failureMessages: [],
           fullName: 'UnclaimDialog Integration Edge Cases handles empty item name',
           status: 'passed',
@@ -2222,7 +2511,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['UnclaimDialog Integration', 'Error Handling Extended'],
-          duration: 8,
+          duration: 9,
           failureMessages: [],
           fullName:
             'UnclaimDialog Integration Error Handling Extended displays error message when unclaim fails',
@@ -2242,20 +2531,373 @@ window.jest_html_reporters_callback__({
     },
     {
       numFailingTests: 0,
+      numPassingTests: 40,
+      numPendingTests: 0,
+      numTodoTests: 0,
+      perfStats: {
+        end: 1774131044808,
+        loadTestEnvironmentEnd: 1774131044675,
+        loadTestEnvironmentStart: 1774131044673,
+        runtime: 133,
+        setupAfterEnvEnd: 1774131044689,
+        setupAfterEnvStart: 1774131044681,
+        setupFilesEnd: 1774131044675,
+        setupFilesStart: 1774131044675,
+        slow: false,
+        start: 1774131044675,
+      },
+      testFilePath:
+        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/add-item-card.test.tsx',
+      failureMessage: null,
+      testResults: [
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Rendering'],
+          duration: 2,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Rendering renders correctly with default props',
+          status: 'passed',
+          title: 'renders correctly with default props',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Rendering'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Rendering renders Plus icon',
+          status: 'passed',
+          title: 'renders Plus icon',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Rendering'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Rendering renders as a button element',
+          status: 'passed',
+          title: 'renders as a button element',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Rendering'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Rendering has correct button type',
+          status: 'passed',
+          title: 'has correct button type',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Click Behavior'],
+          duration: 7,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Click Behavior calls onClick handler when clicked',
+          status: 'passed',
+          title: 'calls onClick handler when clicked',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Click Behavior'],
+          duration: 7,
+          failureMessages: [],
+          fullName:
+            'AddItemCard Integration Click Behavior calls onClick handler when Plus icon is clicked',
+          status: 'passed',
+          title: 'calls onClick handler when Plus icon is clicked',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Click Behavior'],
+          duration: 16,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Click Behavior calls onClick handler multiple times',
+          status: 'passed',
+          title: 'calls onClick handler multiple times',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Click Behavior'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Click Behavior does not call onClick when not clicked',
+          status: 'passed',
+          title: 'does not call onClick when not clicked',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Hover States'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Hover States applies hover classes to button',
+          status: 'passed',
+          title: 'applies hover classes to button',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Hover States'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Hover States applies group hover classes to icon',
+          status: 'passed',
+          title: 'applies group hover classes to icon',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Hover States'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Hover States applies group hover classes to text',
+          status: 'passed',
+          title: 'applies group hover classes to text',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Hover States'],
+          duration: 0,
+          failureMessages: [],
+          fullName:
+            'AddItemCard Integration Hover States has transition classes for smooth hover effect',
+          status: 'passed',
+          title: 'has transition classes for smooth hover effect',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Styling Classes'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Styling Classes has correct base styling classes',
+          status: 'passed',
+          title: 'has correct base styling classes',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Styling Classes'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Styling Classes has correct responsive height classes',
+          status: 'passed',
+          title: 'has correct responsive height classes',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Styling Classes'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'AddItemCard Integration Styling Classes has correct responsive padding classes',
+          status: 'passed',
+          title: 'has correct responsive padding classes',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Styling Classes'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Styling Classes has correct icon sizing classes',
+          status: 'passed',
+          title: 'has correct icon sizing classes',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Styling Classes'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Styling Classes has correct text color classes',
+          status: 'passed',
+          title: 'has correct text color classes',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Styling Classes'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Styling Classes has correct text sizing classes',
+          status: 'passed',
+          title: 'has correct text sizing classes',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Responsive Behavior'],
+          duration: 0,
+          failureMessages: [],
+          fullName:
+            'AddItemCard Integration Responsive Behavior maintains flex layout at all sizes',
+          status: 'passed',
+          title: 'maintains flex layout at all sizes',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Responsive Behavior'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Responsive Behavior uses full width at all sizes',
+          status: 'passed',
+          title: 'uses full width at all sizes',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Responsive Behavior'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Responsive Behavior adjusts height responsively',
+          status: 'passed',
+          title: 'adjusts height responsively',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Responsive Behavior'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Responsive Behavior adjusts icon size responsively',
+          status: 'passed',
+          title: 'adjusts icon size responsively',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Responsive Behavior'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Responsive Behavior adjusts text size responsively',
+          status: 'passed',
+          title: 'adjusts text size responsively',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Responsive Behavior'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Responsive Behavior adjusts padding responsively',
+          status: 'passed',
+          title: 'adjusts padding responsively',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Accessibility'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Accessibility is keyboard accessible as a button',
+          status: 'passed',
+          title: 'is keyboard accessible as a button',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Accessibility'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Accessibility has visible text label',
+          status: 'passed',
+          title: 'has visible text label',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Accessibility'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Accessibility maintains focus styles',
+          status: 'passed',
+          title: 'maintains focus styles',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Integration with Parent Components'],
+          duration: 6,
+          failureMessages: [],
+          fullName:
+            'AddItemCard Integration Integration with Parent Components works with inline onClick handler',
+          status: 'passed',
+          title: 'works with inline onClick handler',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Integration with Parent Components'],
+          duration: 6,
+          failureMessages: [],
+          fullName:
+            'AddItemCard Integration Integration with Parent Components passes event through onClick handler',
+          status: 'passed',
+          title: 'passes event through onClick handler',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Integration with Parent Components'],
+          duration: 11,
+          failureMessages: [],
+          fullName:
+            'AddItemCard Integration Integration with Parent Components works with debounced onClick handlers',
+          status: 'passed',
+          title: 'works with debounced onClick handlers',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Visual Consistency'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'AddItemCard Integration Visual Consistency has consistent border styling (dashed)',
+          status: 'passed',
+          title: 'has consistent border styling (dashed)',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Visual Consistency'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Visual Consistency has transparent background',
+          status: 'passed',
+          title: 'has transparent background',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Visual Consistency'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Visual Consistency has subtle shadow',
+          status: 'passed',
+          title: 'has subtle shadow',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Visual Consistency'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Visual Consistency has rounded corners',
+          status: 'passed',
+          title: 'has rounded corners',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Layout'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Layout centers content horizontally and vertically',
+          status: 'passed',
+          title: 'centers content horizontally and vertically',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Layout'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Layout has gap between icon and text',
+          status: 'passed',
+          title: 'has gap between icon and text',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Layout'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Layout icon appears before text',
+          status: 'passed',
+          title: 'icon appears before text',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Edge Cases'],
+          duration: 26,
+          failureMessages: [],
+          fullName: 'AddItemCard Integration Edge Cases handles rapid clicks without errors',
+          status: 'passed',
+          title: 'handles rapid clicks without errors',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Edge Cases'],
+          duration: 6,
+          failureMessages: [],
+          fullName:
+            'AddItemCard Integration Edge Cases handles being clicked when disabled (if parent prevents)',
+          status: 'passed',
+          title: 'handles being clicked when disabled (if parent prevents)',
+        },
+        {
+          ancestorTitles: ['AddItemCard Integration', 'Edge Cases'],
+          duration: 0,
+          failureMessages: [],
+          fullName:
+            'AddItemCard Integration Edge Cases does not have any console errors when rendering',
+          status: 'passed',
+          title: 'does not have any console errors when rendering',
+        },
+      ],
+    },
+    {
+      numFailingTests: 0,
       numPassingTests: 28,
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643712033,
-        loadTestEnvironmentEnd: 1773643711895,
-        loadTestEnvironmentStart: 1773643711892,
-        runtime: 138,
-        setupAfterEnvEnd: 1773643711918,
-        setupAfterEnvStart: 1773643711906,
-        setupFilesEnd: 1773643711895,
-        setupFilesStart: 1773643711895,
+        end: 1774131044943,
+        loadTestEnvironmentEnd: 1774131044812,
+        loadTestEnvironmentStart: 1774131044809,
+        runtime: 131,
+        setupAfterEnvEnd: 1774131044827,
+        setupAfterEnvStart: 1774131044818,
+        setupFilesEnd: 1774131044812,
+        setupFilesStart: 1774131044812,
         slow: false,
-        start: 1773643711895,
+        start: 1774131044812,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/list-view.test.tsx',
@@ -2263,7 +2905,7 @@ window.jest_html_reporters_callback__({
       testResults: [
         {
           ancestorTitles: ['ListView Integration', 'Rendering'],
-          duration: 6,
+          duration: 5,
           failureMessages: [],
           fullName:
             'ListView Integration Rendering renders three accordion sections (Unassigned, Claimed, Packed)',
@@ -2272,7 +2914,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ListView Integration', 'Rendering'],
-          duration: 1,
+          duration: 2,
           failureMessages: [],
           fullName:
             'ListView Integration Rendering does not render accordion section when column has no items',
@@ -2297,7 +2939,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ListView Integration', 'Accordion Expand/Collapse'],
-          duration: 9,
+          duration: 10,
           failureMessages: [],
           fullName:
             'ListView Integration Accordion Expand/Collapse should expand when accordion header is clicked',
@@ -2306,7 +2948,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ListView Integration', 'Accordion Expand/Collapse'],
-          duration: 16,
+          duration: 14,
           failureMessages: [],
           fullName:
             'ListView Integration Accordion Expand/Collapse should collapse when accordion header is clicked again',
@@ -2342,7 +2984,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ListView Integration', 'Action Buttons - Unassigned Column'],
-          duration: 3,
+          duration: 2,
           failureMessages: [],
           fullName:
             'ListView Integration Action Buttons - Unassigned Column renders Delete button for admin users',
@@ -2360,7 +3002,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ListView Integration', 'Action Buttons - Unassigned Column'],
-          duration: 11,
+          duration: 8,
           failureMessages: [],
           fullName:
             'ListView Integration Action Buttons - Unassigned Column calls onDeleteItem when Delete button is clicked',
@@ -2378,7 +3020,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ListView Integration', 'Action Buttons - Claimed Column'],
-          duration: 8,
+          duration: 9,
           failureMessages: [],
           fullName:
             'ListView Integration Action Buttons - Claimed Column calls onUnclaim when Unclaim button is clicked',
@@ -2405,7 +3047,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ListView Integration', 'Action Buttons - Packed Column'],
-          duration: 1,
+          duration: 2,
           failureMessages: [],
           fullName:
             'ListView Integration Action Buttons - Packed Column shows Packed status without Unclaim for items packed by others',
@@ -2422,7 +3064,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ListView Integration', 'Member Avatars'],
-          duration: 1,
+          duration: 2,
           failureMessages: [],
           fullName:
             'ListView Integration Member Avatars shows +N indicator when more than 3 claims',
@@ -2431,7 +3073,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ListView Integration', 'Member Avatars'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName:
             'ListView Integration Member Avatars hides avatars in claimed column when boardViewMode is my-view',
@@ -2516,16 +3158,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643712165,
-        loadTestEnvironmentEnd: 1773643712036,
-        loadTestEnvironmentStart: 1773643712034,
-        runtime: 129,
-        setupAfterEnvEnd: 1773643712050,
-        setupAfterEnvStart: 1773643712042,
-        setupFilesEnd: 1773643712036,
-        setupFilesStart: 1773643712036,
+        end: 1774131045074,
+        loadTestEnvironmentEnd: 1774131044948,
+        loadTestEnvironmentStart: 1774131044946,
+        runtime: 126,
+        setupAfterEnvEnd: 1774131044962,
+        setupAfterEnvStart: 1774131044953,
+        setupFilesEnd: 1774131044948,
+        setupFilesStart: 1774131044948,
         slow: false,
-        start: 1773643712036,
+        start: 1774131044948,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/delete-confirmation-dialog.test.tsx',
@@ -2541,7 +3183,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['DeleteConfirmationDialog Integration', 'Rendering'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName:
             'DeleteConfirmationDialog Integration Rendering does not render dialog when closed',
@@ -2550,7 +3192,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['DeleteConfirmationDialog Integration', 'Rendering'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName:
             'DeleteConfirmationDialog Integration Rendering renders delete icon (AlertTriangle)',
@@ -2559,7 +3201,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['DeleteConfirmationDialog Integration', 'Rendering'],
-          duration: 1,
+          duration: 2,
           failureMessages: [],
           fullName: 'DeleteConfirmationDialog Integration Rendering renders title "Delete Item"',
           status: 'passed',
@@ -2585,7 +3227,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['DeleteConfirmationDialog Integration', 'Rendering'],
-          duration: 5,
+          duration: 1,
           failureMessages: [],
           fullName:
             'DeleteConfirmationDialog Integration Rendering displays item info box with item name and quantity',
@@ -2594,7 +3236,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['DeleteConfirmationDialog Integration', 'Rendering'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName: 'DeleteConfirmationDialog Integration Rendering renders Cancel button',
           status: 'passed',
@@ -2611,7 +3253,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['DeleteConfirmationDialog Integration', 'Rendering'],
-          duration: 8,
+          duration: 10,
           failureMessages: [],
           fullName:
             'DeleteConfirmationDialog Integration Rendering renders loading state when deleting',
@@ -2638,7 +3280,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['DeleteConfirmationDialog Integration', 'Interactions'],
-          duration: 8,
+          duration: 9,
           failureMessages: [],
           fullName:
             'DeleteConfirmationDialog Integration Interactions closes dialog after successful deletion',
@@ -2647,7 +3289,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['DeleteConfirmationDialog Integration', 'Interactions'],
-          duration: 7,
+          duration: 8,
           failureMessages: [],
           fullName:
             'DeleteConfirmationDialog Integration Interactions does not close dialog when deletion fails (error in console)',
@@ -2692,7 +3334,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['DeleteConfirmationDialog Integration', 'Edge Cases'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName: 'DeleteConfirmationDialog Integration Edge Cases handles very long item names',
           status: 'passed',
@@ -2744,20 +3386,431 @@ window.jest_html_reporters_callback__({
     },
     {
       numFailingTests: 0,
+      numPassingTests: 33,
+      numPendingTests: 0,
+      numTodoTests: 0,
+      perfStats: {
+        end: 1774131045191,
+        loadTestEnvironmentEnd: 1774131045078,
+        loadTestEnvironmentStart: 1774131045075,
+        runtime: 113,
+        setupAfterEnvEnd: 1774131045092,
+        setupAfterEnvStart: 1774131045083,
+        setupFilesEnd: 1774131045078,
+        setupFilesStart: 1774131045078,
+        slow: false,
+        start: 1774131045078,
+      },
+      testFilePath:
+        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/kanban-column-add-item.test.tsx',
+      failureMessage: null,
+      testResults: [
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Admin-only Add Item Controls',
+            'Plus Icon in Header',
+          ],
+          duration: 6,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Admin-only Add Item Controls Plus Icon in Header shows + icon in unassigned column header when user is admin',
+          status: 'passed',
+          title: 'shows + icon in unassigned column header when user is admin',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Admin-only Add Item Controls',
+            'Plus Icon in Header',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Admin-only Add Item Controls Plus Icon in Header does NOT show + icon in unassigned column header when user is not admin',
+          status: 'passed',
+          title: 'does NOT show + icon in unassigned column header when user is not admin',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Admin-only Add Item Controls',
+            'Plus Icon in Header',
+          ],
+          duration: 2,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Admin-only Add Item Controls Plus Icon in Header does NOT show + icon in claimed column header even for admin',
+          status: 'passed',
+          title: 'does NOT show + icon in claimed column header even for admin',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Admin-only Add Item Controls',
+            'Plus Icon in Header',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Admin-only Add Item Controls Plus Icon in Header does NOT show + icon in packed column header even for admin',
+          status: 'passed',
+          title: 'does NOT show + icon in packed column header even for admin',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Admin-only Add Item Controls',
+            'Plus Icon in Header',
+          ],
+          duration: 12,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Admin-only Add Item Controls Plus Icon in Header calls onAddItem when + icon is clicked',
+          status: 'passed',
+          title: 'calls onAddItem when + icon is clicked',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Admin-only Add Item Controls',
+            'AddItemCard in Column Body',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Admin-only Add Item Controls AddItemCard in Column Body shows AddItemCard in unassigned column when user is admin',
+          status: 'passed',
+          title: 'shows AddItemCard in unassigned column when user is admin',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Admin-only Add Item Controls',
+            'AddItemCard in Column Body',
+          ],
+          duration: 2,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Admin-only Add Item Controls AddItemCard in Column Body does NOT show AddItemCard in unassigned column when user is not admin',
+          status: 'passed',
+          title: 'does NOT show AddItemCard in unassigned column when user is not admin',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Admin-only Add Item Controls',
+            'AddItemCard in Column Body',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Admin-only Add Item Controls AddItemCard in Column Body does NOT show AddItemCard in claimed column even for admin',
+          status: 'passed',
+          title: 'does NOT show AddItemCard in claimed column even for admin',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Admin-only Add Item Controls',
+            'AddItemCard in Column Body',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Admin-only Add Item Controls AddItemCard in Column Body does NOT show AddItemCard in packed column even for admin',
+          status: 'passed',
+          title: 'does NOT show AddItemCard in packed column even for admin',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Admin-only Add Item Controls',
+            'AddItemCard in Column Body',
+          ],
+          duration: 7,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Admin-only Add Item Controls AddItemCard in Column Body calls onAddItem when AddItemCard is clicked',
+          status: 'passed',
+          title: 'calls onAddItem when AddItemCard is clicked',
+        },
+        {
+          ancestorTitles: ['KanbanColumn Add Item Feature Integration', 'Group Hover Behavior'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Group Hover Behavior AddItemCard has opacity-0 by default',
+          status: 'passed',
+          title: 'AddItemCard has opacity-0 by default',
+        },
+        {
+          ancestorTitles: ['KanbanColumn Add Item Feature Integration', 'Group Hover Behavior'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Group Hover Behavior AddItemCard wrapper has group-hover:opacity-100 class',
+          status: 'passed',
+          title: 'AddItemCard wrapper has group-hover:opacity-100 class',
+        },
+        {
+          ancestorTitles: ['KanbanColumn Add Item Feature Integration', 'Group Hover Behavior'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Group Hover Behavior column has group class for hover behavior',
+          status: 'passed',
+          title: 'column has group class for hover behavior',
+        },
+        {
+          ancestorTitles: ['KanbanColumn Add Item Feature Integration', 'Group Hover Behavior'],
+          duration: 2,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Group Hover Behavior AddItemCard wrapper has transition-opacity class',
+          status: 'passed',
+          title: 'AddItemCard wrapper has transition-opacity class',
+        },
+        {
+          ancestorTitles: ['KanbanColumn Add Item Feature Integration', 'Group Hover Behavior'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Group Hover Behavior both + icon and AddItemCard are visible on group hover',
+          status: 'passed',
+          title: 'both + icon and AddItemCard are visible on group hover',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Column Header Layout with Add Button',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Column Header Layout with Add Button header has flex layout with justify-between',
+          status: 'passed',
+          title: 'header has flex layout with justify-between',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Column Header Layout with Add Button',
+          ],
+          duration: 2,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Column Header Layout with Add Button header has flex items-center gap-2 for controls',
+          status: 'passed',
+          title: 'header has flex items-center gap-2 for controls',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Column Header Layout with Add Button',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Column Header Layout with Add Button + icon appears before item count badge',
+          status: 'passed',
+          title: '+ icon appears before item count badge',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Integration with onAddItem prop',
+          ],
+          duration: 2,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Integration with onAddItem prop only renders add controls when onAddItem is provided',
+          status: 'passed',
+          title: 'only renders add controls when onAddItem is provided',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Integration with onAddItem prop',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Integration with onAddItem prop does not show add controls when onAddItem is not provided even for admin',
+          status: 'passed',
+          title: 'does not show add controls when onAddItem is not provided even for admin',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Integration with onAddItem prop',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Integration with onAddItem prop passes the same function reference to both add controls',
+          status: 'passed',
+          title: 'passes the same function reference to both add controls',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Empty State with Admin Controls',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Empty State with Admin Controls shows empty state message when no items and admin',
+          status: 'passed',
+          title: 'shows empty state message when no items and admin',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Empty State with Admin Controls',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Empty State with Admin Controls shows empty state message when no items and not admin',
+          status: 'passed',
+          title: 'shows empty state message when no items and not admin',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Empty State with Admin Controls',
+          ],
+          duration: 9,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Empty State with Admin Controls allows adding item when column is empty and user is admin',
+          status: 'passed',
+          title: 'allows adding item when column is empty and user is admin',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Empty State with Admin Controls',
+          ],
+          duration: 8,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Empty State with Admin Controls admin can add item via + icon when column is empty',
+          status: 'passed',
+          title: 'admin can add item via + icon when column is empty',
+        },
+        {
+          ancestorTitles: ['KanbanColumn Add Item Feature Integration', 'Column Type Restrictions'],
+          duration: 3,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Column Type Restrictions only unassigned column shows add controls for admin',
+          status: 'passed',
+          title: 'only unassigned column shows add controls for admin',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Visual Consistency of Add Controls',
+          ],
+          duration: 2,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Visual Consistency of Add Controls + icon has correct styling classes',
+          status: 'passed',
+          title: '+ icon has correct styling classes',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Visual Consistency of Add Controls',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Visual Consistency of Add Controls + icon button has correct type attribute',
+          status: 'passed',
+          title: '+ icon button has correct type attribute',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Visual Consistency of Add Controls',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Visual Consistency of Add Controls AddItemCard wrapper has correct positioning',
+          status: 'passed',
+          title: 'AddItemCard wrapper has correct positioning',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Bug Fix Verification: Group Hover on Entire Column',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Bug Fix Verification: Group Hover on Entire Column group class is applied to the column div',
+          status: 'passed',
+          title: 'group class is applied to the column div',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Bug Fix Verification: Group Hover on Entire Column',
+          ],
+          duration: 2,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Bug Fix Verification: Group Hover on Entire Column hovering anywhere on column should show AddItemCard',
+          status: 'passed',
+          title: 'hovering anywhere on column should show AddItemCard',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Bug Fix Verification: Group Hover on Entire Column',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Bug Fix Verification: Group Hover on Entire Column AddItemCard is not visible by default (opacity-0)',
+          status: 'passed',
+          title: 'AddItemCard is not visible by default (opacity-0)',
+        },
+        {
+          ancestorTitles: [
+            'KanbanColumn Add Item Feature Integration',
+            'Bug Fix Verification: Group Hover on Entire Column',
+          ],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'KanbanColumn Add Item Feature Integration Bug Fix Verification: Group Hover on Entire Column AddItemCard becomes visible on group hover (group-hover:opacity-100)',
+          status: 'passed',
+          title: 'AddItemCard becomes visible on group hover (group-hover:opacity-100)',
+        },
+      ],
+    },
+    {
+      numFailingTests: 0,
       numPassingTests: 32,
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643712271,
-        loadTestEnvironmentEnd: 1773643712168,
-        loadTestEnvironmentStart: 1773643712165,
-        runtime: 103,
-        setupAfterEnvEnd: 1773643712183,
-        setupAfterEnvStart: 1773643712174,
-        setupFilesEnd: 1773643712168,
-        setupFilesStart: 1773643712168,
+        end: 1774131045290,
+        loadTestEnvironmentEnd: 1774131045193,
+        loadTestEnvironmentStart: 1774131045191,
+        runtime: 96,
+        setupAfterEnvEnd: 1774131045207,
+        setupAfterEnvStart: 1774131045199,
+        setupFilesEnd: 1774131045194,
+        setupFilesStart: 1774131045194,
         slow: false,
-        start: 1773643712168,
+        start: 1774131045194,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/kanban-card.test.tsx',
@@ -2797,7 +3850,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanCard Integration', 'Rendering'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName: 'KanbanCard Integration Rendering has drag attributes',
           status: 'passed',
@@ -2813,7 +3866,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanCard Integration', 'Unassigned Column'],
-          duration: 6,
+          duration: 1,
           failureMessages: [],
           fullName:
             'KanbanCard Integration Unassigned Column shows Edit and Delete buttons for admin',
@@ -2822,7 +3875,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanCard Integration', 'Unassigned Column'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName:
             'KanbanCard Integration Unassigned Column does not show Edit and Delete buttons for non-admin',
@@ -2831,7 +3884,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanCard Integration', 'Unassigned Column'],
-          duration: 9,
+          duration: 7,
           failureMessages: [],
           fullName:
             'KanbanCard Integration Unassigned Column calls onClaim when Claim button is clicked',
@@ -2885,7 +3938,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanCard Integration', 'Claimed Column'],
-          duration: 7,
+          duration: 6,
           failureMessages: [],
           fullName:
             'KanbanCard Integration Claimed Column calls onMarkPacked when Mark Packed button is clicked',
@@ -2946,7 +3999,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanCard Integration', 'Avatar Display'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName:
             'KanbanCard Integration Avatar Display shows avatars in All Items View claimed column',
@@ -2955,7 +4008,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanCard Integration', 'Count Calculation - My View'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName:
             'KanbanCard Integration Count Calculation - My View shows required_count in unassigned column',
@@ -2964,7 +4017,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanCard Integration', 'Count Calculation - My View'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName:
             'KanbanCard Integration Count Calculation - My View shows user claim quantity in claimed column',
@@ -2973,7 +4026,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanCard Integration', 'Count Calculation - My View'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName:
             'KanbanCard Integration Count Calculation - My View shows 0 when user has no claim in claimed column',
@@ -3033,7 +4086,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanCard Integration', 'Edge Cases'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName: 'KanbanCard Integration Edge Cases handles very long item name with truncation',
           status: 'passed',
@@ -3047,16 +4100,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643712376,
-        loadTestEnvironmentEnd: 1773643712274,
-        loadTestEnvironmentStart: 1773643712271,
-        runtime: 102,
-        setupAfterEnvEnd: 1773643712287,
-        setupAfterEnvStart: 1773643712279,
-        setupFilesEnd: 1773643712274,
-        setupFilesStart: 1773643712274,
+        end: 1774131045390,
+        loadTestEnvironmentEnd: 1774131045295,
+        loadTestEnvironmentStart: 1774131045293,
+        runtime: 95,
+        setupAfterEnvEnd: 1774131045309,
+        setupAfterEnvStart: 1774131045301,
+        setupFilesEnd: 1774131045295,
+        setupFilesStart: 1774131045295,
         slow: false,
-        start: 1773643712274,
+        start: 1774131045295,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/trip-dashboard-page.test.tsx',
@@ -3064,7 +4117,7 @@ window.jest_html_reporters_callback__({
       testResults: [
         {
           ancestorTitles: ['TripDashboardClient Integration', 'Rendering'],
-          duration: 14,
+          duration: 13,
           failureMessages: [],
           fullName: 'TripDashboardClient Integration Rendering should render trip dashboard page',
           status: 'passed',
@@ -3081,7 +4134,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['TripDashboardClient Integration', 'Rendering'],
-          duration: 4,
+          duration: 5,
           failureMessages: [],
           fullName: 'TripDashboardClient Integration Rendering should show stats',
           status: 'passed',
@@ -3089,7 +4142,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['TripDashboardClient Integration', 'Back Button Navigation'],
-          duration: 14,
+          duration: 13,
           failureMessages: [],
           fullName:
             'TripDashboardClient Integration Back Button Navigation should navigate to dashboard when Back button is clicked',
@@ -3098,7 +4151,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['TripDashboardClient Integration', 'Members Interaction'],
-          duration: 15,
+          duration: 14,
           failureMessages: [],
           fullName:
             'TripDashboardClient Integration Members Interaction should open members modal when View all is clicked',
@@ -3118,20 +4171,67 @@ window.jest_html_reporters_callback__({
     },
     {
       numFailingTests: 0,
+      numPassingTests: 3,
+      numPendingTests: 0,
+      numTodoTests: 0,
+      perfStats: {
+        end: 1774131045490,
+        loadTestEnvironmentEnd: 1774131045395,
+        loadTestEnvironmentStart: 1774131045393,
+        runtime: 94,
+        setupAfterEnvEnd: 1774131045409,
+        setupAfterEnvStart: 1774131045401,
+        setupFilesEnd: 1774131045396,
+        setupFilesStart: 1774131045396,
+        slow: false,
+        start: 1774131045396,
+      },
+      testFilePath:
+        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/Navbar.test.tsx',
+      failureMessage: null,
+      testResults: [
+        {
+          ancestorTitles: ['Navbar Integration'],
+          duration: 4,
+          failureMessages: [],
+          fullName: 'Navbar Integration renders correctly with profile data after mounting',
+          status: 'passed',
+          title: 'renders correctly with profile data after mounting',
+        },
+        {
+          ancestorTitles: ['Navbar Integration'],
+          duration: 32,
+          failureMessages: [],
+          fullName: 'Navbar Integration handles sign out flow',
+          status: 'passed',
+          title: 'handles sign out flow',
+        },
+        {
+          ancestorTitles: ['Navbar Integration'],
+          duration: 18,
+          failureMessages: [],
+          fullName: 'Navbar Integration shows profile info in dropdown',
+          status: 'passed',
+          title: 'shows profile info in dropdown',
+        },
+      ],
+    },
+    {
+      numFailingTests: 0,
       numPassingTests: 24,
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643712485,
-        loadTestEnvironmentEnd: 1773643712380,
-        loadTestEnvironmentStart: 1773643712378,
-        runtime: 104,
-        setupAfterEnvEnd: 1773643712394,
-        setupAfterEnvStart: 1773643712386,
-        setupFilesEnd: 1773643712381,
-        setupFilesStart: 1773643712381,
+        end: 1774131045579,
+        loadTestEnvironmentEnd: 1774131045494,
+        loadTestEnvironmentStart: 1774131045492,
+        runtime: 85,
+        setupAfterEnvEnd: 1774131045508,
+        setupAfterEnvStart: 1774131045499,
+        setupFilesEnd: 1774131045494,
+        setupFilesStart: 1774131045494,
         slow: false,
-        start: 1773643712381,
+        start: 1774131045494,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/kanban-board.test.tsx',
@@ -3148,7 +4248,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanBoard Integration', 'Rendering'],
-          duration: 2,
+          duration: 1,
           failureMessages: [],
           fullName: 'KanbanBoard Integration Rendering renders items in correct columns',
           status: 'passed',
@@ -3156,7 +4256,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanBoard Integration', 'Rendering'],
-          duration: 2,
+          duration: 1,
           failureMessages: [],
           fullName: 'KanbanBoard Integration Rendering renders DndContext wrapper',
           status: 'passed',
@@ -3190,7 +4290,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanBoard Integration', 'Column Configuration'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName:
             'KanbanBoard Integration Column Configuration passes correct props to Packed column',
@@ -3199,7 +4299,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanBoard Integration', 'Drag Disable Logic'],
-          duration: 10,
+          duration: 1,
           failureMessages: [],
           fullName:
             'KanbanBoard Integration Drag Disable Logic disables drag for unassigned column in my-view mode',
@@ -3208,7 +4308,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanBoard Integration', 'Drag Disable Logic'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName:
             'KanbanBoard Integration Drag Disable Logic enables drag for claimed column in my-view mode',
@@ -3226,7 +4326,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanBoard Integration', 'Event Handlers'],
-          duration: 7,
+          duration: 11,
           failureMessages: [],
           fullName: 'KanbanBoard Integration Event Handlers passes onClaim handler to columns',
           status: 'passed',
@@ -3242,7 +4342,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanBoard Integration', 'Event Handlers'],
-          duration: 8,
+          duration: 7,
           failureMessages: [],
           fullName: 'KanbanBoard Integration Event Handlers passes onMarkPacked handler to columns',
           status: 'passed',
@@ -3250,7 +4350,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanBoard Integration', 'Event Handlers'],
-          duration: 8,
+          duration: 7,
           failureMessages: [],
           fullName: 'KanbanBoard Integration Event Handlers passes onEditItem handler to columns',
           status: 'passed',
@@ -3282,7 +4382,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanBoard Integration', 'Edge Cases'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName: 'KanbanBoard Integration Edge Cases handles items not found in columns',
           status: 'passed',
@@ -3299,7 +4399,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanBoard Integration', 'Board View Mode Integration'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName:
             'KanbanBoard Integration Board View Mode Integration uses boardViewMode from store',
@@ -3317,7 +4417,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanBoard Integration', 'Drag End Edge Cases'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName:
             'KanbanBoard Integration Drag End Edge Cases handles drag end when active is null',
@@ -3346,67 +4446,20 @@ window.jest_html_reporters_callback__({
     },
     {
       numFailingTests: 0,
-      numPassingTests: 3,
-      numPendingTests: 0,
-      numTodoTests: 0,
-      perfStats: {
-        end: 1773643712589,
-        loadTestEnvironmentEnd: 1773643712488,
-        loadTestEnvironmentStart: 1773643712486,
-        runtime: 101,
-        setupAfterEnvEnd: 1773643712505,
-        setupAfterEnvStart: 1773643712494,
-        setupFilesEnd: 1773643712488,
-        setupFilesStart: 1773643712488,
-        slow: false,
-        start: 1773643712488,
-      },
-      testFilePath:
-        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/Navbar.test.tsx',
-      failureMessage: null,
-      testResults: [
-        {
-          ancestorTitles: ['Navbar Integration'],
-          duration: 3,
-          failureMessages: [],
-          fullName: 'Navbar Integration renders correctly with profile data after mounting',
-          status: 'passed',
-          title: 'renders correctly with profile data after mounting',
-        },
-        {
-          ancestorTitles: ['Navbar Integration'],
-          duration: 38,
-          failureMessages: [],
-          fullName: 'Navbar Integration handles sign out flow',
-          status: 'passed',
-          title: 'handles sign out flow',
-        },
-        {
-          ancestorTitles: ['Navbar Integration'],
-          duration: 18,
-          failureMessages: [],
-          fullName: 'Navbar Integration shows profile info in dropdown',
-          status: 'passed',
-          title: 'shows profile info in dropdown',
-        },
-      ],
-    },
-    {
-      numFailingTests: 0,
       numPassingTests: 11,
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643712662,
-        loadTestEnvironmentEnd: 1773643712594,
-        loadTestEnvironmentStart: 1773643712592,
-        runtime: 68,
-        setupAfterEnvEnd: 1773643712608,
-        setupAfterEnvStart: 1773643712599,
-        setupFilesEnd: 1773643712594,
-        setupFilesStart: 1773643712594,
+        end: 1774131045644,
+        loadTestEnvironmentEnd: 1774131045584,
+        loadTestEnvironmentStart: 1774131045582,
+        runtime: 60,
+        setupAfterEnvEnd: 1774131045598,
+        setupAfterEnvStart: 1774131045589,
+        setupFilesEnd: 1774131045584,
+        setupFilesStart: 1774131045584,
         slow: false,
-        start: 1773643712594,
+        start: 1774131045584,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/kanban-column.test.tsx',
@@ -3423,7 +4476,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanColumn Integration', 'Unassigned Column'],
-          duration: 2,
+          duration: 1,
           failureMessages: [],
           fullName: 'KanbanColumn Integration Unassigned Column renders items in the column',
           status: 'passed',
@@ -3439,7 +4492,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanColumn Integration', 'Unassigned Column'],
-          duration: 2,
+          duration: 1,
           failureMessages: [],
           fullName:
             'KanbanColumn Integration Unassigned Column uses warm beige color scheme for unassigned column',
@@ -3482,7 +4535,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanColumn Integration', 'User Interactions'],
-          duration: 14,
+          duration: 11,
           failureMessages: [],
           fullName:
             'KanbanColumn Integration User Interactions passes onClaim callback to child cards',
@@ -3500,7 +4553,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['KanbanColumn Integration', 'Sortable Context'],
-          duration: 1,
+          duration: 2,
           failureMessages: [],
           fullName:
             'KanbanColumn Integration Sortable Context provides item IDs to SortableContext',
@@ -3515,16 +4568,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643712721,
-        loadTestEnvironmentEnd: 1773643712664,
-        loadTestEnvironmentStart: 1773643712662,
-        runtime: 57,
-        setupAfterEnvEnd: 1773643712678,
-        setupAfterEnvStart: 1773643712669,
-        setupFilesEnd: 1773643712664,
-        setupFilesStart: 1773643712664,
+        end: 1774131045702,
+        loadTestEnvironmentEnd: 1774131045647,
+        loadTestEnvironmentStart: 1774131045645,
+        runtime: 55,
+        setupAfterEnvEnd: 1774131045660,
+        setupAfterEnvStart: 1774131045652,
+        setupFilesEnd: 1774131045647,
+        setupFilesStart: 1774131045647,
         slow: false,
-        start: 1773643712664,
+        start: 1774131045647,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/landing/trip-board-mock-card.test.tsx',
@@ -3532,7 +4585,7 @@ window.jest_html_reporters_callback__({
       testResults: [
         {
           ancestorTitles: ['TripBoardMockCard Integration', 'rendering'],
-          duration: 2,
+          duration: 3,
           failureMessages: [],
           fullName: 'TripBoardMockCard Integration rendering renders the mock trip card',
           status: 'passed',
@@ -3588,7 +4641,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['TripBoardMockCard Integration', 'visual design'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName: 'TripBoardMockCard Integration visual design has border styling',
           status: 'passed',
@@ -3596,7 +4649,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['TripBoardMockCard Integration', 'gradient banner'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName: 'TripBoardMockCard Integration gradient banner renders the gradient background',
           status: 'passed',
@@ -3730,7 +4783,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['TripBoardMockCard Integration', 'accessibility'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName:
             'TripBoardMockCard Integration accessibility has descriptive icon labels (visually hidden for screen readers)',
@@ -3761,116 +4814,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643712785,
-        loadTestEnvironmentEnd: 1773643712728,
-        loadTestEnvironmentStart: 1773643712726,
-        runtime: 57,
-        setupAfterEnvEnd: 1773643712741,
-        setupAfterEnvStart: 1773643712733,
-        setupFilesEnd: 1773643712728,
-        setupFilesStart: 1773643712728,
+        end: 1774131045764,
+        loadTestEnvironmentEnd: 1774131045709,
+        loadTestEnvironmentStart: 1774131045707,
+        runtime: 55,
+        setupAfterEnvEnd: 1774131045723,
+        setupAfterEnvStart: 1774131045715,
+        setupFilesEnd: 1774131045709,
+        setupFilesStart: 1774131045709,
         slow: false,
-        start: 1773643712728,
-      },
-      testFilePath:
-        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/view-toggle.test.tsx',
-      failureMessage: null,
-      testResults: [
-        {
-          ancestorTitles: ['ViewToggle Integration', 'Rendering'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'ViewToggle Integration Rendering renders toggle container',
-          status: 'passed',
-          title: 'renders toggle container',
-        },
-        {
-          ancestorTitles: ['ViewToggle Integration', 'Rendering'],
-          duration: 2,
-          failureMessages: [],
-          fullName: 'ViewToggle Integration Rendering renders Kanban button with LayoutGrid icon',
-          status: 'passed',
-          title: 'renders Kanban button with LayoutGrid icon',
-        },
-        {
-          ancestorTitles: ['ViewToggle Integration', 'Rendering'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'ViewToggle Integration Rendering renders List button with List icon',
-          status: 'passed',
-          title: 'renders List button with List icon',
-        },
-        {
-          ancestorTitles: ['ViewToggle Integration', 'Rendering'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'ViewToggle Integration Rendering applies active styling to Kanban button when viewMode is kanban',
-          status: 'passed',
-          title: 'applies active styling to Kanban button when viewMode is kanban',
-        },
-        {
-          ancestorTitles: ['ViewToggle Integration', 'Rendering'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'ViewToggle Integration Rendering applies active styling to List button when viewMode is list',
-          status: 'passed',
-          title: 'applies active styling to List button when viewMode is list',
-        },
-        {
-          ancestorTitles: ['ViewToggle Integration', 'Interactions'],
-          duration: 8,
-          failureMessages: [],
-          fullName:
-            'ViewToggle Integration Interactions calls setViewMode with "kanban" when Kanban button is clicked',
-          status: 'passed',
-          title: 'calls setViewMode with "kanban" when Kanban button is clicked',
-        },
-        {
-          ancestorTitles: ['ViewToggle Integration', 'Interactions'],
-          duration: 6,
-          failureMessages: [],
-          fullName:
-            'ViewToggle Integration Interactions calls setViewMode with "list" when List button is clicked',
-          status: 'passed',
-          title: 'calls setViewMode with "list" when List button is clicked',
-        },
-        {
-          ancestorTitles: ['ViewToggle Integration', 'Store Integration'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'ViewToggle Integration Store Integration retrieves current viewMode from store',
-          status: 'passed',
-          title: 'retrieves current viewMode from store',
-        },
-        {
-          ancestorTitles: ['ViewToggle Integration', 'Store Integration'],
-          duration: 7,
-          failureMessages: [],
-          fullName: 'ViewToggle Integration Store Integration updates store when view mode changes',
-          status: 'passed',
-          title: 'updates store when view mode changes',
-        },
-      ],
-    },
-    {
-      numFailingTests: 0,
-      numPassingTests: 9,
-      numPendingTests: 0,
-      numTodoTests: 0,
-      perfStats: {
-        end: 1773643712847,
-        loadTestEnvironmentEnd: 1773643712788,
-        loadTestEnvironmentStart: 1773643712786,
-        runtime: 59,
-        setupAfterEnvEnd: 1773643712801,
-        setupAfterEnvStart: 1773643712793,
-        setupFilesEnd: 1773643712788,
-        setupFilesStart: 1773643712788,
-        slow: false,
-        start: 1773643712788,
+        start: 1774131045709,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/board-view-toggle.test.tsx',
@@ -3902,7 +4855,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['BoardViewToggle Integration', 'Rendering'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName:
             'BoardViewToggle Integration Rendering applies active styling to My View button when boardViewMode is my-view',
@@ -3920,7 +4873,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['BoardViewToggle Integration', 'Interactions'],
-          duration: 14,
+          duration: 8,
           failureMessages: [],
           fullName:
             'BoardViewToggle Integration Interactions calls setBoardViewMode with "my-view" when My View button is clicked',
@@ -3958,105 +4911,656 @@ window.jest_html_reporters_callback__({
     },
     {
       numFailingTests: 0,
+      numPassingTests: 1,
+      numPendingTests: 0,
+      numTodoTests: 0,
+      perfStats: {
+        end: 1774131045790,
+        loadTestEnvironmentEnd: 1774131045766,
+        loadTestEnvironmentStart: 1774131045764,
+        runtime: 24,
+        setupAfterEnvEnd: 1774131045780,
+        setupAfterEnvStart: 1774131045771,
+        setupFilesEnd: 1774131045766,
+        setupFilesStart: 1774131045766,
+        slow: false,
+        start: 1774131045766,
+      },
+      testFilePath:
+        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/example.test.tsx',
+      failureMessage: null,
+      testResults: [
+        {
+          ancestorTitles: ['Dummy Integration Test'],
+          duration: 0,
+          failureMessages: [],
+          fullName:
+            'Dummy Integration Test should render a basic element to verify DOM environment',
+          status: 'passed',
+          title: 'should render a basic element to verify DOM environment',
+        },
+      ],
+    },
+    {
+      numFailingTests: 0,
       numPassingTests: 9,
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643712916,
-        loadTestEnvironmentEnd: 1773643712851,
-        loadTestEnvironmentStart: 1773643712848,
-        runtime: 65,
-        setupAfterEnvEnd: 1773643712872,
-        setupAfterEnvStart: 1773643712859,
-        setupFilesEnd: 1773643712851,
-        setupFilesStart: 1773643712851,
+        end: 1774131045850,
+        loadTestEnvironmentEnd: 1774131045796,
+        loadTestEnvironmentStart: 1774131045794,
+        runtime: 54,
+        setupAfterEnvEnd: 1774131045810,
+        setupAfterEnvStart: 1774131045801,
+        setupFilesEnd: 1774131045796,
+        setupFilesStart: 1774131045796,
         slow: false,
-        start: 1773643712851,
+        start: 1774131045796,
       },
       testFilePath:
-        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/board-store/drag-drop-workflow.test.tsx',
+        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/view-toggle.test.tsx',
       failureMessage: null,
       testResults: [
         {
-          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
-          duration: 23,
+          ancestorTitles: ['ViewToggle Integration', 'Rendering'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'ViewToggle Integration Rendering renders toggle container',
+          status: 'passed',
+          title: 'renders toggle container',
+        },
+        {
+          ancestorTitles: ['ViewToggle Integration', 'Rendering'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'ViewToggle Integration Rendering renders Kanban button with LayoutGrid icon',
+          status: 'passed',
+          title: 'renders Kanban button with LayoutGrid icon',
+        },
+        {
+          ancestorTitles: ['ViewToggle Integration', 'Rendering'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'ViewToggle Integration Rendering renders List button with List icon',
+          status: 'passed',
+          title: 'renders List button with List icon',
+        },
+        {
+          ancestorTitles: ['ViewToggle Integration', 'Rendering'],
+          duration: 1,
           failureMessages: [],
           fullName:
-            'Board Store Integration - Drag & Drop Workflow should handle drag from unassigned to claimed',
+            'ViewToggle Integration Rendering applies active styling to Kanban button when viewMode is kanban',
+          status: 'passed',
+          title: 'applies active styling to Kanban button when viewMode is kanban',
+        },
+        {
+          ancestorTitles: ['ViewToggle Integration', 'Rendering'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'ViewToggle Integration Rendering applies active styling to List button when viewMode is list',
+          status: 'passed',
+          title: 'applies active styling to List button when viewMode is list',
+        },
+        {
+          ancestorTitles: ['ViewToggle Integration', 'Interactions'],
+          duration: 7,
+          failureMessages: [],
+          fullName:
+            'ViewToggle Integration Interactions calls setViewMode with "kanban" when Kanban button is clicked',
+          status: 'passed',
+          title: 'calls setViewMode with "kanban" when Kanban button is clicked',
+        },
+        {
+          ancestorTitles: ['ViewToggle Integration', 'Interactions'],
+          duration: 7,
+          failureMessages: [],
+          fullName:
+            'ViewToggle Integration Interactions calls setViewMode with "list" when List button is clicked',
+          status: 'passed',
+          title: 'calls setViewMode with "list" when List button is clicked',
+        },
+        {
+          ancestorTitles: ['ViewToggle Integration', 'Store Integration'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'ViewToggle Integration Store Integration retrieves current viewMode from store',
+          status: 'passed',
+          title: 'retrieves current viewMode from store',
+        },
+        {
+          ancestorTitles: ['ViewToggle Integration', 'Store Integration'],
+          duration: 6,
+          failureMessages: [],
+          fullName: 'ViewToggle Integration Store Integration updates store when view mode changes',
+          status: 'passed',
+          title: 'updates store when view mode changes',
+        },
+      ],
+    },
+    {
+      numFailingTests: 0,
+      numPassingTests: 19,
+      numPendingTests: 0,
+      numTodoTests: 0,
+      perfStats: {
+        end: 1774131045898,
+        loadTestEnvironmentEnd: 1774131045853,
+        loadTestEnvironmentStart: 1774131045851,
+        runtime: 45,
+        setupAfterEnvEnd: 1774131045867,
+        setupAfterEnvStart: 1774131045858,
+        setupFilesEnd: 1774131045853,
+        setupFilesStart: 1774131045853,
+        slow: false,
+        start: 1774131045853,
+      },
+      testFilePath:
+        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/landing/feature-card.test.tsx',
+      failureMessage: null,
+      testResults: [
+        {
+          ancestorTitles: ['FeatureCard Integration', 'rendering'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration rendering renders the feature card with all elements',
+          status: 'passed',
+          title: 'renders the feature card with all elements',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'rendering'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration rendering renders the icon container',
+          status: 'passed',
+          title: 'renders the icon container',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'rendering'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration rendering renders the icon itself',
+          status: 'passed',
+          title: 'renders the icon itself',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'styling'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration styling has proper card styling',
+          status: 'passed',
+          title: 'has proper card styling',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'styling'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration styling has hover effect',
+          status: 'passed',
+          title: 'has hover effect',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'styling'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration styling has proper icon container sizing',
+          status: 'passed',
+          title: 'has proper icon container sizing',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'content display'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration content display displays the title correctly',
+          status: 'passed',
+          title: 'displays the title correctly',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'content display'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration content display displays the description correctly',
+          status: 'passed',
+          title: 'displays the description correctly',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'content display'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration content display handles long descriptions',
+          status: 'passed',
+          title: 'handles long descriptions',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'layout'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration layout has proper flex layout',
+          status: 'passed',
+          title: 'has proper flex layout',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'layout'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration layout has proper padding',
+          status: 'passed',
+          title: 'has proper padding',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'different icons'],
+          duration: 5,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration different icons renders correctly with Package icon',
+          status: 'passed',
+          title: 'renders correctly with Package icon',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'different icons'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'FeatureCard Integration different icons renders correctly with CheckCircle icon',
+          status: 'passed',
+          title: 'renders correctly with CheckCircle icon',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'different icons'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration different icons renders correctly with Users icon',
+          status: 'passed',
+          title: 'renders correctly with Users icon',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'edge cases'],
+          duration: 2,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration edge cases handles empty title',
+          status: 'passed',
+          title: 'handles empty title',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'edge cases'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration edge cases handles empty description',
+          status: 'passed',
+          title: 'handles empty description',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'edge cases'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration edge cases handles very long title',
+          status: 'passed',
+          title: 'handles very long title',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'accessibility'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration accessibility has semantic heading structure',
+          status: 'passed',
+          title: 'has semantic heading structure',
+        },
+        {
+          ancestorTitles: ['FeatureCard Integration', 'accessibility'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'FeatureCard Integration accessibility has proper colors',
+          status: 'passed',
+          title: 'has proper colors',
+        },
+      ],
+    },
+    {
+      numFailingTests: 0,
+      numPassingTests: 10,
+      numPendingTests: 0,
+      numTodoTests: 0,
+      perfStats: {
+        end: 1774131045941,
+        loadTestEnvironmentEnd: 1774131045900,
+        loadTestEnvironmentStart: 1774131045898,
+        runtime: 41,
+        setupAfterEnvEnd: 1774131045914,
+        setupAfterEnvStart: 1774131045905,
+        setupFilesEnd: 1774131045900,
+        setupFilesStart: 1774131045900,
+        slow: false,
+        start: 1774131045900,
+      },
+      testFilePath:
+        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/ui/calendar.test.tsx',
+      failureMessage: null,
+      testResults: [
+        {
+          ancestorTitles: ['Calendar Integration'],
+          duration: 2,
+          failureMessages: [],
+          fullName: 'Calendar Integration should render calendar with initial month',
+          status: 'passed',
+          title: 'should render calendar with initial month',
+        },
+        {
+          ancestorTitles: ['Calendar Integration'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'Calendar Integration should render with custom className',
+          status: 'passed',
+          title: 'should render with custom className',
+        },
+        {
+          ancestorTitles: ['Calendar Integration'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'Calendar Integration should display current month',
+          status: 'passed',
+          title: 'should display current month',
+        },
+        {
+          ancestorTitles: ['Calendar Integration'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'Calendar Integration should handle month prop for controlled component',
+          status: 'passed',
+          title: 'should handle month prop for controlled component',
+        },
+        {
+          ancestorTitles: ['Calendar Integration'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'Calendar Integration should handle defaultMonth prop',
+          status: 'passed',
+          title: 'should handle defaultMonth prop',
+        },
+        {
+          ancestorTitles: ['Calendar Integration'],
+          duration: 3,
+          failureMessages: [],
+          fullName: 'Calendar Integration should handle onMonthChange callback',
+          status: 'passed',
+          title: 'should handle onMonthChange callback',
+        },
+        {
+          ancestorTitles: ['Calendar Integration'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'Calendar Integration should handle showOutsideDays prop',
+          status: 'passed',
+          title: 'should handle showOutsideDays prop',
+        },
+        {
+          ancestorTitles: ['Calendar Integration'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'Calendar Integration should handle fixedWeeks prop',
+          status: 'passed',
+          title: 'should handle fixedWeeks prop',
+        },
+        {
+          ancestorTitles: ['Calendar Integration'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'Calendar Integration should handle locale prop',
+          status: 'passed',
+          title: 'should handle locale prop',
+        },
+        {
+          ancestorTitles: ['Calendar Integration'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'Calendar Integration should handle disabled state',
+          status: 'passed',
+          title: 'should handle disabled state',
+        },
+      ],
+    },
+    {
+      numFailingTests: 0,
+      numPassingTests: 14,
+      numPendingTests: 0,
+      numTodoTests: 0,
+      perfStats: {
+        end: 1774131045990,
+        loadTestEnvironmentEnd: 1774131045944,
+        loadTestEnvironmentStart: 1774131045942,
+        runtime: 46,
+        setupAfterEnvEnd: 1774131045958,
+        setupAfterEnvStart: 1774131045950,
+        setupFilesEnd: 1774131045944,
+        setupFilesStart: 1774131045944,
+        slow: false,
+        start: 1774131045944,
+      },
+      testFilePath:
+        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/landing/hero-section.test.tsx',
+      failureMessage: null,
+      testResults: [
+        {
+          ancestorTitles: ['HeroSection Integration', 'rendering'],
+          duration: 2,
+          failureMessages: [],
+          fullName: 'HeroSection Integration rendering renders the hero section with all elements',
+          status: 'passed',
+          title: 'renders the hero section with all elements',
+        },
+        {
+          ancestorTitles: ['HeroSection Integration', 'rendering'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'HeroSection Integration rendering renders the tagline',
+          status: 'passed',
+          title: 'renders the tagline',
+        },
+        {
+          ancestorTitles: ['HeroSection Integration', 'rendering'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'HeroSection Integration rendering renders the main heading',
+          status: 'passed',
+          title: 'renders the main heading',
+        },
+        {
+          ancestorTitles: ['HeroSection Integration', 'rendering'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'HeroSection Integration rendering renders the description paragraph',
+          status: 'passed',
+          title: 'renders the description paragraph',
+        },
+        {
+          ancestorTitles: ['HeroSection Integration', 'Call-to-Action Buttons'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'HeroSection Integration Call-to-Action Buttons renders "Start Packing Free" button with correct link',
+          status: 'passed',
+          title: 'renders "Start Packing Free" button with correct link',
+        },
+        {
+          ancestorTitles: ['HeroSection Integration', 'Call-to-Action Buttons'],
+          duration: 0,
+          failureMessages: [],
+          fullName:
+            'HeroSection Integration Call-to-Action Buttons renders "Sign In" button with correct link',
+          status: 'passed',
+          title: 'renders "Sign In" button with correct link',
+        },
+        {
+          ancestorTitles: ['HeroSection Integration', 'Call-to-Action Buttons'],
+          duration: 2,
+          failureMessages: [],
+          fullName:
+            'HeroSection Integration Call-to-Action Buttons renders ArrowUpRight icon in Start Packing button',
+          status: 'passed',
+          title: 'renders ArrowUpRight icon in Start Packing button',
+        },
+        {
+          ancestorTitles: ['HeroSection Integration', 'Call-to-Action Buttons'],
+          duration: 0,
+          failureMessages: [],
+          fullName:
+            'HeroSection Integration Call-to-Action Buttons applies correct variant to Sign In button',
+          status: 'passed',
+          title: 'applies correct variant to Sign In button',
+        },
+        {
+          ancestorTitles: ['HeroSection Integration', 'Responsive Classes'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'HeroSection Integration Responsive Classes has responsive sizing classes on main heading',
+          status: 'passed',
+          title: 'has responsive sizing classes on main heading',
+        },
+        {
+          ancestorTitles: ['HeroSection Integration', 'Responsive Classes'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'HeroSection Integration Responsive Classes has responsive sizing on buttons',
+          status: 'passed',
+          title: 'has responsive sizing on buttons',
+        },
+        {
+          ancestorTitles: ['HeroSection Integration', 'Layout and Spacing'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'HeroSection Integration Layout and Spacing has proper flex layout',
+          status: 'passed',
+          title: 'has proper flex layout',
+        },
+        {
+          ancestorTitles: ['HeroSection Integration', 'Layout and Spacing'],
+          duration: 1,
+          failureMessages: [],
+          fullName: 'HeroSection Integration Layout and Spacing has proper gap spacing',
+          status: 'passed',
+          title: 'has proper gap spacing',
+        },
+        {
+          ancestorTitles: ['HeroSection Integration', 'Accessibility'],
+          duration: 0,
+          failureMessages: [],
+          fullName: 'HeroSection Integration Accessibility has semantic heading structure',
+          status: 'passed',
+          title: 'has semantic heading structure',
+        },
+        {
+          ancestorTitles: ['HeroSection Integration', 'Accessibility'],
+          duration: 3,
+          failureMessages: [],
+          fullName:
+            'HeroSection Integration Accessibility has descriptive link text for screen readers',
+          status: 'passed',
+          title: 'has descriptive link text for screen readers',
+        },
+      ],
+    },
+    {
+      numFailingTests: 0,
+      numPassingTests: 9,
+      numPendingTests: 0,
+      numTodoTests: 0,
+      perfStats: {
+        end: 1774131046033,
+        loadTestEnvironmentEnd: 1774131045993,
+        loadTestEnvironmentStart: 1774131045991,
+        runtime: 40,
+        setupAfterEnvEnd: 1774131046007,
+        setupAfterEnvStart: 1774131045998,
+        setupFilesEnd: 1774131045993,
+        setupFilesStart: 1774131045993,
+        slow: false,
+        start: 1774131045993,
+      },
+      testFilePath:
+        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/board-store/claiming-workflow.test.tsx',
+      failureMessage: null,
+      testResults: [
+        {
+          ancestorTitles: ['Board Store Integration - Claiming Workflow'],
+          duration: 5,
+          failureMessages: [],
+          fullName:
+            'Board Store Integration - Claiming Workflow should complete claim → pack → unclaim cycle',
+          status: 'passed',
+          title: 'should complete claim → pack → unclaim cycle',
+        },
+        {
+          ancestorTitles: ['Board Store Integration - Claiming Workflow'],
+          duration: 3,
+          failureMessages: [],
+          fullName:
+            'Board Store Integration - Claiming Workflow should handle partial claim → pack → partial unclaim cycle',
+          status: 'passed',
+          title: 'should handle partial claim → pack → partial unclaim cycle',
+        },
+        {
+          ancestorTitles: ['Board Store Integration - Claiming Workflow'],
+          duration: 0,
+          failureMessages: [],
+          fullName:
+            'Board Store Integration - Claiming Workflow should handle multi-user partial claims correctly',
+          status: 'passed',
+          title: 'should handle multi-user partial claims correctly',
+        },
+        {
+          ancestorTitles: ['Board Store Integration - Claiming Workflow'],
+          duration: 2,
+          failureMessages: [],
+          fullName:
+            'Board Store Integration - Claiming Workflow should update all components when store changes',
+          status: 'passed',
+          title: 'should update all components when store changes',
+        },
+        {
+          ancestorTitles: ['Board Store Integration - Error Handling'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'Board Store Integration - Error Handling should handle claim errors gracefully',
+          status: 'passed',
+          title: 'should handle claim errors gracefully',
+        },
+        {
+          ancestorTitles: ['Board Store Integration - Error Handling'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'Board Store Integration - Error Handling should handle markAsPacked errors gracefully',
+          status: 'passed',
+          title: 'should handle markAsPacked errors gracefully',
+        },
+        {
+          ancestorTitles: ['Board Store Integration - Move Item'],
+          duration: 2,
+          failureMessages: [],
+          fullName:
+            'Board Store Integration - Move Item should handle drag from unassigned to claimed',
           status: 'passed',
           title: 'should handle drag from unassigned to claimed',
         },
         {
-          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
-          duration: 0,
+          ancestorTitles: ['Board Store Integration - Move Item'],
+          duration: 1,
           failureMessages: [],
-          fullName:
-            'Board Store Integration - Drag & Drop Workflow should handle drag from claimed to packed',
+          fullName: 'Board Store Integration - Move Item should handle drag from claimed to packed',
           status: 'passed',
           title: 'should handle drag from claimed to packed',
         },
         {
-          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
-          duration: 1,
+          ancestorTitles: ['Board Store Integration - Move Item'],
+          duration: 2,
           failureMessages: [],
           fullName:
-            'Board Store Integration - Drag & Drop Workflow should handle same-column reordering',
+            'Board Store Integration - Move Item should handle drag from claimed to unassigned (unclaim)',
           status: 'passed',
-          title: 'should handle same-column reordering',
-        },
-        {
-          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
-          duration: 0,
-          failureMessages: [],
-          fullName:
-            'Board Store Integration - Drag & Drop Workflow should persist reorder to database for unassigned column',
-          status: 'passed',
-          title: 'should persist reorder to database for unassigned column',
-        },
-        {
-          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'Board Store Integration - Drag & Drop Workflow should persist reorder of claims in My-View for claimed column',
-          status: 'passed',
-          title: 'should persist reorder of claims in My-View for claimed column',
-        },
-        {
-          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
-          duration: 0,
-          failureMessages: [],
-          fullName:
-            'Board Store Integration - Drag & Drop Workflow should persist reorder of claims in My-View for packed column',
-          status: 'passed',
-          title: 'should persist reorder of claims in My-View for packed column',
-        },
-        {
-          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'Board Store Integration - Drag & Drop Workflow should handle reordering errors gracefully',
-          status: 'passed',
-          title: 'should handle reordering errors gracefully',
-        },
-        {
-          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'Board Store Integration - Drag & Drop Workflow should handle drag from packed to claimed (mark as not packed)',
-          status: 'passed',
-          title: 'should handle drag from packed to claimed (mark as not packed)',
-        },
-        {
-          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'Board Store Integration - Drag & Drop Workflow should handle multiple items reorder in unassigned column',
-          status: 'passed',
-          title: 'should handle multiple items reorder in unassigned column',
+          title: 'should handle drag from claimed to unassigned (unclaim)',
         },
       ],
     },
@@ -4066,16 +5570,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643712956,
-        loadTestEnvironmentEnd: 1773643712919,
-        loadTestEnvironmentStart: 1773643712916,
-        runtime: 37,
-        setupAfterEnvEnd: 1773643712933,
-        setupAfterEnvStart: 1773643712924,
-        setupFilesEnd: 1773643712919,
-        setupFilesStart: 1773643712919,
+        end: 1774131046079,
+        loadTestEnvironmentEnd: 1774131046035,
+        loadTestEnvironmentStart: 1774131046033,
+        runtime: 43,
+        setupAfterEnvEnd: 1774131046049,
+        setupAfterEnvStart: 1774131046041,
+        setupFilesEnd: 1774131046036,
+        setupFilesStart: 1774131046036,
         slow: false,
-        start: 1773643712919,
+        start: 1774131046036,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/board-header.test.tsx',
@@ -4142,161 +5646,20 @@ window.jest_html_reporters_callback__({
     },
     {
       numFailingTests: 0,
-      numPassingTests: 14,
-      numPendingTests: 0,
-      numTodoTests: 0,
-      perfStats: {
-        end: 1773643713002,
-        loadTestEnvironmentEnd: 1773643712959,
-        loadTestEnvironmentStart: 1773643712957,
-        runtime: 43,
-        setupAfterEnvEnd: 1773643712972,
-        setupAfterEnvStart: 1773643712964,
-        setupFilesEnd: 1773643712959,
-        setupFilesStart: 1773643712959,
-        slow: false,
-        start: 1773643712959,
-      },
-      testFilePath:
-        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/landing/hero-section.test.tsx',
-      failureMessage: null,
-      testResults: [
-        {
-          ancestorTitles: ['HeroSection Integration', 'rendering'],
-          duration: 2,
-          failureMessages: [],
-          fullName: 'HeroSection Integration rendering renders the hero section with all elements',
-          status: 'passed',
-          title: 'renders the hero section with all elements',
-        },
-        {
-          ancestorTitles: ['HeroSection Integration', 'rendering'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'HeroSection Integration rendering renders the tagline',
-          status: 'passed',
-          title: 'renders the tagline',
-        },
-        {
-          ancestorTitles: ['HeroSection Integration', 'rendering'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'HeroSection Integration rendering renders the main heading',
-          status: 'passed',
-          title: 'renders the main heading',
-        },
-        {
-          ancestorTitles: ['HeroSection Integration', 'rendering'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'HeroSection Integration rendering renders the description paragraph',
-          status: 'passed',
-          title: 'renders the description paragraph',
-        },
-        {
-          ancestorTitles: ['HeroSection Integration', 'Call-to-Action Buttons'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'HeroSection Integration Call-to-Action Buttons renders "Start Packing Free" button with correct link',
-          status: 'passed',
-          title: 'renders "Start Packing Free" button with correct link',
-        },
-        {
-          ancestorTitles: ['HeroSection Integration', 'Call-to-Action Buttons'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'HeroSection Integration Call-to-Action Buttons renders "Sign In" button with correct link',
-          status: 'passed',
-          title: 'renders "Sign In" button with correct link',
-        },
-        {
-          ancestorTitles: ['HeroSection Integration', 'Call-to-Action Buttons'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'HeroSection Integration Call-to-Action Buttons renders ArrowUpRight icon in Start Packing button',
-          status: 'passed',
-          title: 'renders ArrowUpRight icon in Start Packing button',
-        },
-        {
-          ancestorTitles: ['HeroSection Integration', 'Call-to-Action Buttons'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'HeroSection Integration Call-to-Action Buttons applies correct variant to Sign In button',
-          status: 'passed',
-          title: 'applies correct variant to Sign In button',
-        },
-        {
-          ancestorTitles: ['HeroSection Integration', 'Responsive Classes'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'HeroSection Integration Responsive Classes has responsive sizing classes on main heading',
-          status: 'passed',
-          title: 'has responsive sizing classes on main heading',
-        },
-        {
-          ancestorTitles: ['HeroSection Integration', 'Responsive Classes'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'HeroSection Integration Responsive Classes has responsive sizing on buttons',
-          status: 'passed',
-          title: 'has responsive sizing on buttons',
-        },
-        {
-          ancestorTitles: ['HeroSection Integration', 'Layout and Spacing'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'HeroSection Integration Layout and Spacing has proper flex layout',
-          status: 'passed',
-          title: 'has proper flex layout',
-        },
-        {
-          ancestorTitles: ['HeroSection Integration', 'Layout and Spacing'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'HeroSection Integration Layout and Spacing has proper gap spacing',
-          status: 'passed',
-          title: 'has proper gap spacing',
-        },
-        {
-          ancestorTitles: ['HeroSection Integration', 'Accessibility'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'HeroSection Integration Accessibility has semantic heading structure',
-          status: 'passed',
-          title: 'has semantic heading structure',
-        },
-        {
-          ancestorTitles: ['HeroSection Integration', 'Accessibility'],
-          duration: 4,
-          failureMessages: [],
-          fullName:
-            'HeroSection Integration Accessibility has descriptive link text for screen readers',
-          status: 'passed',
-          title: 'has descriptive link text for screen readers',
-        },
-      ],
-    },
-    {
-      numFailingTests: 0,
       numPassingTests: 6,
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643713050,
-        loadTestEnvironmentEnd: 1773643713008,
-        loadTestEnvironmentStart: 1773643713006,
+        end: 1774131046124,
+        loadTestEnvironmentEnd: 1774131046082,
+        loadTestEnvironmentStart: 1774131046080,
         runtime: 42,
-        setupAfterEnvEnd: 1773643713021,
-        setupAfterEnvStart: 1773643713013,
-        setupFilesEnd: 1773643713008,
-        setupFilesStart: 1773643713008,
+        setupAfterEnvEnd: 1774131046096,
+        setupAfterEnvStart: 1774131046087,
+        setupFilesEnd: 1774131046082,
+        setupFilesStart: 1774131046082,
         slow: false,
-        start: 1773643713008,
+        start: 1774131046082,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/claim-quantity-dialog.test.tsx',
@@ -4304,7 +5667,7 @@ window.jest_html_reporters_callback__({
       testResults: [
         {
           ancestorTitles: ['ClaimQuantityDialog Integration'],
-          duration: 4,
+          duration: 5,
           failureMessages: [],
           fullName: 'ClaimQuantityDialog Integration renders dialog when open',
           status: 'passed',
@@ -4312,7 +5675,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ClaimQuantityDialog Integration'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName: 'ClaimQuantityDialog Integration does not render dialog when closed',
           status: 'passed',
@@ -4320,7 +5683,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ClaimQuantityDialog Integration'],
-          duration: 2,
+          duration: 1,
           failureMessages: [],
           fullName: 'ClaimQuantityDialog Integration displays item name and remaining needed',
           status: 'passed',
@@ -4337,7 +5700,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ClaimQuantityDialog Integration'],
-          duration: 5,
+          duration: 6,
           failureMessages: [],
           fullName:
             'ClaimQuantityDialog Integration calls onConfirm with quantity when form is submitted',
@@ -4346,7 +5709,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ClaimQuantityDialog Integration'],
-          duration: 1,
+          duration: 2,
           failureMessages: [],
           fullName: 'ClaimQuantityDialog Integration closes dialog when Cancel is clicked',
           status: 'passed',
@@ -4356,383 +5719,105 @@ window.jest_html_reporters_callback__({
     },
     {
       numFailingTests: 0,
-      numPassingTests: 10,
-      numPendingTests: 0,
-      numTodoTests: 0,
-      perfStats: {
-        end: 1773643713104,
-        loadTestEnvironmentEnd: 1773643713059,
-        loadTestEnvironmentStart: 1773643713057,
-        runtime: 45,
-        setupAfterEnvEnd: 1773643713072,
-        setupAfterEnvStart: 1773643713064,
-        setupFilesEnd: 1773643713059,
-        setupFilesStart: 1773643713059,
-        slow: false,
-        start: 1773643713059,
-      },
-      testFilePath:
-        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/ui/calendar.test.tsx',
-      failureMessage: null,
-      testResults: [
-        {
-          ancestorTitles: ['Calendar Integration'],
-          duration: 2,
-          failureMessages: [],
-          fullName: 'Calendar Integration should render calendar with initial month',
-          status: 'passed',
-          title: 'should render calendar with initial month',
-        },
-        {
-          ancestorTitles: ['Calendar Integration'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'Calendar Integration should render with custom className',
-          status: 'passed',
-          title: 'should render with custom className',
-        },
-        {
-          ancestorTitles: ['Calendar Integration'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'Calendar Integration should display current month',
-          status: 'passed',
-          title: 'should display current month',
-        },
-        {
-          ancestorTitles: ['Calendar Integration'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'Calendar Integration should handle month prop for controlled component',
-          status: 'passed',
-          title: 'should handle month prop for controlled component',
-        },
-        {
-          ancestorTitles: ['Calendar Integration'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'Calendar Integration should handle defaultMonth prop',
-          status: 'passed',
-          title: 'should handle defaultMonth prop',
-        },
-        {
-          ancestorTitles: ['Calendar Integration'],
-          duration: 3,
-          failureMessages: [],
-          fullName: 'Calendar Integration should handle onMonthChange callback',
-          status: 'passed',
-          title: 'should handle onMonthChange callback',
-        },
-        {
-          ancestorTitles: ['Calendar Integration'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'Calendar Integration should handle showOutsideDays prop',
-          status: 'passed',
-          title: 'should handle showOutsideDays prop',
-        },
-        {
-          ancestorTitles: ['Calendar Integration'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'Calendar Integration should handle fixedWeeks prop',
-          status: 'passed',
-          title: 'should handle fixedWeeks prop',
-        },
-        {
-          ancestorTitles: ['Calendar Integration'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'Calendar Integration should handle locale prop',
-          status: 'passed',
-          title: 'should handle locale prop',
-        },
-        {
-          ancestorTitles: ['Calendar Integration'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'Calendar Integration should handle disabled state',
-          status: 'passed',
-          title: 'should handle disabled state',
-        },
-      ],
-    },
-    {
-      numFailingTests: 0,
-      numPassingTests: 19,
-      numPendingTests: 0,
-      numTodoTests: 0,
-      perfStats: {
-        end: 1773643713148,
-        loadTestEnvironmentEnd: 1773643713108,
-        loadTestEnvironmentStart: 1773643713106,
-        runtime: 40,
-        setupAfterEnvEnd: 1773643713122,
-        setupAfterEnvStart: 1773643713113,
-        setupFilesEnd: 1773643713108,
-        setupFilesStart: 1773643713108,
-        slow: false,
-        start: 1773643713108,
-      },
-      testFilePath:
-        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/landing/feature-card.test.tsx',
-      failureMessage: null,
-      testResults: [
-        {
-          ancestorTitles: ['FeatureCard Integration', 'rendering'],
-          duration: 2,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration rendering renders the feature card with all elements',
-          status: 'passed',
-          title: 'renders the feature card with all elements',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'rendering'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration rendering renders the icon container',
-          status: 'passed',
-          title: 'renders the icon container',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'rendering'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration rendering renders the icon itself',
-          status: 'passed',
-          title: 'renders the icon itself',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'styling'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration styling has proper card styling',
-          status: 'passed',
-          title: 'has proper card styling',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'styling'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration styling has hover effect',
-          status: 'passed',
-          title: 'has hover effect',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'styling'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration styling has proper icon container sizing',
-          status: 'passed',
-          title: 'has proper icon container sizing',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'content display'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration content display displays the title correctly',
-          status: 'passed',
-          title: 'displays the title correctly',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'content display'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration content display displays the description correctly',
-          status: 'passed',
-          title: 'displays the description correctly',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'content display'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration content display handles long descriptions',
-          status: 'passed',
-          title: 'handles long descriptions',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'layout'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration layout has proper flex layout',
-          status: 'passed',
-          title: 'has proper flex layout',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'layout'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration layout has proper padding',
-          status: 'passed',
-          title: 'has proper padding',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'different icons'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration different icons renders correctly with Package icon',
-          status: 'passed',
-          title: 'renders correctly with Package icon',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'different icons'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'FeatureCard Integration different icons renders correctly with CheckCircle icon',
-          status: 'passed',
-          title: 'renders correctly with CheckCircle icon',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'different icons'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration different icons renders correctly with Users icon',
-          status: 'passed',
-          title: 'renders correctly with Users icon',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'edge cases'],
-          duration: 2,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration edge cases handles empty title',
-          status: 'passed',
-          title: 'handles empty title',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'edge cases'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration edge cases handles empty description',
-          status: 'passed',
-          title: 'handles empty description',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'edge cases'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration edge cases handles very long title',
-          status: 'passed',
-          title: 'handles very long title',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'accessibility'],
-          duration: 1,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration accessibility has semantic heading structure',
-          status: 'passed',
-          title: 'has semantic heading structure',
-        },
-        {
-          ancestorTitles: ['FeatureCard Integration', 'accessibility'],
-          duration: 0,
-          failureMessages: [],
-          fullName: 'FeatureCard Integration accessibility has proper colors',
-          status: 'passed',
-          title: 'has proper colors',
-        },
-      ],
-    },
-    {
-      numFailingTests: 0,
       numPassingTests: 9,
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643713193,
-        loadTestEnvironmentEnd: 1773643713155,
-        loadTestEnvironmentStart: 1773643713153,
-        runtime: 38,
-        setupAfterEnvEnd: 1773643713168,
-        setupAfterEnvStart: 1773643713160,
-        setupFilesEnd: 1773643713155,
-        setupFilesStart: 1773643713155,
+        end: 1774131046174,
+        loadTestEnvironmentEnd: 1774131046131,
+        loadTestEnvironmentStart: 1774131046128,
+        runtime: 43,
+        setupAfterEnvEnd: 1774131046144,
+        setupAfterEnvStart: 1774131046136,
+        setupFilesEnd: 1774131046131,
+        setupFilesStart: 1774131046131,
         slow: false,
-        start: 1773643713155,
+        start: 1774131046131,
       },
       testFilePath:
-        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/board-store/claiming-workflow.test.tsx',
+        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/board-store/drag-drop-workflow.test.tsx',
       failureMessage: null,
       testResults: [
         {
-          ancestorTitles: ['Board Store Integration - Claiming Workflow'],
-          duration: 4,
+          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
+          duration: 9,
           failureMessages: [],
           fullName:
-            'Board Store Integration - Claiming Workflow should complete claim → pack → unclaim cycle',
-          status: 'passed',
-          title: 'should complete claim → pack → unclaim cycle',
-        },
-        {
-          ancestorTitles: ['Board Store Integration - Claiming Workflow'],
-          duration: 3,
-          failureMessages: [],
-          fullName:
-            'Board Store Integration - Claiming Workflow should handle partial claim → pack → partial unclaim cycle',
-          status: 'passed',
-          title: 'should handle partial claim → pack → partial unclaim cycle',
-        },
-        {
-          ancestorTitles: ['Board Store Integration - Claiming Workflow'],
-          duration: 0,
-          failureMessages: [],
-          fullName:
-            'Board Store Integration - Claiming Workflow should handle multi-user partial claims correctly',
-          status: 'passed',
-          title: 'should handle multi-user partial claims correctly',
-        },
-        {
-          ancestorTitles: ['Board Store Integration - Claiming Workflow'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'Board Store Integration - Claiming Workflow should update all components when store changes',
-          status: 'passed',
-          title: 'should update all components when store changes',
-        },
-        {
-          ancestorTitles: ['Board Store Integration - Error Handling'],
-          duration: 2,
-          failureMessages: [],
-          fullName:
-            'Board Store Integration - Error Handling should handle claim errors gracefully',
-          status: 'passed',
-          title: 'should handle claim errors gracefully',
-        },
-        {
-          ancestorTitles: ['Board Store Integration - Error Handling'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'Board Store Integration - Error Handling should handle markAsPacked errors gracefully',
-          status: 'passed',
-          title: 'should handle markAsPacked errors gracefully',
-        },
-        {
-          ancestorTitles: ['Board Store Integration - Move Item'],
-          duration: 2,
-          failureMessages: [],
-          fullName:
-            'Board Store Integration - Move Item should handle drag from unassigned to claimed',
+            'Board Store Integration - Drag & Drop Workflow should handle drag from unassigned to claimed',
           status: 'passed',
           title: 'should handle drag from unassigned to claimed',
         },
         {
-          ancestorTitles: ['Board Store Integration - Move Item'],
-          duration: 1,
+          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
+          duration: 2,
           failureMessages: [],
-          fullName: 'Board Store Integration - Move Item should handle drag from claimed to packed',
+          fullName:
+            'Board Store Integration - Drag & Drop Workflow should handle drag from claimed to packed',
           status: 'passed',
           title: 'should handle drag from claimed to packed',
         },
         {
-          ancestorTitles: ['Board Store Integration - Move Item'],
+          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
+          duration: 0,
+          failureMessages: [],
+          fullName:
+            'Board Store Integration - Drag & Drop Workflow should handle same-column reordering',
+          status: 'passed',
+          title: 'should handle same-column reordering',
+        },
+        {
+          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
           duration: 1,
           failureMessages: [],
           fullName:
-            'Board Store Integration - Move Item should handle drag from claimed to unassigned (unclaim)',
+            'Board Store Integration - Drag & Drop Workflow should persist reorder to database for unassigned column',
           status: 'passed',
-          title: 'should handle drag from claimed to unassigned (unclaim)',
+          title: 'should persist reorder to database for unassigned column',
+        },
+        {
+          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'Board Store Integration - Drag & Drop Workflow should persist reorder of claims in My-View for claimed column',
+          status: 'passed',
+          title: 'should persist reorder of claims in My-View for claimed column',
+        },
+        {
+          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'Board Store Integration - Drag & Drop Workflow should persist reorder of claims in My-View for packed column',
+          status: 'passed',
+          title: 'should persist reorder of claims in My-View for packed column',
+        },
+        {
+          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
+          duration: 2,
+          failureMessages: [],
+          fullName:
+            'Board Store Integration - Drag & Drop Workflow should handle reordering errors gracefully',
+          status: 'passed',
+          title: 'should handle reordering errors gracefully',
+        },
+        {
+          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
+          duration: 1,
+          failureMessages: [],
+          fullName:
+            'Board Store Integration - Drag & Drop Workflow should handle drag from packed to claimed (mark as not packed)',
+          status: 'passed',
+          title: 'should handle drag from packed to claimed (mark as not packed)',
+        },
+        {
+          ancestorTitles: ['Board Store Integration - Drag & Drop Workflow'],
+          duration: 2,
+          failureMessages: [],
+          fullName:
+            'Board Store Integration - Drag & Drop Workflow should handle multiple items reorder in unassigned column',
+          status: 'passed',
+          title: 'should handle multiple items reorder in unassigned column',
         },
       ],
     },
@@ -4742,16 +5827,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643713222,
-        loadTestEnvironmentEnd: 1773643713195,
-        loadTestEnvironmentStart: 1773643713193,
-        runtime: 27,
-        setupAfterEnvEnd: 1773643713209,
-        setupAfterEnvStart: 1773643713201,
-        setupFilesEnd: 1773643713195,
-        setupFilesStart: 1773643713195,
+        end: 1774131046204,
+        loadTestEnvironmentEnd: 1774131046176,
+        loadTestEnvironmentStart: 1774131046174,
+        runtime: 28,
+        setupAfterEnvEnd: 1774131046190,
+        setupAfterEnvStart: 1774131046182,
+        setupFilesEnd: 1774131046176,
+        setupFilesStart: 1774131046176,
         slow: false,
-        start: 1773643713195,
+        start: 1774131046176,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/TripGrid.test.tsx',
@@ -4767,7 +5852,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['TripGrid Integration'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName: 'TripGrid Integration renders nothing when trips array is empty',
           status: 'passed',
@@ -4781,16 +5866,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643713253,
-        loadTestEnvironmentEnd: 1773643713224,
-        loadTestEnvironmentStart: 1773643713222,
-        runtime: 29,
-        setupAfterEnvEnd: 1773643713237,
-        setupAfterEnvStart: 1773643713229,
-        setupFilesEnd: 1773643713224,
-        setupFilesStart: 1773643713224,
+        end: 1774131046238,
+        loadTestEnvironmentEnd: 1774131046207,
+        loadTestEnvironmentStart: 1774131046204,
+        runtime: 31,
+        setupAfterEnvEnd: 1774131046223,
+        setupAfterEnvStart: 1774131046212,
+        setupFilesEnd: 1774131046207,
+        setupFilesStart: 1774131046207,
         slow: false,
-        start: 1773643713224,
+        start: 1774131046207,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/readiness-visualizer.test.tsx',
@@ -4806,7 +5891,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ReadinessVisualizer Integration'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName: 'ReadinessVisualizer Integration should render progress bar with 0% (red)',
           status: 'passed',
@@ -4814,7 +5899,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ReadinessVisualizer Integration'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName: 'ReadinessVisualizer Integration should render progress bar with 10% (red)',
           status: 'passed',
@@ -4846,7 +5931,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ReadinessVisualizer Integration'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName: 'ReadinessVisualizer Integration should render progress bar with 99% (yellow)',
           status: 'passed',
@@ -4854,7 +5939,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ReadinessVisualizer Integration'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName: 'ReadinessVisualizer Integration should render progress bar with 100% (green)',
           status: 'passed',
@@ -4862,7 +5947,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ReadinessVisualizer Integration'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName: 'ReadinessVisualizer Integration should not show label when showLabel is false',
           status: 'passed',
@@ -4870,7 +5955,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ReadinessVisualizer Integration'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName: 'ReadinessVisualizer Integration should show label by default',
           status: 'passed',
@@ -4886,7 +5971,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['ReadinessVisualizer Integration'],
-          duration: 1,
+          duration: 0,
           failureMessages: [],
           fullName:
             'ReadinessVisualizer Integration should apply red text color for percentages below 20%',
@@ -4918,16 +6003,16 @@ window.jest_html_reporters_callback__({
       numPendingTests: 0,
       numTodoTests: 0,
       perfStats: {
-        end: 1773643713284,
-        loadTestEnvironmentEnd: 1773643713260,
-        loadTestEnvironmentStart: 1773643713258,
+        end: 1774131046270,
+        loadTestEnvironmentEnd: 1774131046245,
+        loadTestEnvironmentStart: 1774131046243,
         runtime: 24,
-        setupAfterEnvEnd: 1773643713273,
-        setupAfterEnvStart: 1773643713265,
-        setupFilesEnd: 1773643713260,
-        setupFilesStart: 1773643713260,
+        setupAfterEnvEnd: 1774131046259,
+        setupAfterEnvStart: 1774131046250,
+        setupFilesEnd: 1774131046246,
+        setupFilesStart: 1774131046246,
         slow: false,
-        start: 1773643713260,
+        start: 1774131046246,
       },
       testFilePath:
         '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/board-store/view-mode-workflow.test.tsx',
@@ -4935,7 +6020,7 @@ window.jest_html_reporters_callback__({
       testResults: [
         {
           ancestorTitles: ['Board Store Integration - View Mode Workflow'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName:
             'Board Store Integration - View Mode Workflow should recalculate columns when switching to my-view',
@@ -4971,7 +6056,7 @@ window.jest_html_reporters_callback__({
         },
         {
           ancestorTitles: ['Board Store Integration - View Mode Workflow'],
-          duration: 0,
+          duration: 1,
           failureMessages: [],
           fullName:
             'Board Store Integration - View Mode Workflow should handle fully packed items in different view modes',
@@ -5013,38 +6098,6 @@ window.jest_html_reporters_callback__({
             'Board Store Integration - View Mode Workflow should handle complex scenario with mixed item states',
           status: 'passed',
           title: 'should handle complex scenario with mixed item states',
-        },
-      ],
-    },
-    {
-      numFailingTests: 0,
-      numPassingTests: 1,
-      numPendingTests: 0,
-      numTodoTests: 0,
-      perfStats: {
-        end: 1773643713309,
-        loadTestEnvironmentEnd: 1773643713287,
-        loadTestEnvironmentStart: 1773643713285,
-        runtime: 22,
-        setupAfterEnvEnd: 1773643713300,
-        setupAfterEnvStart: 1773643713292,
-        setupFilesEnd: 1773643713287,
-        setupFilesStart: 1773643713287,
-        slow: false,
-        start: 1773643713287,
-      },
-      testFilePath:
-        '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright/tests/integration/example.test.tsx',
-      failureMessage: null,
-      testResults: [
-        {
-          ancestorTitles: ['Dummy Integration Test'],
-          duration: 1,
-          failureMessages: [],
-          fullName:
-            'Dummy Integration Test should render a basic element to verify DOM environment',
-          status: 'passed',
-          title: 'should render a basic element to verify DOM environment',
         },
       ],
     },
@@ -5092,7 +6145,7 @@ window.jest_html_reporters_callback__({
       '/Users/likhithreddyrechintala/Documents/Projects/cs7180-vibecoding/projects/packright',
     runInBand: false,
     runTestsByPath: false,
-    seed: 1615090361,
+    seed: -1581790183,
     skipFilter: false,
     snapshotFormat: { escapeString: false, printBasicPrototype: false },
     testFailureExitCode: 1,
@@ -5108,7 +6161,7 @@ window.jest_html_reporters_callback__({
     watchman: true,
     workerThreads: false,
   },
-  endTime: 1773643713311,
+  endTime: 1774131046272,
   _reporterOptions: {
     publicPath: './test-report',
     filename: 'index.html',

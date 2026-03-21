@@ -281,10 +281,10 @@ CREATE POLICY "trip_members_update" ON public.trip_members FOR UPDATE TO public 
 CREATE POLICY "trip_members_delete" ON public.trip_members FOR DELETE TO public USING ((user_id = auth.uid()) OR is_admin_of(trip_id) OR (EXISTS ( SELECT 1 FROM trips WHERE ((trips.id = trip_members.trip_id) AND (trips.created_by = auth.uid())))));
 
 -- Items
-CREATE POLICY "items_select" ON public.items FOR SELECT TO public USING (is_member_of(trip_id) OR (EXISTS ( SELECT 1 FROM trips t WHERE ((t.id = items.trip_id) AND (t.created_by = auth.uid())))));
-CREATE POLICY "items_insert" ON public.items FOR INSERT TO public WITH CHECK (is_admin_of(trip_id) OR (EXISTS ( SELECT 1 FROM trips t WHERE ((t.id = items.trip_id) AND (t.created_by = auth.uid())))));
-CREATE POLICY "items_update" ON public.items FOR UPDATE TO public USING (is_admin_of(trip_id) OR (EXISTS ( SELECT 1 FROM trips t WHERE ((t.id = items.trip_id) AND (t.created_by = auth.uid())))));
-CREATE POLICY "items_delete" ON public.items FOR DELETE TO public USING (is_admin_of(trip_id) OR (EXISTS ( SELECT 1 FROM trips t WHERE ((t.id = items.trip_id) AND (t.created_by = auth.uid())))));
+CREATE POLICY items_select ON public.items FOR SELECT TO authenticated USING ((is_member_of(trip_id) OR (EXISTS ( SELECT 1 FROM trips t WHERE ((t.id = items.trip_id) AND (t.created_by = auth.uid()))))));
+CREATE POLICY items_insert ON public.items FOR INSERT TO authenticated WITH CHECK (is_admin_of(trip_id));
+CREATE POLICY items_update ON public.items FOR UPDATE TO authenticated USING ((is_admin_of(trip_id) OR (EXISTS ( SELECT 1 FROM trips t WHERE ((t.id = items.trip_id) AND (t.created_by = auth.uid())))))) WITH CHECK ((is_admin_of(trip_id) OR (EXISTS ( SELECT 1 FROM trips t WHERE ((t.id = items.trip_id) AND (t.created_by = auth.uid()))))));
+CREATE POLICY items_delete ON public.items FOR DELETE TO authenticated USING ((is_admin_of(trip_id) OR (EXISTS ( SELECT 1 FROM trips t WHERE ((t.id = items.trip_id) AND (t.created_by = auth.uid())))));
 
 -- Item Claims
 CREATE POLICY "item_claims_select" ON public.item_claims FOR SELECT TO public USING (EXISTS ( SELECT 1 FROM items i WHERE ((i.id = item_claims.item_id) AND (is_member_of(i.trip_id) OR (EXISTS ( SELECT 1 FROM trips t WHERE ((t.id = i.trip_id) AND (t.created_by = auth.uid()))))))));

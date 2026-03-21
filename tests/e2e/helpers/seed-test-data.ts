@@ -50,6 +50,7 @@ export interface SeedTestDataOptions {
   numberOfMembers?: number; // Number of members to create (default: 2)
   projectUsername?: string; // Specific project username to use (e.g., 'e2e_chromium', 'e2e_firefox')
   includeSearchUsers?: boolean; // Whether to create Alice/Bob search users
+  makeAdmin?: boolean; // Whether the current user should be an admin (default: true)
 }
 
 export interface SeedTestDataResult {
@@ -240,6 +241,7 @@ export async function seedMemberManagementTestData(options: SeedTestDataOptions 
     numberOfMembers = 2,
     projectUsername,
     includeSearchUsers = false,
+    makeAdmin = true,
   } = options;
 
   // Get current user ID from profiles if not provided
@@ -305,20 +307,21 @@ export async function seedMemberManagementTestData(options: SeedTestDataOptions 
   // This fixes foreign key constraint issues and timing problems
   await new Promise((resolve) => setTimeout(resolve, 200));
 
-  // 2. Create trip member for current user (admin) - use randomUUID  // 2. Add members
-  console.log(`[seedTestData] Adding userId ${userId} as admin to trip ${tripId}`);
+  // 2. Create trip member for current user with specified role
+  const userRole = makeAdmin ? 'admin' : 'member';
+  console.log(`[seedTestData] Adding userId ${userId} as ${userRole} to trip ${tripId}`);
   const { error: adminError } = await supabase.from('trip_members').upsert(
     {
       trip_id: tripId,
       user_id: userId,
-      role: 'admin',
+      role: userRole,
     },
     { onConflict: 'trip_id,user_id' }
   );
   if (adminError) {
-    console.error(`[seedTestData] Failed to add admin member: ${JSON.stringify(adminError)}`);
+    console.error(`[seedTestData] Failed to add ${userRole} member: ${JSON.stringify(adminError)}`);
   } else {
-    console.log(`[seedTestData] Successfully added admin ${userId} to trip ${tripId}`);
+    console.log(`[seedTestData] Successfully added ${userRole} ${userId} to trip ${tripId}`);
   }
 
   // ISSUE-#45: Add explicit wait for database commit to ensure data is visible to server components
@@ -326,20 +329,20 @@ export async function seedMemberManagementTestData(options: SeedTestDataOptions 
   // Increased from 100ms to 500ms for more reliability
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  // Verify the admin member was created correctly
+  // Verify the member was created correctly with the expected role
   // Don't use .single() as it may fail with PGRST116 if there are 0 or multiple rows
   const { data: verifyMembers, error: verifyError } = await supabase
     .from('trip_members')
     .select('*')
     .eq('trip_id', tripId)
     .eq('user_id', userId)
-    .eq('role', 'admin');
+    .eq('role', userRole);
 
   const verifyMember = verifyMembers && verifyMembers.length > 0 ? verifyMembers[0] : null;
 
   if (verifyError || !verifyMember) {
     console.error(
-      `[seedTestData] Failed to verify admin member for user ${userId}:`,
+      `[seedTestData] Failed to verify ${userRole} member for user ${userId}:`,
       JSON.stringify(verifyError),
       `Found ${verifyMembers?.length || 0} members`
     );
@@ -350,16 +353,18 @@ export async function seedMemberManagementTestData(options: SeedTestDataOptions 
       .select('*')
       .eq('trip_id', tripId)
       .eq('user_id', userId)
-      .eq('role', 'admin');
+      .eq('role', userRole);
     const retryMember = retryMembers && retryMembers.length > 0 ? retryMembers[0] : null;
     if (retryMember && !retryError) {
-      console.log(`[seedTestData] Verified admin member on retry: user=${userId}, trip=${tripId}`);
+      console.log(
+        `[seedTestData] Verified ${userRole} member on retry: user=${userId}, trip=${tripId}`
+      );
     } else {
       console.error(`[seedTestData] Retry also failed:`, JSON.stringify(retryError));
     }
   } else {
     console.log(
-      `[seedTestData] Verified admin member: user=${userId}, trip=${tripId}, role=${verifyMember.role}`
+      `[seedTestData] Verified ${userRole} member: user=${userId}, trip=${tripId}, role=${verifyMember.role}`
     );
   }
 

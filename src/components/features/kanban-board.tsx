@@ -28,6 +28,7 @@ interface KanbanBoardProps {
   onMoveItem: (itemId: string, fromColumn: KanbanColumn, toColumn: KanbanColumn) => void;
   onReorderItem: (itemId: string, column: KanbanColumn, newIndex: number) => void;
   onPersistReorder: (column: KanbanColumn) => Promise<void>;
+  onAddItem?: () => void;
 }
 
 export function KanbanBoard({
@@ -43,6 +44,7 @@ export function KanbanBoard({
   onMoveItem,
   onReorderItem,
   onPersistReorder,
+  onAddItem,
 }: KanbanBoardProps) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
   const [activeColumn, setActiveColumn] = React.useState<KanbanColumn | null>(null);
@@ -187,6 +189,7 @@ export function KanbanBoard({
           onUnclaim={onUnclaim}
           onEditItem={onEditItem}
           onDeleteItem={onDeleteItem}
+          onAddItem={onAddItem}
         />
         <KanbanColumnComponent
           id="claimed"

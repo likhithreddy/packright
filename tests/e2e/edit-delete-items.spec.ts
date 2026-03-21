@@ -77,288 +77,225 @@ test.describe('Edit/Delete Item Flows', () => {
 
   test.describe('Edit Item Dialog Flow', () => {
     test('should open edit dialog from card menu', async ({ page }) => {
-      // Find the three-dot menu button on an item card
-      // Try multiple selectors for the menu button
-      const menuButton = page
-        .locator('button:has([class*="lucide-more"])')
-        .or(page.locator('[data-testid="card-menu-button"]'))
-        .or(page.locator('.border-stone-200 button').last())
+      // The Edit button is directly exposed on the card (no dropdown menu)
+      // Find the Edit (Pencil) button on an item card in the unassigned column
+      const editButton = page
+        .locator('button:has([class*="lucide-pen"])')
+        .or(page.locator('button[title="Edit item"]'))
         .first();
 
-      const hasMenuButton = (await menuButton.count()) > 0;
+      await expect(editButton).toBeVisible({ timeout: 5000 });
+      // Use force click since button might be in a transitional state
+      await editButton.click({ force: true });
 
-      if (hasMenuButton) {
-        await menuButton.click();
-
-        // Look for Edit option
-        const editOption = page
-          .locator('button:has-text("Edit")')
-          .or(page.getByRole('menuitem', { name: 'Edit' }))
-          .first();
-        const hasEditOption = (await editOption.count()) > 0;
-
-        if (hasEditOption) {
-          await editOption.click();
-
-          // Verify dialog opened
-          await expect(page.getByText('Edit Item')).toBeVisible();
-        }
-      }
+      // Verify dialog opened
+      await expect(page.getByText('Edit Item')).toBeVisible({ timeout: 3000 });
     });
 
     test('should pre-fill form with current item values', async ({ page }) => {
-      // Find and click menu button
-      const menuButton = page
-        .locator('button:has([class*="lucide-more"])')
-        .or(page.locator('[data-testid="card-menu-button"]'))
+      // Find and click the Edit (Pencil) button directly
+      const editButton = page
+        .locator('button:has([class*="lucide-pen"])')
+        .or(page.locator('button[title="Edit item"]'))
         .first();
 
-      const hasMenuButton = (await menuButton.count()) > 0;
+      await expect(editButton).toBeVisible({ timeout: 5000 });
+      await editButton.click({ force: true });
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      // Check that form fields are pre-filled
+      const nameInput = page
+        .getByPlaceholder('Enter item name')
+        .or(page.locator('input[name="name"]'));
+      const hasNameInput = (await nameInput.count()) > 0;
 
-        // Click Edit option
-        const editOption = page
-          .locator('button:has-text("Edit")')
-          .or(page.getByRole('menuitem', { name: 'Edit' }))
-          .first();
-        const hasEditOption = (await editOption.count()) > 0;
+      if (hasNameInput) {
+        await expect(nameInput.first()).toBeVisible();
 
-        if (hasEditOption) {
-          await editOption.click();
-
-          // Check that form fields are pre-filled
-          const nameInput = page
-            .getByPlaceholder('Enter item name')
-            .or(page.locator('input[name="name"]'));
-          const hasNameInput = (await nameInput.count()) > 0;
-
-          if (hasNameInput) {
-            await expect(nameInput.first()).toBeVisible();
-
-            // Check that input has a value
-            const inputValue = await nameInput.first().inputValue();
-            expect(inputValue?.length).toBeGreaterThan(0);
-          }
-        }
+        // Check that input has a value
+        const inputValue = await nameInput.first().inputValue();
+        expect(inputValue?.length).toBeGreaterThan(0);
       }
     });
 
     test('should allow editing item name', async ({ page }) => {
-      const menuButton = page.locator('button:has([class*="lucide-more"])').first();
-      const hasMenuButton = (await menuButton.count()) > 0;
+      const editButton = page
+        .locator('button:has([class*="lucide-pen"])')
+        .or(page.locator('button[title="Edit item"]'))
+        .first();
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      await expect(editButton).toBeVisible({ timeout: 5000 });
+      await editButton.click({ force: true });
 
-        const editOption = page.locator('button:has-text("Edit")').first();
-        const hasEditOption = (await editOption.count()) > 0;
+      // Find name input
+      const nameInput = page
+        .getByPlaceholder('Enter item name')
+        .or(page.locator('input[name="name"]'))
+        .first();
+      const hasNameInput = (await nameInput.count()) > 0;
 
-        if (hasEditOption) {
-          await editOption.click();
+      if (hasNameInput) {
+        // Clear and enter new name
+        await nameInput.fill('Updated Tent Name');
+        await page.waitForTimeout(100);
 
-          // Find name input
-          const nameInput = page
-            .getByPlaceholder('Enter item name')
-            .or(page.locator('input[name="name"]'))
-            .first();
-          const hasNameInput = (await nameInput.count()) > 0;
+        // Click Save Changes
+        const saveButton = page
+          .getByRole('button', { name: 'Save Changes' })
+          .or(page.locator('button:has-text("Save")'))
+          .first();
 
-          if (hasNameInput) {
-            // Clear and enter new name
-            await nameInput.fill('Updated Tent Name');
-            await page.waitForTimeout(100);
+        await saveButton.click();
+        await page.waitForTimeout(500);
 
-            // Click Save Changes
-            const saveButton = page
-              .getByRole('button', { name: 'Save Changes' })
-              .or(page.locator('button:has-text("Save")'))
-              .first();
+        // Check for success toast
+        const toast = page.locator('.cn-toast, [data-sonner-toast]');
+        const toastCount = await toast.count();
 
-            await saveButton.click();
-            await page.waitForTimeout(500);
-
-            // Check for success toast
-            const toast = page.locator('.cn-toast, [data-sonner-toast]');
-            const toastCount = await toast.count();
-
-            if (toastCount > 0) {
-              await expect(toast.first()).toContainText(/saved|success|updated/i, {
-                timeout: 3000,
-              });
-            }
-          }
+        if (toastCount > 0) {
+          await expect(toast.first()).toContainText(/saved|success|updated/i, {
+            timeout: 3000,
+          });
         }
       }
     });
 
     test('should allow editing item quantity', async ({ page }) => {
-      const menuButton = page.locator('button:has([class*="lucide-more"])').first();
-      const hasMenuButton = (await menuButton.count()) > 0;
+      const editButton = page
+        .locator('button:has([class*="lucide-pen"])')
+        .or(page.locator('button[title="Edit item"]'))
+        .first();
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      await expect(editButton).toBeVisible({ timeout: 5000 });
+      await editButton.click({ force: true });
 
-        const editOption = page.locator('button:has-text("Edit")').first();
-        const hasEditOption = (await editOption.count()) > 0;
+      // Find quantity input
+      const quantityInput = page
+        .getByPlaceholder('Enter quantity')
+        .or(page.locator('input[type="number"]'))
+        .first();
+      const hasQuantityInput = (await quantityInput.count()) > 0;
 
-        if (hasEditOption) {
-          await editOption.click();
+      if (hasQuantityInput) {
+        // Clear and enter new quantity
+        await quantityInput.fill('10');
+        await page.waitForTimeout(100);
 
-          // Find quantity input
-          const quantityInput = page
-            .getByPlaceholder('Enter quantity')
-            .or(page.locator('input[type="number"]'))
-            .first();
-          const hasQuantityInput = (await quantityInput.count()) > 0;
+        // Click Save Changes
+        const saveButton = page.getByRole('button', { name: 'Save Changes' }).first();
+        await saveButton.click();
+        await page.waitForTimeout(500);
 
-          if (hasQuantityInput) {
-            // Clear and enter new quantity
-            await quantityInput.fill('10');
-            await page.waitForTimeout(100);
+        // Check for success toast
+        const toast = page.locator('.cn-toast, [data-sonner-toast]');
+        const toastCount = await toast.count();
 
-            // Click Save Changes
-            const saveButton = page.getByRole('button', { name: 'Save Changes' }).first();
-            await saveButton.click();
-            await page.waitForTimeout(500);
-
-            // Check for success toast
-            const toast = page.locator('.cn-toast, [data-sonner-toast]');
-            const toastCount = await toast.count();
-
-            if (toastCount > 0) {
-              await expect(toast.first()).toContainText(/saved|success|updated/i, {
-                timeout: 3000,
-              });
-            }
-          }
+        if (toastCount > 0) {
+          await expect(toast.first()).toContainText(/saved|success|updated/i, {
+            timeout: 3000,
+          });
         }
       }
     });
 
     test('should validate name length (min 1, max 100)', async ({ page }) => {
-      const menuButton = page.locator('button:has([class*="lucide-more"])').first();
-      const hasMenuButton = (await menuButton.count()) > 0;
+      const editButton = page
+        .locator('button:has([class*="lucide-pen"])')
+        .or(page.locator('button[title="Edit item"]'))
+        .first();
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      await expect(editButton).toBeVisible({ timeout: 5000 });
+      await editButton.click({ force: true });
 
-        const editOption = page.locator('button:has-text("Edit")').first();
-        const hasEditOption = (await editOption.count()) > 0;
+      // Find name input
+      const nameInput = page
+        .getByPlaceholder('Enter item name')
+        .or(page.locator('input[name="name"]'))
+        .first();
+      const hasNameInput = (await nameInput.count()) > 0;
 
-        if (hasEditOption) {
-          await editOption.click();
+      if (hasNameInput) {
+        // Clear and enter empty name
+        await nameInput.fill('');
+        await page.waitForTimeout(100);
 
-          // Find name input
-          const nameInput = page
-            .getByPlaceholder('Enter item name')
-            .or(page.locator('input[name="name"]'))
-            .first();
-          const hasNameInput = (await nameInput.count()) > 0;
+        // Try to click away to trigger validation (mode: 'onBlur')
+        await page.keyboard.press('Tab');
+        await page.waitForTimeout(100);
 
-          if (hasNameInput) {
-            // Clear and enter empty name
-            await nameInput.fill('');
-            await page.waitForTimeout(100);
-
-            // Try to save - button should be disabled or show error
-            const saveButton = page.getByRole('button', { name: 'Save Changes' }).first();
-            const isDisabled = await saveButton.isDisabled();
-
-            expect(isDisabled).toBe(true);
-          }
-        }
+        // Should show validation error when name is empty
+        await expect(page.getByText(/Item name is required/i)).toBeVisible({ timeout: 3000 });
       }
     });
 
     test('should validate quantity range (min 1, max 1000)', async ({ page }) => {
-      const menuButton = page.locator('button:has([class*="lucide-more"])').first();
-      const hasMenuButton = (await menuButton.count()) > 0;
+      const editButton = page
+        .locator('button:has([class*="lucide-pen"])')
+        .or(page.locator('button[title="Edit item"]'))
+        .first();
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      await expect(editButton).toBeVisible({ timeout: 5000 });
+      await editButton.click({ force: true });
 
-        const editOption = page.locator('button:has-text("Edit")').first();
-        const hasEditOption = (await editOption.count()) > 0;
+      // Find quantity input
+      const quantityInput = page
+        .getByPlaceholder('Enter quantity')
+        .or(page.locator('input[type="number"]'))
+        .first();
+      const hasQuantityInput = (await quantityInput.count()) > 0;
 
-        if (hasEditOption) {
-          await editOption.click();
+      if (hasQuantityInput) {
+        // Check min/max attributes
+        const minAttr = await quantityInput.getAttribute('min');
+        const maxAttr = await quantityInput.getAttribute('max');
 
-          // Find quantity input
-          const quantityInput = page
-            .getByPlaceholder('Enter quantity')
-            .or(page.locator('input[type="number"]'))
-            .first();
-          const hasQuantityInput = (await quantityInput.count()) > 0;
-
-          if (hasQuantityInput) {
-            // Check min/max attributes
-            const minAttr = await quantityInput.getAttribute('min');
-            const maxAttr = await quantityInput.getAttribute('max');
-
-            expect(minAttr).toBe('1');
-            expect(maxAttr).toBe('1000');
-          }
-        }
+        expect(minAttr).toBe('1');
+        expect(maxAttr).toBe('1000');
       }
     });
 
     test('should close dialog when Cancel is clicked', async ({ page }) => {
-      const menuButton = page.locator('button:has([class*="lucide-more"])').first();
-      const hasMenuButton = (await menuButton.count()) > 0;
+      const editButton = page
+        .locator('button:has([class*="lucide-pen"])')
+        .or(page.locator('button[title="Edit item"]'))
+        .first();
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      await expect(editButton).toBeVisible({ timeout: 5000 });
+      await editButton.click({ force: true });
 
-        const editOption = page.locator('button:has-text("Edit")').first();
-        const hasEditOption = (await editOption.count()) > 0;
+      // Click Cancel
+      const cancelButton = page.getByRole('button', { name: 'Cancel' }).first();
+      await cancelButton.click();
 
-        if (hasEditOption) {
-          await editOption.click();
-
-          // Click Cancel
-          const cancelButton = page.getByRole('button', { name: 'Cancel' }).first();
-          await cancelButton.click();
-
-          // Dialog should be closed
-          await expect(page.getByText('Edit Item')).not.toBeVisible();
-        }
-      }
+      // Dialog should be closed
+      await expect(page.getByText('Edit Item')).not.toBeVisible({ timeout: 3000 });
     });
 
     test('should show loading state while saving', async ({ page }) => {
-      const menuButton = page.locator('button:has([class*="lucide-more"])').first();
-      const hasMenuButton = (await menuButton.count()) > 0;
+      const editButton = page
+        .locator('button:has([class*="lucide-pen"])')
+        .or(page.locator('button[title="Edit item"]'))
+        .first();
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      await expect(editButton).toBeVisible({ timeout: 5000 });
+      await editButton.click({ force: true });
 
-        const editOption = page.locator('button:has-text("Edit")').first();
-        const hasEditOption = (await editOption.count()) > 0;
+      // Modify a field
+      const nameInput = page.getByPlaceholder('Enter item name').first();
+      const hasNameInput = (await nameInput.count()) > 0;
 
-        if (hasEditOption) {
-          await editOption.click();
+      if (hasNameInput) {
+        await nameInput.fill('Updated Name');
 
-          // Modify a field
-          const nameInput = page.getByPlaceholder('Enter item name').first();
-          const hasNameInput = (await nameInput.count()) > 0;
+        // Click Save
+        const saveButton = page.getByRole('button', { name: 'Save Changes' }).first();
+        await saveButton.click();
 
-          if (hasNameInput) {
-            await nameInput.fill('Updated Name');
+        // Check for loading state (spinner or "Saving..." text)
+        const loader = page.locator('[class*="animate-spin"]').or(page.getByText('Saving...'));
+        const hasLoader = (await loader.count()) > 0;
 
-            // Click Save
-            const saveButton = page.getByRole('button', { name: 'Save Changes' }).first();
-            await saveButton.click();
-
-            // Check for loading state (spinner or "Saving..." text)
-            const loader = page.locator('[class*="animate-spin"]').or(page.getByText('Saving...'));
-            const hasLoader = (await loader.count()) > 0;
-
-            if (hasLoader) {
-              await expect(loader.first()).toBeVisible();
-            }
-          }
+        if (hasLoader) {
+          await expect(loader.first()).toBeVisible({ timeout: 3000 });
         }
       }
     });
@@ -366,185 +303,151 @@ test.describe('Edit/Delete Item Flows', () => {
 
   test.describe('Delete Confirmation Dialog Flow', () => {
     test('should open delete dialog from card menu', async ({ page }) => {
-      // Find the three-dot menu button
-      const menuButton = page
-        .locator('button:has([class*="lucide-more"])')
-        .or(page.locator('[data-testid="card-menu-button"]'))
+      // The Delete button is directly exposed on the card (no dropdown menu)
+      // Find the Delete (Trash) button on an item card in the unassigned column
+      const deleteButton = page
+        .locator('button:has([class*="lucide-trash"])')
+        .or(page.locator('button[title="Delete item"]'))
         .first();
 
-      const hasMenuButton = (await menuButton.count()) > 0;
+      await expect(deleteButton).toBeVisible({ timeout: 5000 });
+      await deleteButton.click({ force: true });
 
-      if (hasMenuButton) {
-        await menuButton.click();
-
-        // Look for Delete option
-        const deleteOption = page
-          .locator('button:has-text("Delete")')
-          .or(page.getByRole('menuitem', { name: 'Delete' }))
-          .first();
-        const hasDeleteOption = (await deleteOption.count()) > 0;
-
-        if (hasDeleteOption) {
-          await deleteOption.click();
-
-          // Verify dialog opened
-          await expect(page.getByText('Delete Item')).toBeVisible();
-        }
-      }
+      // Verify dialog opened - use role selector for specificity
+      await expect(page.getByRole('heading', { name: 'Delete Item' })).toBeVisible({
+        timeout: 3000,
+      });
     });
 
     test('should display item info in delete dialog', async ({ page }) => {
-      const menuButton = page.locator('button:has([class*="lucide-more"])').first();
-      const hasMenuButton = (await menuButton.count()) > 0;
+      // The Delete button is directly exposed on the card
+      const deleteButton = page
+        .locator('button:has([class*="lucide-trash"])')
+        .or(page.locator('button[title="Delete item"]'))
+        .first();
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      await expect(deleteButton).toBeVisible({ timeout: 5000 });
+      await deleteButton.click({ force: true });
 
-        const deleteOption = page.locator('button:has-text("Delete")').first();
-        const hasDeleteOption = (await deleteOption.count()) > 0;
+      // Check for warning message
+      await expect(page.getByText(/are you sure/i)).toBeVisible({ timeout: 3000 });
 
-        if (hasDeleteOption) {
-          await deleteOption.click();
+      // Check for item info display
+      const itemInfo = page.locator('.bg-stone-100').or(page.locator('[data-testid="item-info"]'));
+      const hasItemInfo = (await itemInfo.count()) > 0;
 
-          // Check for warning message
-          await expect(page.getByText(/are you sure/i)).toBeVisible();
-
-          // Check for item info display
-          const itemInfo = page
-            .locator('.bg-stone-100')
-            .or(page.locator('[data-testid="item-info"]'));
-          const hasItemInfo = (await itemInfo.count()) > 0;
-
-          if (hasItemInfo) {
-            await expect(itemInfo.first()).toBeVisible();
-          }
-        }
+      if (hasItemInfo) {
+        await expect(itemInfo.first()).toBeVisible();
       }
     });
 
     test('should close dialog when Cancel is clicked', async ({ page }) => {
-      const menuButton = page.locator('button:has([class*="lucide-more"])').first();
-      const hasMenuButton = (await menuButton.count()) > 0;
+      // The Delete button is directly exposed on the card
+      const deleteButton = page
+        .locator('button:has([class*="lucide-trash"])')
+        .or(page.locator('button[title="Delete item"]'))
+        .first();
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      await expect(deleteButton).toBeVisible({ timeout: 5000 });
+      await deleteButton.click({ force: true });
 
-        const deleteOption = page.locator('button:has-text("Delete")').first();
-        const hasDeleteOption = (await deleteOption.count()) > 0;
+      // Click Cancel
+      const cancelButton = page.getByRole('button', { name: 'Cancel' }).first();
+      await cancelButton.click();
 
-        if (hasDeleteOption) {
-          await deleteOption.click();
-
-          // Click Cancel
-          const cancelButton = page.getByRole('button', { name: 'Cancel' }).first();
-          await cancelButton.click();
-
-          // Dialog should be closed
-          await expect(page.getByText('Delete Item')).not.toBeVisible();
-        }
-      }
+      // Dialog should be closed - use role selector for specificity
+      await expect(page.getByRole('heading', { name: 'Delete Item' })).not.toBeVisible({
+        timeout: 3000,
+      });
     });
 
     test('should delete item when confirmed', async ({ page }) => {
-      const menuButton = page.locator('button:has([class*="lucide-more"])').first();
-      const hasMenuButton = (await menuButton.count()) > 0;
+      // The Delete button is directly exposed on the card
+      const deleteButton = page
+        .locator('button:has([class*="lucide-trash"])')
+        .or(page.locator('button[title="Delete item"]'))
+        .first();
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      await expect(deleteButton).toBeVisible({ timeout: 5000 });
+      await deleteButton.click({ force: true });
 
-        const deleteOption = page.locator('button:has-text("Delete")').first();
-        const hasDeleteOption = (await deleteOption.count()) > 0;
+      // Click Delete to confirm
+      const confirmDeleteButton = page
+        .getByRole('button', { name: /Delete/i })
+        .or(page.locator('button:has-text("Delete Item")'))
+        .or(page.locator('button.bg-red-600'))
+        .first();
 
-        if (hasDeleteOption) {
-          await deleteOption.click();
+      await confirmDeleteButton.click();
+      await page.waitForTimeout(500);
 
-          // Click Delete to confirm
-          const deleteButton = page
-            .getByRole('button', { name: /Delete/i })
-            .or(page.locator('button:has-text("Delete Item")'))
-            .or(page.locator('button.bg-red-600'))
-            .first();
+      // Check for success toast
+      const toast = page.locator('.cn-toast, [data-sonner-toast]');
+      const toastCount = await toast.count();
 
-          await deleteButton.click();
-          await page.waitForTimeout(500);
-
-          // Check for success toast
-          const toast = page.locator('.cn-toast, [data-sonner-toast]');
-          const toastCount = await toast.count();
-
-          if (toastCount > 0) {
-            await expect(toast.first()).toContainText(/deleted|removed|success/i, {
-              timeout: 3000,
-            });
-          }
-
-          // Dialog should be closed
-          await expect(page.getByText('Delete Item')).not.toBeVisible();
-        }
+      if (toastCount > 0) {
+        await expect(toast.first()).toContainText(/deleted|removed|success/i, {
+          timeout: 3000,
+        });
       }
+
+      // Dialog should be closed - use role selector for specificity
+      await expect(page.getByRole('heading', { name: 'Delete Item' })).not.toBeVisible({
+        timeout: 3000,
+      });
     });
 
     test('should show loading state while deleting', async ({ page }) => {
-      const menuButton = page.locator('button:has([class*="lucide-more"])').first();
-      const hasMenuButton = (await menuButton.count()) > 0;
+      // The Delete button is directly exposed on the card
+      const deleteButton = page
+        .locator('button:has([class*="lucide-trash"])')
+        .or(page.locator('button[title="Delete item"]'))
+        .first();
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      await expect(deleteButton).toBeVisible({ timeout: 5000 });
+      await deleteButton.click({ force: true });
 
-        const deleteOption = page.locator('button:has-text("Delete")').first();
-        const hasDeleteOption = (await deleteOption.count()) > 0;
+      // Click Delete
+      const confirmDeleteButton = page
+        .getByRole('button', { name: /Delete/i })
+        .or(page.locator('button.bg-red-600'))
+        .first();
 
-        if (hasDeleteOption) {
-          await deleteOption.click();
+      await confirmDeleteButton.click();
 
-          // Click Delete
-          const deleteButton = page
-            .getByRole('button', { name: /Delete/i })
-            .or(page.locator('button.bg-red-600'))
-            .first();
+      // Check for loading state
+      const loader = page.locator('[class*="animate-spin"]').or(page.getByText('Deleting...'));
+      const hasLoader = (await loader.count()) > 0;
 
-          await deleteButton.click();
-
-          // Check for loading state
-          const loader = page.locator('[class*="animate-spin"]').or(page.getByText('Deleting...'));
-          const hasLoader = (await loader.count()) > 0;
-
-          if (hasLoader) {
-            await expect(loader.first()).toBeVisible();
-          }
-        }
+      if (hasLoader) {
+        await expect(loader.first()).toBeVisible({ timeout: 3000 });
       }
     });
 
     test('should disable buttons while deleting', async ({ page }) => {
-      const menuButton = page.locator('button:has([class*="lucide-more"])').first();
-      const hasMenuButton = (await menuButton.count()) > 0;
+      // The Delete button is directly exposed on the card
+      const deleteButton = page
+        .locator('button:has([class*="lucide-trash"])')
+        .or(page.locator('button[title="Delete item"]'))
+        .first();
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      await expect(deleteButton).toBeVisible({ timeout: 5000 });
+      await deleteButton.click({ force: true });
 
-        const deleteOption = page.locator('button:has-text("Delete")').first();
-        const hasDeleteOption = (await deleteOption.count()) > 0;
+      // Click Delete
+      const confirmDeleteButton = page
+        .getByRole('button', { name: /Delete/i })
+        .or(page.locator('button.bg-red-600'))
+        .first();
 
-        if (hasDeleteOption) {
-          await deleteOption.click();
+      await confirmDeleteButton.click();
 
-          // Click Delete
-          const deleteButton = page
-            .getByRole('button', { name: /Delete/i })
-            .or(page.locator('button.bg-red-600'))
-            .first();
+      // Check that Cancel button is disabled during deletion
+      const cancelButton = page.getByRole('button', { name: 'Cancel' }).first();
+      const isDisabled = await cancelButton.isDisabled();
 
-          await deleteButton.click();
-
-          // Check that Cancel button is disabled during deletion
-          const cancelButton = page.getByRole('button', { name: 'Cancel' }).first();
-          const isDisabled = await cancelButton.isDisabled();
-
-          if (isDisabled) {
-            expect(isDisabled).toBe(true);
-          }
-        }
+      if (isDisabled) {
+        expect(isDisabled).toBe(true);
       }
     });
   });
@@ -560,37 +463,31 @@ test.describe('Edit/Delete Item Flows', () => {
         await route.fulfill({ status: 500, body: JSON.stringify({ error: 'Database error' }) });
       });
 
-      const menuButton = page.locator('button:has([class*="lucide-more"])').first();
-      const hasMenuButton = (await menuButton.count()) > 0;
+      const editButton = page
+        .locator('button:has([class*="lucide-pen"])')
+        .or(page.locator('button[title="Edit item"]'))
+        .first();
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      await expect(editButton).toBeVisible({ timeout: 5000 });
+      await editButton.click({ force: true });
 
-        const editOption = page.locator('button:has-text("Edit")').first();
-        const hasEditOption = (await editOption.count()) > 0;
+      // Modify and try to save
+      const nameInput = page.getByPlaceholder('Enter item name').first();
+      const hasNameInput = (await nameInput.count()) > 0;
 
-        if (hasEditOption) {
-          await editOption.click();
+      if (hasNameInput) {
+        await nameInput.fill('Updated Name');
 
-          // Modify and try to save
-          const nameInput = page.getByPlaceholder('Enter item name').first();
-          const hasNameInput = (await nameInput.count()) > 0;
+        const saveButton = page.getByRole('button', { name: 'Save Changes' }).first();
+        await saveButton.click();
+        await page.waitForTimeout(500);
 
-          if (hasNameInput) {
-            await nameInput.fill('Updated Name');
+        // Check for error toast
+        const toast = page.locator('.cn-toast, [data-sonner-toast]');
+        const toastCount = await toast.count();
 
-            const saveButton = page.getByRole('button', { name: 'Save Changes' }).first();
-            await saveButton.click();
-            await page.waitForTimeout(500);
-
-            // Check for error toast
-            const toast = page.locator('.cn-toast, [data-sonner-toast]');
-            const toastCount = await toast.count();
-
-            if (toastCount > 0) {
-              await expect(toast.first()).toContainText(/error|failed/i, { timeout: 3000 });
-            }
-          }
+        if (toastCount > 0) {
+          await expect(toast.first()).toContainText(/error|failed/i, { timeout: 3000 });
         }
       }
     });
@@ -598,25 +495,19 @@ test.describe('Edit/Delete Item Flows', () => {
 
   test.describe('Accessibility', () => {
     test('should close dialogs on Escape key', async ({ page }) => {
-      const menuButton = page.locator('button:has([class*="lucide-more"])').first();
-      const hasMenuButton = (await menuButton.count()) > 0;
+      const editButton = page
+        .locator('button:has([class*="lucide-pen"])')
+        .or(page.locator('button[title="Edit item"]'))
+        .first();
 
-      if (hasMenuButton) {
-        await menuButton.click();
+      await expect(editButton).toBeVisible({ timeout: 5000 });
+      await editButton.click({ force: true });
 
-        const editOption = page.locator('button:has-text("Edit")').first();
-        const hasEditOption = (await editOption.count()) > 0;
+      // Press Escape
+      await page.keyboard.press('Escape');
 
-        if (hasEditOption) {
-          await editOption.click();
-
-          // Press Escape
-          await page.keyboard.press('Escape');
-
-          // Dialog should be closed
-          await expect(page.getByText('Edit Item')).not.toBeVisible();
-        }
-      }
+      // Dialog should be closed
+      await expect(page.getByText('Edit Item')).not.toBeVisible({ timeout: 3000 });
     });
   });
 });

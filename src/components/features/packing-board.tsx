@@ -9,6 +9,7 @@ import { ClaimQuantityDialog } from './claim-quantity-dialog';
 import { EditItemDialog } from './edit-item-dialog';
 import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
 import { UnclaimDialog } from './unclaim-dialog';
+import { AddItemDialog } from './add-item-dialog';
 import { useBoardStore } from '@/store/board-store';
 import { AlertTriangle } from 'lucide-react';
 import {
@@ -17,6 +18,7 @@ import {
   subscribeToTripItems,
   updateItem,
   deleteItem,
+  createItem,
 } from '@/lib/supabase/items';
 import { Trip, KanbanColumn, ItemWithClaims, ItemClaim } from '@/types/database.types';
 import { UserProfile } from '@/lib/utils';
@@ -31,7 +33,17 @@ type TripMemberWithProfile = {
   }> | null;
 };
 
-export function PackingBoard() {
+export interface PackingBoardProps {
+  currentUserId?: string;
+  initialTrip?: Trip | null;
+  currentUserIsAdmin?: boolean;
+}
+
+export function PackingBoard({
+  currentUserId: propCurrentUserId,
+  initialTrip,
+  currentUserIsAdmin,
+}: PackingBoardProps) {
   const params = useParams();
   const router = useRouter();
   const tripId = params.id as string;
@@ -78,8 +90,11 @@ export function PackingBoard() {
   const [unclaimingClaimId, setUnclaimingClaimId] = React.useState<string | null>(null);
   const [unclaimingClaimQuantity, setUnclaimingClaimQuantity] = React.useState(0);
 
-  // State for trip data
-  const [trip, setTrip] = React.useState<Trip | null>(null);
+  // State for add item dialog
+  const [addItemDialogOpen, setAddItemDialogOpen] = React.useState(false);
+
+  // State for trip data - initialize with prop if available
+  const [trip, setTrip] = React.useState<Trip | null>(initialTrip || null);
   // Note: members state is kept for potential future use
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [members, setMembers] = React.useState<Array<UserProfile & { id: string }>>([]);
@@ -93,33 +108,37 @@ export function PackingBoard() {
       setError(null);
 
       try {
-        // Fetch trip details
-        const { data: tripData, error: tripError } = await supabase
-          .from('trips')
-          .select('*')
-          .eq('id', tripId)
-          .single();
+        // Only fetch trip details if we don't already have it from props
+        if (!trip) {
+          const { data: tripData, error: tripError } = await supabase
+            .from('trips')
+            .select('*')
+            .eq('id', tripId)
+            .single();
 
-        if (tripError) {
-          if (tripError.code === 'PGRST116') {
-            // Trip not found
-            router.push('/dashboard');
-            return;
+          if (tripError) {
+            if (tripError.code === 'PGRST116') {
+              // Trip not found
+              router.push('/dashboard');
+              return;
+            }
+            throw tripError;
           }
-          throw tripError;
+
+          setTrip(tripData as Trip);
         }
 
-        setTrip(tripData as Trip);
+        // Only check admin status if not provided via prop
+        if (currentUserIsAdmin === undefined) {
+          const { data: memberData } = await supabase
+            .from('trip_members')
+            .select('role')
+            .eq('trip_id', tripId)
+            .eq('user_id', currentUserId)
+            .single();
 
-        // Check if current user is admin
-        const { data: memberData } = await supabase
-          .from('trip_members')
-          .select('role')
-          .eq('trip_id', tripId)
-          .eq('user_id', currentUserId)
-          .single();
-
-        setIsAdmin(memberData?.role === 'admin');
+          setIsAdmin(memberData?.role === 'admin');
+        }
 
         // Fetch trip members with their profiles
         const { data: membersData } = await supabase
@@ -186,29 +205,73 @@ export function PackingBoard() {
     setTripId(tripId);
   }, [tripId, setTripId]);
 
-  // Get current user
+  // Get current user with retry logic for E2E test compatibility
+  // Use prop if available (server-side data), otherwise fetch client-side
   React.useEffect(() => {
-    const getCurrentUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        setCurrentUserId(user.id);
+    // If currentUserId is provided as prop, use it immediately
+    if (propCurrentUserId) {
+      setCurrentUserId(propCurrentUserId);
 
-        // Fetch profile immediately to avoid UE glitch
+      // Set admin status if provided as prop
+      if (currentUserIsAdmin !== undefined) {
+        setIsAdmin(currentUserIsAdmin);
+      }
+
+      // Fetch profile if we have the user ID
+      const fetchProfile = async () => {
         const { data: profile } = await supabase
           .from('profiles')
           .select('full_name, username, avatar_theme')
-          .eq('id', user.id)
+          .eq('id', propCurrentUserId)
           .single();
 
         if (profile) {
           setCurrentUserProfile(profile);
         }
+      };
+      fetchProfile();
+      return;
+    }
+
+    // Otherwise, fall back to client-side fetch with retry logic
+    const getCurrentUser = async (retries = 5) => {
+      for (let i = 0; i < retries; i++) {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) {
+          setCurrentUserId(user.id);
+
+          // Fetch profile immediately to avoid UE glitch
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('full_name, username, avatar_theme')
+            .eq('id', user.id)
+            .single();
+
+          if (profile) {
+            setCurrentUserProfile(profile);
+          }
+          return;
+        }
+        // Wait 500ms before retrying (only if we have retries left)
+        if (i < retries - 1) {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        }
       }
+      // If we've exhausted retries, log a warning but don't throw
+      // The loading state will handle showing an error to the user
+      console.warn('[PackingBoard] Failed to get authenticated user after retries');
     };
     getCurrentUser();
-  }, [supabase, setCurrentUserId, setCurrentUserProfile]);
+  }, [
+    supabase,
+    setCurrentUserId,
+    setCurrentUserProfile,
+    propCurrentUserId,
+    currentUserIsAdmin,
+    setIsAdmin,
+  ]);
 
   // Load trip data when tripId and currentUserId are set
   React.useEffect(() => {
@@ -374,6 +437,39 @@ export function PackingBoard() {
     }
   };
 
+  // Handle add item
+  const handleAddItem = async (
+    name: string,
+    requiredCount: number,
+    category: string,
+    claimType: 'single' | 'multiple'
+  ) => {
+    if (!tripId) {
+      setError('No trip selected');
+      throw new Error('No trip selected');
+    }
+
+    try {
+      const { error } = await createItem(supabase, tripId, {
+        name,
+        required_count: requiredCount,
+        category,
+        claim_type: claimType,
+      });
+
+      if (error) {
+        setError(error.message);
+        throw error;
+      }
+
+      // Reload trip data to show the new item
+      await loadTripData(true);
+    } catch (err) {
+      console.error('Failed to add item:', err);
+      throw err;
+    }
+  };
+
   // Handle move item (drag and drop)
   const handleMoveItem = async (itemId: string, fromColumn: string, toColumn: string) => {
     try {
@@ -493,6 +589,7 @@ export function PackingBoard() {
         onMoveItem={handleMoveItem}
         onReorderItem={reorderItem}
         onPersistReorder={persistReorder}
+        onAddItem={() => setAddItemDialogOpen(true)}
       />
     );
   };
@@ -541,6 +638,15 @@ export function PackingBoard() {
         claimedQuantity={unclaimingClaimQuantity}
         onConfirm={handleUnclaimConfirm}
       />
+
+      {/* Add Item Dialog - Admin only */}
+      {isAdmin && (
+        <AddItemDialog
+          open={addItemDialogOpen}
+          onOpenChange={setAddItemDialogOpen}
+          onSave={handleAddItem}
+        />
+      )}
     </div>
   );
 }

@@ -25,8 +25,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Loader2 } from 'lucide-react';
+import { Combobox, ComboboxOption } from '@/components/ui/combobox';
+import { CATEGORY_ICONS } from '@/lib/utils/category-icons';
 
-const editItemSchema = z.object({
+const addItemSchema = z.object({
   name: z
     .string()
     .min(1, 'Item name is required')
@@ -35,58 +37,52 @@ const editItemSchema = z.object({
     .number()
     .min(1, 'Quantity must be at least 1')
     .max(1000, 'Quantity cannot exceed 1000'),
+  category: z.string().min(1, 'Category is required'),
   claim_type: z.enum(['single', 'multiple']),
 });
 
-type EditItemFormValues = z.infer<typeof editItemSchema>;
+type AddItemFormValues = z.infer<typeof addItemSchema>;
 
-interface EditItemDialogProps {
+// Predefined categories from category-icons.tsx
+const CATEGORY_OPTIONS: ComboboxOption[] = Object.keys(CATEGORY_ICONS).map((cat) => ({
+  value: cat,
+  label: cat,
+}));
+
+interface AddItemDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  itemName: string;
-  requiredCount: number;
-  claimType: 'single' | 'multiple';
-  onSave: (name: string, requiredCount: number, claimType: 'single' | 'multiple') => Promise<void>;
+  onSave: (
+    name: string,
+    requiredCount: number,
+    category: string,
+    claimType: 'single' | 'multiple'
+  ) => Promise<void>;
 }
 
-export function EditItemDialog({
-  open,
-  onOpenChange,
-  itemName,
-  requiredCount,
-  claimType,
-  onSave,
-}: EditItemDialogProps) {
+export function AddItemDialog({ open, onOpenChange, onSave }: AddItemDialogProps) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const form = useForm<EditItemFormValues>({
-    resolver: zodResolver(editItemSchema),
+  const form = useForm<AddItemFormValues>({
+    resolver: zodResolver(addItemSchema),
     mode: 'onBlur',
     defaultValues: {
-      name: itemName,
-      required_count: requiredCount,
-      claim_type: claimType,
+      name: '',
+      required_count: 1,
+      category: '',
+      claim_type: 'single',
     },
   });
 
-  // Reset form when item data changes
-  React.useEffect(() => {
-    form.reset({
-      name: itemName,
-      required_count: requiredCount,
-      claim_type: claimType,
-    });
-  }, [itemName, requiredCount, claimType, form]);
-
-  const handleSubmit = async (values: EditItemFormValues) => {
+  const handleSubmit = async (values: AddItemFormValues) => {
     setIsSubmitting(true);
     try {
-      await onSave(values.name, values.required_count, values.claim_type);
+      await onSave(values.name, values.required_count, values.category, values.claim_type);
       onOpenChange(false);
       form.reset();
     } catch (error) {
       // Error handling is done by the parent component
-      console.error('Failed to update item:', error);
+      console.error('Failed to create item:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -103,10 +99,9 @@ export function EditItemDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[450px]">
         <DialogHeader>
-          <DialogTitle className="font-serif text-xl">Edit Item</DialogTitle>
+          <DialogTitle className="font-serif text-xl">Add New Item</DialogTitle>
           <DialogDescription>
-            Update the item name, quantity, and claim type. This will be visible to all trip
-            members.
+            Add a new item to the trip. This will be visible to all trip members.
           </DialogDescription>
         </DialogHeader>
 
@@ -153,6 +148,27 @@ export function EditItemDialog({
                       ref={field.ref}
                       min={1}
                       max={1000}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-medium">Category</FormLabel>
+                  <FormControl>
+                    <Combobox
+                      options={CATEGORY_OPTIONS}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Select or type a category"
+                      allowNew
+                      newLabelFormat={(v) => `Use "${v}"`}
                     />
                   </FormControl>
                   <FormMessage />
@@ -211,10 +227,10 @@ export function EditItemDialog({
                 {isSubmitting ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Saving...
+                    Adding...
                   </>
                 ) : (
-                  'Save Changes'
+                  'Add Item'
                 )}
               </Button>
             </DialogFooter>
