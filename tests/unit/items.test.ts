@@ -40,12 +40,23 @@ describe('items lib functions', () => {
     // Second call: .from('item_claims').select().in() - claims query
 
     // mockEq returns object that supports chaining and maybeSingle
-    mockEq.mockReturnValue({
-      eq: mockEq,
+    // Use a fresh mock for eq to avoid circular reference
+    const mockEqNested = jest.fn();
+    mockEqNested.mockReturnValue({
       maybeSingle: mockMaybeSingle,
       single: mockSingle,
       order: mockOrder,
     });
+    mockEq.mockReturnValue({
+      eq: mockEqNested,
+      maybeSingle: mockMaybeSingle,
+      single: mockSingle,
+      order: mockOrder,
+    });
+
+    // mockOrder default - tests override this with mockReturnValueOnce/mockResolvedValueOnce
+    // Keep it simple to avoid circular references that cause heap/stack issues
+    mockOrder.mockReturnValue({} as jest.Mocked<unknown>);
 
     // mockIn returns promise with data (for claims query)
     mockIn.mockResolvedValue({ data: [], error: null });
@@ -57,6 +68,9 @@ describe('items lib functions', () => {
       order: mockOrder,
       maybeSingle: mockMaybeSingle,
       single: mockSingle,
+      limit: jest.fn().mockReturnValue({
+        maybeSingle: mockMaybeSingle,
+      }),
     });
 
     // Setup from() chain
@@ -74,17 +88,14 @@ describe('items lib functions', () => {
       }),
     });
 
-    // Setup update().eq() for updateItem (returns promise with { error })
-    // Setup update().eq().select().single() for updateClaim (returns data)
-    // Create a thenable object that can be awaited and has select() method
-    const mockUpdateEqResult = {
+    // Setup update().eq() - use simple object by default (no promise)
+    // Individual tests override with mockResolvedValue when needed
+    // This avoids circular references from Promise + attached methods
+    mockUpdateEq.mockReturnValue({
       select: jest.fn().mockReturnValue({
         single: mockSingle,
       }),
-      then: (resolve: (value: { error: null }) => unknown) =>
-        Promise.resolve({ error: null }).then(resolve),
-    };
-    mockUpdateEq.mockReturnValue(mockUpdateEqResult);
+    });
     mockUpdate.mockReturnValue({
       eq: mockUpdateEq,
     });
@@ -99,6 +110,19 @@ describe('items lib functions', () => {
       on: mockOn.mockReturnThis(),
       subscribe: mockSubscribe,
     });
+  });
+
+  // Properly cleanup mocks after each test
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  // After all tests complete, force cleanup to prevent Next.js environment issues
+  afterAll(() => {
+    jest.clearAllMocks();
+    // Set a timeout to allow cleanup to complete before process exits
+    // This prevents Next.js's setImmediate recursion from crashing the test runner
+    return new Promise((resolve) => setTimeout(resolve, 100));
   });
 
   describe('getTripItems', () => {
@@ -573,6 +597,12 @@ describe('items lib functions', () => {
   });
 
   describe('updateItem', () => {
+    beforeEach(() => {
+      // updateItem awaits .eq(), so override to return a promise
+      // This is done here to avoid circular references in the global beforeEach
+      mockUpdateEq.mockResolvedValue({ error: null });
+    });
+
     it('should update item fields successfully', async () => {
       const result = await updateItem(mockSupabase, 'item-1', {
         name: 'Updated Item',
@@ -636,10 +666,21 @@ describe('items lib functions', () => {
         claims: [],
       };
 
-      // Mock the order query to return empty list (no existing items)
-      mockOrder.mockResolvedValueOnce({ data: null, error: null });
-      // Mock the insert to return the new item
-      mockSingle.mockResolvedValueOnce({ data: mockNewItem, error: null });
+      // Create a separate mock for the insert query's single() call
+      const mockInsertSingle = jest.fn().mockResolvedValue({ data: mockNewItem, error: null });
+      mockInsert.mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          single: mockInsertSingle,
+        }),
+      });
+
+      // Mock the order().limit().maybeSingle() query to return empty (no existing items)
+      const mockLimit = jest.fn().mockReturnValue({
+        maybeSingle: jest.fn().mockResolvedValue({ data: null, error: null }),
+      });
+      mockOrder.mockReturnValueOnce({
+        limit: mockLimit,
+      } as jest.Mocked<unknown> & { limit: jest.Mock });
 
       const result = await createItem(mockSupabase, 'trip-1', {
         name: 'New Item',
@@ -679,10 +720,21 @@ describe('items lib functions', () => {
         claims: [],
       };
 
-      // Mock the order query to return an existing item with sort_order 5
-      mockOrder.mockResolvedValueOnce({ data: mockExistingItem, error: null });
-      // Mock the insert to return the new item
-      mockSingle.mockResolvedValueOnce({ data: mockNewItem, error: null });
+      // Create a separate mock for the insert query's single() call
+      const mockInsertSingle = jest.fn().mockResolvedValue({ data: mockNewItem, error: null });
+      mockInsert.mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          single: mockInsertSingle,
+        }),
+      });
+
+      // Mock the order().limit().maybeSingle() query to return existing item
+      const mockLimit = jest.fn().mockReturnValue({
+        maybeSingle: jest.fn().mockResolvedValue({ data: mockExistingItem, error: null }),
+      });
+      mockOrder.mockReturnValueOnce({
+        limit: mockLimit,
+      } as jest.Mocked<unknown> & { limit: jest.Mock });
 
       const result = await createItem(mockSupabase, 'trip-1', {
         name: 'New Item',
@@ -698,10 +750,21 @@ describe('items lib functions', () => {
     it('should handle database errors during item creation', async () => {
       const mockError = { code: 'P0001', message: 'Insert failed' } as PostgrestError;
 
-      // Mock the order query to return empty list
-      mockOrder.mockResolvedValueOnce({ data: null, error: null });
-      // Mock the insert to return an error
-      mockSingle.mockResolvedValueOnce({ data: null, error: mockError });
+      // Create a separate mock for the insert query's single() call that returns error
+      const mockInsertSingle = jest.fn().mockResolvedValue({ data: null, error: mockError });
+      mockInsert.mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          single: mockInsertSingle,
+        }),
+      });
+
+      // Mock the order().limit().maybeSingle() query to return empty list
+      const mockLimit = jest.fn().mockReturnValue({
+        maybeSingle: jest.fn().mockResolvedValue({ data: null, error: null }),
+      });
+      mockOrder.mockReturnValueOnce({
+        limit: mockLimit,
+      } as jest.Mocked<unknown> & { limit: jest.Mock });
 
       const result = await createItem(mockSupabase, 'trip-1', {
         name: 'New Item',
@@ -717,8 +780,13 @@ describe('items lib functions', () => {
     it('should handle errors when fetching existing items', async () => {
       const mockError = { code: 'P0002', message: 'Query failed' } as PostgrestError;
 
-      // Mock the order query to return an error
-      mockOrder.mockResolvedValueOnce({ data: null, error: mockError });
+      // Mock the order().limit().maybeSingle() query to return an error
+      const mockLimit = jest.fn().mockReturnValue({
+        maybeSingle: jest.fn().mockResolvedValue({ data: null, error: mockError }),
+      });
+      mockOrder.mockReturnValueOnce({
+        limit: mockLimit,
+      } as jest.Mocked<unknown> & { limit: jest.Mock });
 
       const result = await createItem(mockSupabase, 'trip-1', {
         name: 'New Item',
@@ -732,8 +800,19 @@ describe('items lib functions', () => {
     });
 
     it('should catch and return exceptions', async () => {
-      const error = new Error('Connection failed');
-      mockOrder.mockRejectedValue(error);
+      // Use a simple object instead of Error to avoid Jest treating it as an actual error
+      const testError = { message: 'Test exception' };
+
+      // Create a rejected promise that won't trigger Jest's error detection
+      const rejectedPromise = Promise.reject(testError);
+      // Suppress unhandled rejection warning
+      rejectedPromise.catch(() => {});
+
+      // Mock the order().limit() to return the rejected promise
+      const mockLimit = jest.fn().mockReturnValue(rejectedPromise);
+      mockOrder.mockReturnValueOnce({
+        limit: mockLimit,
+      } as jest.Mocked<unknown> & { limit: jest.Mock });
 
       const result = await createItem(mockSupabase, 'trip-1', {
         name: 'New Item',

@@ -111,7 +111,7 @@ export function KanbanColumn({
   return (
     <div
       ref={setNodeRef}
-      className={`${styles.bg} ${styles.border} border rounded-2xl flex flex-col h-full min-w-[85vw] md:min-w-0 min-h-[300px] sm:min-h-[400px] transition-colors shrink-0 md:shrink snap-center md:snap-align-none ${
+      className={`group ${styles.bg} ${styles.border} border rounded-2xl flex flex-col h-full min-w-[85vw] md:min-w-0 min-h-[300px] sm:min-h-[400px] transition-colors shrink-0 md:shrink snap-center md:snap-align-none ${
         isOver && !isDragDisabled ? 'brightness-95' : ''
       }`}
     >
@@ -139,7 +139,7 @@ export function KanbanColumn({
 
       {/* Cards container */}
       <div className="flex-1 p-2 sm:p-3 overflow-y-auto">
-        <div className="flex flex-col gap-2 sm:gap-3 group">
+        <div className="flex flex-col gap-2 sm:gap-3">
           {renderCards()}
           {id === 'unassigned' && isAdmin && onAddItem && (
             <div className="opacity-0 group-hover:opacity-100 transition-opacity">

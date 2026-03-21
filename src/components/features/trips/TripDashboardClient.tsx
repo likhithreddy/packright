@@ -223,7 +223,11 @@ export function TripDashboardClient({
 
       {/* Main content area - Packing Board */}
       <main className="flex-1 overflow-hidden">
-        <PackingBoard />
+        <PackingBoard
+          currentUserId={currentUserId}
+          initialTrip={trip}
+          currentUserIsAdmin={currentUserIsAdmin}
+        />
       </main>
 
       {/* Members Modal */}

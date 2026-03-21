@@ -140,7 +140,7 @@ export function Combobox({
                 value === option.value && 'bg-stone-100'
               )}
             >
-              <span className="flex-1 truncate">{option.label}</span>
+              <span className="flex-1 truncate text-left">{option.label}</span>
               {value === option.value && <Check className="h-4 w-4 shrink-0 text-stone-700" />}
             </button>
           ))}
@@ -154,7 +154,9 @@ export function Combobox({
                 'hover:bg-stone-100 bg-stone-50'
               )}
             >
-              <span className="flex-1 truncate text-stone-700">{newLabelFormat(searchValue)}</span>
+              <span className="flex-1 truncate text-left text-stone-700">
+                {newLabelFormat(searchValue)}
+              </span>
             </button>
           )}
         </div>
