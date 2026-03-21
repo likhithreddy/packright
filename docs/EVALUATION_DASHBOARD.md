@@ -24,15 +24,15 @@ PackRight maintains comprehensive test coverage across all code layers. All metr
 
 | Metric         | Percentage | Threshold | Status   |
 | -------------- | ---------- | --------- | -------- |
-| **Statements** | 87.55%     | 80%       | [x] Pass |
-| **Branches**   | 79.32%     | 80%       | [x] Pass |
-| **Functions**  | 88.52%     | 80%       | [x] Pass |
-| **Lines**      | 88.77%     | 80%       | [x] Pass |
+| **Statements** | 92.35%     | 80%       | [x] Pass |
+| **Branches**   | 84.34%     | 80%       | [x] Pass |
+| **Functions**  | 94.15%     | 80%       | [x] Pass |
+| **Lines**      | 93.48%     | 80%       | [x] Pass |
 
 **Coverage Badge:**
 
 ```
-[Coverage: 87.55%]
+[Coverage: 92.35%]
 ```
 
 **Coverage Report Location:**
@@ -50,8 +50,8 @@ Unit tests verify isolated business logic, database query wrappers, and utility 
 
 | Metric          | Value      |
 | --------------- | ---------- |
-| **Total Tests** | 519        |
-| **Passing**     | 519 (100%) |
+| **Total Tests** | 566        |
+| **Passing**     | 566 (100%) |
 | **Failing**     | 0          |
 | **Skipped**     | 0          |
 
@@ -81,7 +81,7 @@ Unit tests verify isolated business logic, database query wrappers, and utility 
    - Error message generation
    - Edge case handling
 
-5. **Component Logic** (150 tests)
+5. **Component Logic** (198 tests)
    - Component state management
    - Event handler logic
    - Conditional rendering logic
@@ -91,11 +91,11 @@ Unit tests verify isolated business logic, database query wrappers, and utility 
 | Module                         | Statements | Branches | Functions | Lines |
 | ------------------------------ | ---------- | -------- | --------- | ----- |
 | `lib/utils.ts`                 | 100%       | 100%     | 100%      | 100%  |
-| `lib/supabase/items.ts`        | 95%        | 88%      | 100%      | 96%   |
-| `lib/supabase/trips.ts`        | 93%        | 85%      | 96%       | 94%   |
-| `lib/supabase/trip-members.ts` | 91%        | 82%      | 94%       | 92%   |
-| `store/board-store.ts`         | 90%        | 80%      | 95%       | 91%   |
-| `lib/profile-utils.ts`         | 100%       | 100%     | 100%      | 100%  |
+| `lib/supabase/items.ts`        | 88.17%     | 87.5%    | 78.94%    | 87.64% |
+| `lib/supabase/trips.ts`        | 100%       | 90%      | 100%      | 100%   |
+| `lib/supabase/trip-members.ts` | 100%       | 92.85%   | 100%      | 100%   |
+| `store/board-store.ts`         | 83.62%     | 62.09%   | 96.07%    | 86.34% |
+| `lib/profile-utils.ts`         | 92.85%     | 90%      | 100%      | 100%   |
 
 ### Test Execution
 
@@ -145,8 +145,8 @@ Integration tests verify connected React components spanning multiple features a
 
 | Metric          | Value      |
 | --------------- | ---------- |
-| **Total Tests** | 493        |
-| **Passing**     | 493 (100%) |
+| **Total Tests** | 597        |
+| **Passing**     | 597 (100%) |
 | **Failing**     | 0          |
 | **Skipped**     | 0          |
 
@@ -186,6 +186,11 @@ Integration tests verify connected React components spanning multiple features a
    - Conflict resolution
    - Multi-user state synchronization
 
+6. **Admin-Only Features** (104 tests)
+   - Non-admin user restrictions
+   - Admin-only UI controls
+   - RLS policy enforcement for item creation
+
 ### Test Execution
 
 **Command:**
@@ -222,9 +227,10 @@ End-to-end tests validate critical user flows across the entire application usin
 
 | Metric              | Value                     |
 | ------------------- | ------------------------- |
-| **Total Tests**     | 24                        |
-| **Passing**         | 24 (100%)                 |
+| **Total Tests**     | 124                       |
+| **Passing**         | 123 (99.2%)               |
 | **Failing**         | 0                         |
+| **Skipped**         | 1                         |
 | **Browsers Tested** | Chromium, Firefox, WebKit |
 
 ### Test Categories
@@ -262,6 +268,14 @@ End-to-end tests validate critical user flows across the entire application usin
    - View readiness percentage
    - See progress update after claiming items
    - See progress update after packing items
+
+6. **Admin-Only Add Item** (6 tests)
+   - Non-admin cannot see plus icon
+   - Non-admin cannot see AddItemCard on hover
+   - Non-admin cannot add item via API
+   - Admin CAN see add controls (positive)
+   - Non-admin keyboard navigation test
+   - Non-admin empty state test
 
 ### Test Execution
 
@@ -390,14 +404,14 @@ For detailed information about the CI/CD pipeline architecture, job definitions,
 | Sprint 2 | 9                | 45           | 212           | ~3 days  |
 | Sprint 3 | 10               | 52           | 519           | ~4 days  |
 
-**Total:** 26 issues, 131 story points, 816 cumulative tests
+**Total:** 26 issues, 131 story points, 1,287 cumulative tests
 
 ### Test Count Progression
 
 ```
 Sprint 1 End: ████████████████████ 85 tests
 Sprint 2 End: ████████████████████████████████████████████████████ 212 tests
-Sprint 3 End: ██████████████████████████████████████████████████████████████████████████████████████████████ 519 tests
+Sprint 3 End: ████████████████████████████████████████████████████████████████████████████████████████████████████████████████████ 566 tests
 ```
 
 **Growth Rate:** 510% increase in test count from Sprint 1 to Sprint 3
@@ -408,7 +422,7 @@ Sprint 3 End: ██████████████████████
 | -------- | ---------- | -------- | --------- | ------ |
 | Sprint 1 | ~85%       | ~80%     | ~88%      | ~84%   |
 | Sprint 2 | ~90%       | ~82%     | ~92%      | ~89%   |
-| Sprint 3 | 87.55%     | 79.32%   | 88.52%    | 88.77% |
+| Sprint 3 | 92.35%     | 84.34%   | 94.15%    | 93.48% |
 
 ---
 
@@ -418,11 +432,11 @@ Sprint 3 End: ██████████████████████
 
 | Metric                  | Value  |
 | ----------------------- | ------ |
-| **Total Commits**       | 127    |
+| **Total Commits**       | 129    |
 | **Total Lines of Code** | ~8,500 |
-| **Test Code**           | ~4,200 |
-| **Production Code**     | ~4,300 |
-| **Test-to-Code Ratio**  | 0.98:1 |
+| **Test Code**           | ~4,363 |
+| **Production Code**     | ~4,137 |
+| **Test-to-Code Ratio**  | 1.05:1 |
 | **Components**          | 42     |
 | **API Routes**          | 1      |
 | **Database Tables**     | 5      |
@@ -432,9 +446,9 @@ Sprint 3 End: ██████████████████████
 
 | Category      | Files | Lines  |
 | ------------- | ----- | ------ |
-| Components    | 42    | ~3,200 |
+| Components    | 44    | ~3,250 |
 | Utilities     | 18    | ~600   |
-| Tests         | 67    | ~4,200 |
+| Tests         | 74    | ~4,363 |
 | Types         | 8     | ~150   |
 | Store         | 1     | ~520   |
 | Configuration | 12    | ~280   |
