@@ -12,6 +12,7 @@ export function AddItemCard({ onClick }: AddItemCardProps) {
     <button
       type="button"
       onClick={onClick}
+      data-testid="add-item-card"
       className="w-full bg-transparent border border-dashed border-stone-300 rounded-xl p-3 sm:p-4 shadow-sm hover:bg-stone-50/80 hover:border-stone-400 transition-all cursor-pointer group flex items-center justify-center gap-2 h-[80px] sm:h-[88px]"
     >
       <Plus className="h-4 w-4 sm:h-5 sm:w-5 text-stone-400 group-hover:text-stone-600 transition-colors" />
