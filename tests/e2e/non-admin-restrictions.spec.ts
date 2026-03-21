@@ -83,8 +83,12 @@ test.describe('Non-Admin Item Add Restrictions', () => {
     // Wait for the kanban board to be visible
     await expect(page.getByTestId('kanban-board')).toBeVisible({ timeout: 10000 });
 
-    // Find the unassigned column
-    const unassignedColumn = page.locator('.group').filter({ hasText: 'Unassigned' }).first();
+    // Wait for the column heading to be stable
+    await page.waitForSelector('h2:has-text("Unassigned")', { state: 'visible' });
+
+    // Find the unassigned column - use heading as anchor for more stable locator
+    const unassignedHeading = page.locator('h2:has-text("Unassigned")');
+    const unassignedColumn = unassignedHeading.locator('..');
 
     // Scroll the column into view if needed
     await unassignedColumn.scrollIntoViewIfNeeded();
