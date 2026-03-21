@@ -88,9 +88,9 @@ Unit tests verify isolated business logic, database query wrappers, and utility 
 
 ### Coverage by Module
 
-| Module                         | Statements | Branches | Functions | Lines |
-| ------------------------------ | ---------- | -------- | --------- | ----- |
-| `lib/utils.ts`                 | 100%       | 100%     | 100%      | 100%  |
+| Module                         | Statements | Branches | Functions | Lines  |
+| ------------------------------ | ---------- | -------- | --------- | ------ |
+| `lib/utils.ts`                 | 100%       | 100%     | 100%      | 100%   |
 | `lib/supabase/items.ts`        | 88.17%     | 87.5%    | 78.94%    | 87.64% |
 | `lib/supabase/trips.ts`        | 100%       | 90%      | 100%      | 100%   |
 | `lib/supabase/trip-members.ts` | 100%       | 92.85%   | 100%      | 100%   |
